@@ -1,0 +1,190 @@
+…or create a new repository on the command line
+echo "# Projecte_E03" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/JorgePR91/Projecte_E03.git
+git push -u origin main
+
+…or push an existing repository from the command line
+git remote add origin https://github.com/JorgePR91/Projecte_E03.git
+git branch -M main
+git push -u origin main
+
+# Pasos para los colaboradores del proyecto JavaFX
+
+Una vez configurado el repositorio, cada colaborador deberá seguir estos pasos para trabajar en su propia rama:
+
+## 1. Obtener acceso al repositorio
+
+1. Revisar su correo electrónico para la invitación de GitHub
+2. Hacer clic en el enlace y aceptar la invitación para colaborar
+3. Navegar al repositorio en GitHub para verificar que tienen acceso
+
+## 2. Configurar el entorno de desarrollo local
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/proyecto-javafx-equipo.git
+   cd proyecto-javafx-equipo
+   ```
+
+2. Configurar Git con sus credenciales (si no lo han hecho antes):
+   ```bash
+   git config --global user.name "Su Nombre"
+   git config --global user.email "su.email@ejemplo.com"
+   ```
+
+3. Instalar las herramientas necesarias:
+   - JDK (Java Development Kit) versión 17 o superior
+   - Maven
+   - Un IDE compatible con JavaFX (Eclipse, IntelliJ IDEA, NetBeans, VS Code)
+
+## 3. Cambiar a su rama asignada
+
+Cada colaborador debe trabajar en su propia rama:
+
+```bash
+# Para el Colaborador 1
+git checkout colaborador1-feature
+
+# Para el Colaborador 2
+git checkout colaborador2-feature
+
+# Y así sucesivamente...
+```
+
+## 4. Importar el proyecto en su IDE
+
+Dependiendo del IDE:
+
+- **IntelliJ IDEA**: 
+  - File > Open > Seleccionar la carpeta del proyecto
+  - Importar como proyecto Maven cuando se solicite
+
+- **Eclipse**:
+  - File > Import > Maven > Existing Maven Projects
+  - Seleccionar la carpeta del proyecto
+
+- **NetBeans**:
+  - File > Open Project
+  - Navegar a la carpeta del proyecto
+
+- **VS Code**:
+  - File > Open Folder
+  - Seleccionar la carpeta del proyecto
+  - Instalar extensiones de Java y JavaFX
+
+## 5. Realizar cambios en el proyecto
+
+Cada colaborador debe:
+
+1. Definir claramente qué parte del proyecto va a desarrollar
+2. Crear los archivos necesarios para su funcionalidad
+3. Implementar su código siguiendo el estándar del proyecto
+4. Probar localmente que su código funciona correctamente
+
+Por ejemplo, podrían dividir las tareas de la siguiente manera:
+- **Colaborador 1**: Implementar el diseño de la interfaz principal
+- **Colaborador 2**: Desarrollar la lógica de negocio principal
+- **Colaborador 3**: Crear componentes de UI reutilizables
+- **Colaborador 4**: Implementar la capa de acceso a datos
+- **Colaborador 5**: Desarrollar funcionalidades específicas (por ejemplo, reportes)
+- **Colaborador 6**: Crear pruebas unitarias e integración
+
+## 6. Mantenerse actualizado con la rama principal
+
+Periódicamente, es bueno integrar los cambios de la rama principal:
+
+```bash
+# Obtener los últimos cambios del repositorio remoto
+git fetch origin
+
+# Asegurarse de estar en su rama
+git checkout colaborador1-feature  # (cada uno su rama)
+
+# Incorporar los cambios de la rama principal
+git merge origin/main
+
+# Resolver conflictos si existen
+# ...
+
+# Continuar con el desarrollo
+```
+
+## 7. Hacer commit de los cambios regularmente
+
+```bash
+# Ver los archivos modificados
+git status
+
+# Añadir los archivos modificados
+git add .
+
+# O añadir archivos específicos
+git add src/main/java/com/tu-empresa/app/MiClase.java
+
+# Hacer commit con un mensaje descriptivo
+git commit -m "Implementada la funcionalidad X que hace Y"
+```
+
+## 8. Subir los cambios a GitHub
+
+```bash
+# Subir los cambios a su rama en GitHub
+git push origin colaborador1-feature  # (cada uno su rama)
+```
+
+## 9. Crear un Pull Request cuando finalice su parte
+
+Una vez que hayan completado su funcionalidad:
+
+1. Ir a GitHub y navegar al repositorio
+2. Hacer clic en "Pull requests"
+3. Hacer clic en "New pull request"
+4. Seleccionar como "base" la rama `main` y como "compare" su rama personal
+5. Hacer clic en "Create pull request"
+6. Añadir un título descriptivo y detallar los cambios realizados
+7. Asignar revisores si es necesario
+8. Hacer clic en "Create pull request"
+
+## 10. Participar en la revisión de código
+
+1. Responder a los comentarios en su Pull Request
+2. Realizar modificaciones adicionales si se solicitan
+3. Continuar subiendo cambios a su rama si es necesario (los Pull Requests se actualizan automáticamente)
+
+## 11. Resolver conflictos si aparecen
+
+Si aparecen conflictos al intentar fusionar con la rama principal:
+
+1. Obtener los últimos cambios de la rama principal:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout colaborador1-feature  # (volver a su rama)
+   git merge main
+   ```
+
+2. Resolver los conflictos en los archivos marcados
+3. Añadir los archivos resueltos:
+   ```bash
+   git add .
+   ```
+
+4. Completar la fusión:
+   ```bash
+   git commit -m "Resueltos conflictos de fusión con main"
+   ```
+
+5. Subir los cambios:
+   ```bash
+   git push origin colaborador1-feature
+   ```
+
+## 12. Celebrar cuando su Pull Request sea fusionado
+
+Una vez que el administrador del proyecto apruebe y fusione su Pull Request, ¡es momento de celebrar! Su código ahora forma parte del proyecto principal.
+
+¿Hay aspectos específicos del flujo de trabajo que te gustaría que expandiera más, o necesitas información adicional sobre alguna parte del proceso?
