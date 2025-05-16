@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane prefHeight="613.0" prefWidth="686.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="appEquip03.EscenaPescaminesController">
+   <top>
+      <Pane prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </top>
+   <left>
+      <Pane prefHeight="398.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <BorderPane prefHeight="398.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <Pane fx:id="root" prefHeight="397.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+   <bottom>
+      <Pane prefHeight="74.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom></BorderPane>

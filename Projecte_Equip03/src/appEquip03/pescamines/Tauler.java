@@ -1,15 +1,19 @@
 package appEquip03.pescamines;
 
-import java.util.Scanner;
+import java.util.Random;
 
-public class Tabler {
+import javafx.scene.layout.GridPane;
+
+public class Tauler {
 	
 	private String dificultat;
 	private int tamany;
+	private GridPane gridPane;
 
-	private Casella[][] caselles = new Casella[tamany][tamany];
+	private Casella[][] caselles;
 
-	public Tabler(String dificultat, Random alea) {
+	public Tauler(String dificultat, Random alea) {
+		
 		super();
 		this.dificultat = dificultat;
 		switch(dificultat) {
@@ -18,8 +22,12 @@ public class Tabler {
 		case "d" -> this.tamany = 12;
 		default -> {this.dificultat = "n"; this.tamany = 10;}
 		}
-		this.caselles = assignarBombes(this.caselles, alea);
+
+		this.caselles = assignarBombes(this.caselles, tamany,  alea);
+		
+		this.gridPane = nouGP(this.caselles);
 	}
+	
 	//GETTERS I SETTERS
 	public String getDificultat() {
 		return dificultat;
@@ -40,20 +48,31 @@ public class Tabler {
 		this.caselles = caselles;
 	}
 	
+	public GridPane getGridPane() {
+		return gridPane;
+	}
+
+	public void setGridPane(GridPane gridPane) {
+		this.gridPane = gridPane;
+	}
+
 	//MÈTODES
-	private Casella[][] assignarBombes(Casella[][] c, Scanner alea){
+	private Casella[][] assignarBombes(Casella[][] c, int tamany, Random alea){
+		c = new Casella[tamany][tamany];
+
 		//nombre de bombes com atribut?
-		int nBomb = 0;
+		int nMines = 0;
 		//decidir bombes
 		if(this.dificultat == "f") {
-			nBomb=10;
+			nMines=10;
 		} else if(this.dificultat == "d") {
-			nBomb=15;
+			nMines=15;
 		} else {
-			nBomb=12;
+			nMines=12;
 		}
+		
 		//col·locar bombes
-		for(int b=0;b<c.length;) {
+		for(int b=0;b<nMines;) {
 			
 			int x = alea.nextInt(tamany);
 			int y = alea.nextInt(tamany);
@@ -66,7 +85,7 @@ public class Tabler {
 		//col·locar caselles
 		for(int o=0;o<c.length;o++) {
 			for(int m=0;m<c[o].length;m++) {
-				if(c[o][m]!=null) {
+				if(c[o][m]==null) {
 					c[o][m] = new Lliure();
 				}
 			}
@@ -75,4 +94,15 @@ public class Tabler {
 		
 		return c;
 	}
+	
+	private GridPane nouGP(Casella[][] c) {
+		GridPane gp = new GridPane();
+		for(int o=0;o<c.length;o++) {
+			for(int m=0;m<c[o].length;m++) {
+				gp.add(c[o][m].getContainer(), o, m);
+			}
+		}
+		return gp;
+	}
+	
 }
