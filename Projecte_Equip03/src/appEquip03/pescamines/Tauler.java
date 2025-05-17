@@ -2,6 +2,7 @@ package appEquip03.pescamines;
 
 import java.util.Random;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 
 public class Tauler {
@@ -26,6 +27,7 @@ public class Tauler {
 		this.caselles = assignarBombes(this.caselles, tamany,  alea);
 		
 		this.gridPane = nouGP(this.caselles);
+		//this.gridPane.setAlignment(Pos.CENTER);
 	}
 	
 	//GETTERS I SETTERS

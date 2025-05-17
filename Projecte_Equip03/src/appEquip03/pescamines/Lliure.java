@@ -11,7 +11,11 @@ public class Lliure extends Casella {
 	//SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
 	public Lliure() {
-		super( new Text ("M"));
+		super(new Text ("M"));
 		// TODO Auto-generated constructor stub
+	}
+	
+	public int recompteMines() {
+		
 	}
 }
