@@ -5,13 +5,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 //import javafx.scene.text.Text;
 
-public abstract class Casella {
+public abstract class CasellaPM {
 		private boolean estat;
 		private StackPane container;
 		private Button botoCasella;
 		private Node contingut;
 		
-		public Casella(Node t) {
+		public CasellaPM(Node t) {
 			super();
 			this.estat = true;
 			this.botoCasella = new Button();
@@ -41,7 +41,12 @@ public abstract class Casella {
 		public void setContainer(StackPane container) {
 			this.container = container;
 		}
-		
+		public Node getContingut() {
+			return contingut;
+		}
+		public void setContingut(Node contingut) {
+			this.contingut = contingut;
+		}
 		private void polsarBoto() {
 	        this.botoCasella.setOnAction(e -> {
 	        	this.estat = false;
@@ -54,4 +59,5 @@ public abstract class Casella {
 //		        container.getChildren().add(l);
 //		}
 //		
+		
 }

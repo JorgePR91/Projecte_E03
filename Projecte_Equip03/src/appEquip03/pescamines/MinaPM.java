@@ -2,10 +2,10 @@ package appEquip03.pescamines;
 
 import javafx.scene.text.Text;
 
-	public class Mina extends Casella {
+	public class MinaPM extends CasellaPM {
 		private Text text;
 		
-		public Mina() {			
+		public MinaPM() {			
 			super(new Text ("X"));
 		}
 
