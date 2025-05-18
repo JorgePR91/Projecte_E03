@@ -9,13 +9,12 @@ public abstract class Casella {
 		protected StackPane container;
 		protected Node contingut;
 		
-		public Casella(Node t) {
+		public Casella() {
 			super();
 			this.estat = true;
-			this.contingut = t;
-			t.setVisible(!estat);
-			container = new StackPane();
-			container.getChildren().addAll(contingut);
+			this.container = new StackPane();
+			//container.getChildren().add(contingut);
+			// contingut.setVisible(!estat);
 			//accio();
 		}
 		public boolean getEstat() {

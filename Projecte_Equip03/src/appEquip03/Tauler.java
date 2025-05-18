@@ -1,9 +1,11 @@
 package appEquip03;
 
+import java.util.Random;
+
 import javafx.scene.layout.GridPane;
 
-public class Tauler {
-	
+public class Tauler implements MetodeTauler{
+	Random alea = new Random();
 	private int l;
 	private int a;
 	private GridPane gridPane;
@@ -16,11 +18,11 @@ public class Tauler {
 		this.l = l;
 		this.a = a;
 		caselles = new Casella[this.a][this.l];
+		caselles = MetodeTauler.assignarMines(caselles, a, alea, "n");
 		this.gridPane = nouGP(caselles);
 	}
 	
 	//GETTERS I SETTERS
-
 	public Casella[][] getCaselles() {
 		return caselles;
 	}
@@ -51,31 +53,6 @@ public class Tauler {
 		}
 		return gp;
 	}
-	//CREAR SEGONS DIFICULTAT
-	public Tauler dificultat(String dificultat) {
-	int tamany = 0;
-	
-	switch(dificultat) {
-	case "f" -> tamany = 9;
-	case "n" -> tamany = 10;
-	case "d" -> tamany = 12;
-	default -> {dificultat = "n"; tamany = 10;}
-	}
-	return new Tauler(tamany, tamany);
-	}
-	public void recorrerTauler(Casella[][] c) {
-		int nM = 0;
-		for(int o=0;o<c.length;o++) {
-			for(int m=0;m<c[o].length;m++) {
-//				if(c[o][m] instanceof Lliure) {
-//					nM = recompteMines(c, o, m);
-//					Lliure aux = (Lliure) c[o][m];
-//					aux.setRecompte(nM);
-//					aux.setText(new Text(""+aux.getRecompte()));
-//				}
-			}
-			}		
-	}
-	
+
 
 }

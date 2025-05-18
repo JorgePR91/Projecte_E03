@@ -6,13 +6,18 @@ import javafx.scene.text.Text;
 	public class Mina extends Casella implements AccioCasella {
 		private Text text;
 		private Button boto;
+		//= new Button();
 		
-		public Mina() {			
-			super(new Text ("X"));
+		public Mina() {
+			super();
 			this.text = new Text ("X");
 			this.boto = new Button();
 			boto.setMinWidth(50);
 			boto.setMinHeight(50);
+			super.setContingut(this.text);
+			super.container.getChildren().addAll(this.boto, this.text);
+			this.text.setVisible(!super.estat);
+			reaccio();
 		}
 
 	public Text getMina() {
@@ -29,7 +34,8 @@ import javafx.scene.text.Text;
 		boto.setOnAction(e -> {
       	setEstat(false);
       	boto.setVisible(getEstat());
-      	getContingut().setVisible(!getEstat());
+      	this.text.setVisible(!super.getEstat());
+
       	});
 	}
 	//EXPLOTAR -> DESTAPAR TOT: ENVIAR A TABLER

@@ -11,22 +11,32 @@ public class Lliure extends Casella implements AccioCasella {
 	private Button boto;
 	//RECERCA DE MINES
 	//SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
+	{
 
+	}
 	public Lliure() {
-		super(new Text(""));
-		this.text = new Text(" ");
-		this.recompte = 0;
-		this.frontera = true;
+		super();
 		this.boto = new Button();
 		boto.setMinWidth(50);
 		boto.setMinHeight(50);
+		this.text = new Text(" ");
+		this.recompte = 0;
+		this.frontera = false;
+		super.container.getChildren().addAll(this.text, this.boto);
+		this.text.setVisible(!super.estat);
+		reaccio();
 	}
 	public Lliure(int n) {
-		super(new Text(""+n));
+		super();
+		this.boto = new Button();
+		boto.setMinWidth(50);
+		boto.setMinHeight(50);
 		this.text = new Text(""+n);
 		this.recompte = n;
-		this.frontera = false;
-		this.boto = new Button();
+		this.frontera = true;
+		super.container.getChildren().addAll(this.text, this.boto);
+		this.text.setVisible(!super.estat);
+		reaccio();
 	}
 	
 	public boolean isFrontera() {
@@ -58,9 +68,9 @@ public class Lliure extends Casella implements AccioCasella {
 	@Override
 	public void reaccio() {
 		boto.setOnAction(e -> {
-      	setEstat(false);
-      	boto.setVisible(getEstat());
-      	getContingut().setVisible(!getEstat());
+      	super.setEstat(false);
+      	boto.setVisible(super.getEstat());
+      	this.text.setVisible(!super.getEstat());
       	});
 	}
 
