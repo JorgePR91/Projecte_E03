@@ -9,13 +9,17 @@ public class Lliure extends Casella implements AccioCasella {
 	private int recompte;
 	private Text text;
 	private Button boto;
+	private int x;
+	private int y;
+
 	//RECERCA DE MINES
 	//SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 	{
 
 	}
-	public Lliure() {
-		super();
+	public Lliure(int x, int y) {
+		super(x,y);
+
 		this.boto = new Button();
 		boto.setMinWidth(50);
 		boto.setMinHeight(50);
@@ -26,8 +30,9 @@ public class Lliure extends Casella implements AccioCasella {
 		this.text.setVisible(!super.estat);
 		reaccio();
 	}
-	public Lliure(int n) {
-		super();
+	public Lliure(int n, int x, int y) {
+		super(x, y);
+
 		this.boto = new Button();
 		boto.setMinWidth(50);
 		boto.setMinHeight(50);
@@ -39,10 +44,22 @@ public class Lliure extends Casella implements AccioCasella {
 		reaccio();
 	}
 	
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
 	public boolean isFrontera() {
 		return frontera;
 	}
-
+	
 	public void setFrontera(boolean frontera) {
 		this.frontera = frontera;
 	}
@@ -63,7 +80,13 @@ public class Lliure extends Casella implements AccioCasella {
 		this.text = text;
 		this.setContingut(text);
 	}
-
+	
+	public Button getBoto() {
+		return boto;
+	}
+	public void setBoto(Button boto) {
+		this.boto = boto;
+	}
 	//METODES
 	@Override
 	public void reaccio() {
@@ -71,7 +94,9 @@ public class Lliure extends Casella implements AccioCasella {
       	super.setEstat(false);
       	boto.setVisible(super.getEstat());
       	this.text.setVisible(!super.getEstat());
+      	descobrir(this, Tauler.get , this.x, this.y);
       	});
 	}
+	
 
 }

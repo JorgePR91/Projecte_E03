@@ -24,7 +24,7 @@ public interface MetodeTauler {
 			int y = alea.nextInt(tamany);
 			
 			if(c[x][y]==null) {
-				c[x][y] = new Mina();
+				c[x][y] = new Mina(x, y);
 				b++;
 			}
 		}
@@ -35,9 +35,9 @@ public interface MetodeTauler {
 					int nombre = 0;
 					nombre = recompteMines(c,o,m);
 					if(nombre > 0)
-					c[o][m] = new Lliure(nombre);
+					c[o][m] = new Lliure(nombre, o, m);
 					else
-						c[o][m] = new Lliure();
+						c[o][m] = new Lliure(o, m);
 
 				}
 			}
@@ -124,9 +124,36 @@ public interface MetodeTauler {
 
 		return comptador;
 	}
-	public static void descobrir(Casella[][] c, int x, int y) {
-//ES LLIURE
-//NO ES FRONTERA
-//DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
-	}
+	
+	
+	
+	public Lliure descobrir(Lliure l, Casella[][] c, int x, int y) {
+		//ES LLIURE
+		//NO ES FRONTERA
+		//DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
+		if(l.isFrontera() == true || l.getEstat() == false) {
+			l.reaccio();
+			return l;
+		} else {
+			//SI NO ES FRONTERA
+			if(!l.isFrontera() && (c[l.x].length != l.y) && l.getEstat() == true) {
+				l.reaccio();
+				return (Lliure) c[l.x][l.y+1];
+			} else if (!l.isFrontera() && (l.y>0) && l.getEstat() == true) {
+				l.reaccio();
+				return (Lliure) c[l.x][l.y-1];
+			} else if (!l.isFrontera() && (c.length != l.x) && l.getEstat() == true) {
+				l.reaccio();
+				return (Lliure) c[l.x+1][l.y];
+			} else if (!l.isFrontera() && (l.x>0) && l.getEstat() == true) {
+				l.reaccio();
+				return (Lliure) c[l.x-1][l.y];
+				} else return l;
+				//-----------------------------------------
+ 
+			//SI ESTÀ EN EL FINAL DE LA MATRIU
+			//
+		}
+			}
+	
 }

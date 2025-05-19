@@ -8,8 +8,8 @@ import javafx.scene.text.Text;
 		private Button boto;
 		//= new Button();
 		
-		public Mina() {
-			super();
+		public Mina(int x, int y) {
+			super(x, y);
 			this.text = new Text ("X");
 			this.boto = new Button();
 			boto.setMinWidth(50);
@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 			this.text.setVisible(!super.estat);
 			reaccio();
 		}
-
+					
 	public Text getMina() {
 		return text;
 	}
