@@ -3,9 +3,10 @@ package appEquip03;
 import java.util.Random;
 
 public interface MetodeTauler {
+	
 	//OMPLIR BOMBES i OMPLIR CASELLES LLIURES
 	public static Casella[][] assignarMines(Casella[][] c, int tamany, Random alea, String dificultat){
-
+		
 		//nombre de bombes com atribut?
 		int nMines = 0;
 		//decidir bombes
@@ -28,6 +29,7 @@ public interface MetodeTauler {
 				b++;
 			}
 		}
+		
 		//col·locar caselles
 		for(int o=0;o<c.length;o++) {
 			for(int m=0;m<c[o].length;m++) {
@@ -35,9 +37,9 @@ public interface MetodeTauler {
 					int nombre = 0;
 					nombre = recompteMines(c,o,m);
 					if(nombre > 0)
-					c[o][m] = new Lliure(nombre, o, m);
+					c[o][m] = new Lliure(nombre, o, m, c);
 					else
-						c[o][m] = new Lliure(o, m);
+						c[o][m] = new Lliure(o, m, c);
 
 				}
 			}
@@ -127,33 +129,6 @@ public interface MetodeTauler {
 	
 	
 	
-	public Lliure descobrir(Lliure l, Casella[][] c, int x, int y) {
-		//ES LLIURE
-		//NO ES FRONTERA
-		//DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
-		if(l.isFrontera() == true || l.getEstat() == false) {
-			l.reaccio();
-			return l;
-		} else {
-			//SI NO ES FRONTERA
-			if(!l.isFrontera() && (c[l.x].length != l.y) && l.getEstat() == true) {
-				l.reaccio();
-				return (Lliure) c[l.x][l.y+1];
-			} else if (!l.isFrontera() && (l.y>0) && l.getEstat() == true) {
-				l.reaccio();
-				return (Lliure) c[l.x][l.y-1];
-			} else if (!l.isFrontera() && (c.length != l.x) && l.getEstat() == true) {
-				l.reaccio();
-				return (Lliure) c[l.x+1][l.y];
-			} else if (!l.isFrontera() && (l.x>0) && l.getEstat() == true) {
-				l.reaccio();
-				return (Lliure) c[l.x-1][l.y];
-				} else return l;
-				//-----------------------------------------
- 
-			//SI ESTÀ EN EL FINAL DE LA MATRIU
-			//
-		}
-			}
+
 	
 }
