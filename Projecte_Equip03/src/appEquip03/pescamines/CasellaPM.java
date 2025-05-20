@@ -6,10 +6,10 @@ import javafx.scene.layout.StackPane;
 //import javafx.scene.text.Text;
 
 public abstract class CasellaPM {
-		private boolean estat;
-		private StackPane container;
-		private Button botoCasella;
-		private Node contingut;
+		protected boolean estat;
+		protected StackPane container;
+		protected Button botoCasella;
+		protected Node contingut;
 		
 		public CasellaPM(Node t) {
 			super();
