@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -17,142 +17,112 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class EscenaController {
-	 private List<String> paraules;          // Llista de paraules de 5 lletres
-	    private String paraulaObjectiu;          // Paraula a endevinar
-	    private int intentsFets = 0;             // Comptador d'intents
 
-	    private VBox root;                       // Contenidor principal
-	    private TextField entrada;               // Camp per escriure la paraula
-	    private Button enviar;                   // Botó per enviar l'intent
-	    private Button reiniciar;                // Botó per reiniciar el joc
-	    private Label pista;                     // Missatges i pistes per l'usuari
+    private List<String> paraules;
+    private String paraulaObjectiu;
+    private int intentsFets = 0;
 
-	    public static void main(String[] args) {
-	        launch(args);                       // Inicia l'aplicació JavaFX
-	    }
+    @FXML private VBox root;
+    @FXML private TextField entrada;
+    @FXML private Button enviar;
+    @FXML private Label pista;
+    @FXML private Button reiniciar;
 
-	    private static void launch(String[] args) {
-			// TODO Auto-generated method stub
-			
-		}
+    @FXML
+    public void initialize() {
+        try {
+            carregarParaules();
+            paraulaObjectiu = paraules.get(new Random().nextInt(paraules.size()));
+        } catch (IOException e) {
+            mostrarError("No s'ha pogut carregar el fitxer de paraules.");
+        }
+    }
 
-		public void start(Stage primaryStage) {
-	        primaryStage.setTitle("WordleFX - Endevina la paraula");
+    @FXML
+    private void reiniciarJoc() {
+        entrada.setDisable(false);
+        enviar.setDisable(false);
+        root.getChildren().clear();
+        intentsFets = 0;
+        pista.setText("Introdueix una paraula de 5 lletres:");
+        paraulaObjectiu = paraules.get(new Random().nextInt(paraules.size()));
 
-	        try {
-	            carregarParaules();              // Carrega paraules del fitxer
-	        } catch (IOException e) {
-	            mostrarError("No s'ha pogut carregar el fitxer de paraules.");
-	            return;
-	        }
+        HBox controls = new HBox(10, entrada, enviar);
+        controls.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(pista, controls);
+    }
 
-	        inicialitzarJoc();                  // Configura la UI i variables per començar
+    @FXML
+    private void gestionarIntent() {
+        String intent = entrada.getText().toLowerCase();
+        entrada.clear();
 
-	        Scene scene = new Scene(root, 400, 500);
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-	    }
+        if (intent.length() != 5) {
+            pista.setText("La paraula ha de tindre exactament 5 lletres.");
+            return;
+        }
 
-	    // Carrega paraules de 5 lletres del fitxer 'paraules.txt'
-	    private void carregarParaules() throws IOException {
-	        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/paraules.txt"));
-	        BufferedReader br = new BufferedReader(isr);
-	        paraules = br.lines()
-	                .map(String::toLowerCase)
-	                .filter(p -> p.length() == 5)
-	                .collect(Collectors.toList());
-	        br.close();
-	    }
+        String normalObjectiu = eliminarAccents(paraulaObjectiu);
+        String normalIntent = eliminarAccents(intent);
+        HBox filaIntent = new HBox(5);
+        filaIntent.setAlignment(Pos.CENTER);
+        boolean encertTotal = true;
 
-	    // Prepara la partida nova, escull paraula aleatòria i crea la interfície
-	    private void inicialitzarJoc() {
-	        paraulaObjectiu = paraules.get(new Random().nextInt(paraules.size()));
-	        intentsFets = 0;
+        for (int i = 0; i < 5; i++) {
+            char lletra = intent.charAt(i);
+            Label casella = new Label(String.valueOf(Character.toUpperCase(lletra)));
+            casella.setMinSize(40, 40);
+            casella.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center; -fx-border-color: black;");
 
-	        root = new VBox(10);
-	        root.setPadding(new Insets(15));
+            char lletraNormal = normalIntent.charAt(i);
+            if (normalObjectiu.charAt(i) == lletraNormal) {
+                casella.setStyle(casella.getStyle() + " -fx-background-color: green; -fx-text-fill: white;");
+            } else if (normalObjectiu.contains(String.valueOf(lletraNormal))) {
+                casella.setStyle(casella.getStyle() + " -fx-background-color: gold; -fx-text-fill: black;");
+                encertTotal = false;
+            } else {
+                casella.setStyle(casella.getStyle() + " -fx-background-color: gray; -fx-text-fill: white;");
+                encertTotal = false;
+            }
+            filaIntent.getChildren().add(casella);
+        }
 
-	        pista = new Label("Introdueix una paraula de 5 lletres:");
-	        entrada = new TextField();
-	        entrada.setPromptText("Escriu ací...");
-	        enviar = new Button("Enviar");
-	        reiniciar = new Button("Reiniciar");
+        root.getChildren().add(filaIntent);
+        intentsFets++;
 
-	        enviar.setOnAction(e -> gestionarIntent());
-	        reiniciar.setOnAction(e -> start((Stage) root.getScene().getWindow()));
+        if (encertTotal) {
+            pista.setText("🎉 Enhorabona! Has encertat la paraula!");
+            entrada.setDisable(true);
+            enviar.setDisable(true);
+        } else if (intentsFets >= 5) {
+            pista.setText("❌ Has esgotat els intents! La paraula era: " + paraulaObjectiu.toUpperCase());
+            entrada.setDisable(true);
+            enviar.setDisable(true);
+        } else {
+            pista.setText("Intent " + intentsFets + " de 5");
+        }
+    }
 
-	        HBox controls = new HBox(10, entrada, enviar);
-	        root.getChildren().addAll(pista, controls);
-	    }
+    private void carregarParaules() throws IOException {
+        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/resources/paraules.txt"));
+        BufferedReader br = new BufferedReader(isr);
+        paraules = br.lines()
+                .map(String::toLowerCase)
+                .filter(p -> p.length() == 5)
+                .collect(Collectors.toList());
+        br.close();
+    }
 
-	    // Comprova l'intent de l'usuari i mostra colors segons l'encert
-	    private void gestionarIntent() {
-	        String intent = entrada.getText().toLowerCase();
-	        entrada.clear();
+    private String eliminarAccents(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
 
-	        if (intent.length() != 5) {
-	            pista.setText("La paraula ha de tindre exactament 5 lletres.");
-	            return;
-	        }
-
-	        String normalObjectiu = eliminarAccents(paraulaObjectiu);
-	        String normalIntent = eliminarAccents(intent);
-
-	        HBox filaIntent = new HBox(5);
-	        filaIntent.setPadding(new Insets(5));
-
-	        boolean encertTotal = true;
-
-	        for (int i = 0; i < 5; i++) {
-	            char lletra = intent.charAt(i);
-	            Label casella = new Label(String.valueOf(Character.toUpperCase(lletra)));
-	            casella.setMinSize(40, 40);
-	            casella.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center; -fx-border-color: black;");
-
-	            char lletraNormal = normalIntent.charAt(i);
-	            if (normalObjectiu.charAt(i) == lletraNormal) {
-	                casella.setStyle(casella.getStyle() + " -fx-background-color: green; -fx-text-fill: white;");
-	            } else if (normalObjectiu.contains(String.valueOf(lletraNormal))) {
-	                casella.setStyle(casella.getStyle() + " -fx-background-color: gold; -fx-text-fill: black;");
-	                encertTotal = false;
-	            } else {
-	                casella.setStyle(casella.getStyle() + " -fx-background-color: gray; -fx-text-fill: white;");
-	                encertTotal = false;
-	            }
-	            filaIntent.getChildren().add(casella);
-	        }
-
-	        root.getChildren().add(filaIntent);
-	        intentsFets++;
-
-	        if (encertTotal) {
-	            pista.setText("Enhorabona! Has encertat la paraula!");
-	            entrada.setDisable(true);
-	            enviar.setDisable(true);
-	            root.getChildren().add(reiniciar);
-	        } else if (intentsFets >= 5) {
-	            pista.setText("Has esgotat els intents! La paraula era: " + paraulaObjectiu.toUpperCase());
-	            entrada.setDisable(true);
-	            enviar.setDisable(true);
-	            root.getChildren().add(reiniciar);
-	        } else {
-	            pista.setText("Intent " + intentsFets + " de 5");
-	        }
-	    }
-
-	    // Elimina accents d'una cadena per comparar lletres sense diferenciar accents
-	    private String eliminarAccents(String text) {
-	        return Normalizer.normalize(text, Normalizer.Form.NFD)
-	                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-	    }
-
-	    // Mostra un missatge d'error i tanca l'aplicació
-	    private void mostrarError(String missatge) {
-	        Alert alert = new Alert(Alert.AlertType.ERROR, missatge, ButtonType.OK);
-	        alert.showAndWait();
-	        System.exit(1);
-	    }
-	}
+    private void mostrarError(String missatge) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, missatge, ButtonType.OK);
+        alert.showAndWait();
+        System.exit(1);
+    }
+}
