@@ -1,0 +1,6 @@
+#itemCerca > .label{
+    -fx-graphic: url("../../../../iconaCerca.png");
+}
+#itemPreferencies > .label{
+    -fx-graphic: url("../../../../iconaPreferencies.png");
+}

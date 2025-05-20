@@ -3,15 +3,10 @@ package appEquip03;
 import java.io.IOException;
 import java.util.Random;
 
-import appEquip03.pescamines.CasellaPM;
-import appEquip03.pescamines.LliurePM;
-import appEquip03.pescamines.MinaPM;
-import appEquip03.pescamines.TaulerPM;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 
@@ -33,7 +28,7 @@ public class Main extends Application {
 			
 				
 				try {
-					Parent root = FXMLLoader.load(getClass().getResource("./pescamines/EscenaPescamines.fxml"));
+					Parent root = FXMLLoader.load(getClass().getResource("EscenaPescamines.fxml"));
 					Scene scene = new Scene(root,800,800);
 					scene.getStylesheets().add(getClass().getResource("applicationPescamines.css").toExternalForm());
 					primaryStage.setTitle("Pescamines");
