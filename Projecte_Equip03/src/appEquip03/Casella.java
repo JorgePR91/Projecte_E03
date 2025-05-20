@@ -36,7 +36,7 @@ public abstract class Casella {
 		public void setY(int y) {
 			this.y = y;
 		}
-		public boolean getEstat() {
+		public boolean isEstat() {
 			return estat;
 		}
 		public void setEstat(boolean estat) {

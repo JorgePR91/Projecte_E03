@@ -79,94 +79,48 @@ public class Lliure extends Casella implements AccioCasella {
 	@Override
 	public void reaccio() {
 		boto.setOnAction(e -> {
-//			super.setEstat(false);
-//			boto.setVisible(super.getEstat());
-//			this.text.setVisible(!super.getEstat());
-//			if(!this.isFrontera()) 
 			despejar(this, this.c);
 		});
-
 	}
-
-//	public static Lliure descobrir(Lliure l, Casella[][] c) {
-//		//ES LLIURE
-//		//NO ES FRONTERA
-//		//DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
-//		if(l.isFrontera() == true || l.getEstat() == false) {
-//			l.reaccio();
-//			return l;
-//		} else {
-//			//SI NO ES FRONTERA
-//			if(!l.isFrontera() && (c[l.getX()].length != l.getY()) && l.getEstat() == true) {
-//				l.reaccio();
-//				return 
-//						descobrir((Lliure) c[l.getX()][l.getY()+1], c);
-//			} else if (!l.isFrontera() && (l.getY()>0) && l.getEstat() == true) {
-//				l.reaccio();
-//				return descobrir((Lliure) c[l.getX()][l.getY()-1], c);
-//			} else if (!l.isFrontera() && (c.length != l.getX()) && l.getEstat() == true) {
-//				l.reaccio();
-//				return descobrir((Lliure) c[l.getX()+1][l.getY()], c);
-//			} else if (!l.isFrontera() && (l.getX()>0) && l.getEstat() == true) {
-//				l.reaccio();
-//				return descobrir((Lliure) c[l.getX()-1][l.getY()], c);
-//				} else return l;
-//				//-----------------------------------------
-// 
-//			//SI ESTÀ EN EL FINAL DE LA MATRIU
-//			//
-//		}
-//	}
 
 	public Lliure despejar(Lliure l, Casella[][] c) {
 		// ES LLIURE
 		// NO ES FRONTERA
 		// DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
-		if (l != null && l.descobrir(l)) {
-//		if (!l.isFrontera()) {
-			Casella aux = (Casella) l;
-			int x = aux.getX();
-			int y = aux.getY();
 
-			if ((x < c.length - 2)) {
-				if (c[x - 1][y] instanceof Lliure) {
-					Lliure l2 = (Lliure) c[x - 1][y];
-					return despejar(l2, c);
-				}
-			} else if ((x > 0) && (x < c.length - 2)) {
-				if (c[x + 1][y] instanceof Lliure) {
-					Lliure l2 = (Lliure) c[x + 1][y];
-					return despejar(l2, c);
-				}
-			} else
-
-			if ((y < c[0].length - 2) && (y > 0)) {
-				if (c[x][y - 1] instanceof Lliure) {
-					Lliure l2 = (Lliure) c[x][y - 1];
-					return despejar(l2, c);
-				}
-			} else if ((y > 0) && (y < c[0].length - 2)) {
-				if (c[x][y + 1] instanceof Lliure) {
-					Lliure l2 = (Lliure) c[x][y + 1];
-					return despejar(l2, c);
-				}
-			}
+		if (l == null||!l.descobrir(l)) {
+			return l;
 		} 
-			return null;
-		
+		if(!l.isFrontera()) {
+			if (l.getX() < c.length - 1) {
+				despejar((Lliure) c[l.getX() + 1][l.getY()], c);
+			} 
+			if (l.getX() > 0) {
+				despejar((Lliure) c[l.getX() - 1][l.getY()], c);
+			} 
+			if (l.getY() < c[0].length - 1) {
+				despejar((Lliure) c[l.getX()][l.getY() + 1], c);
+			} 
+			if (l.getY() > 0) {
+				 despejar((Lliure) c[l.getX()][l.getY() - 1], c);
+			} 
+			return l;
+		}
+		return l;
+
 	}
 
 	public boolean descobrir(Lliure l) {
 		boolean descoberta = false;
-		
-		if (l instanceof Lliure && l.getEstat() == true) {
-			
+
+		if (l instanceof Lliure && l.isEstat() == true) {
+
 			l.setEstat(false);
-			l.getBoto().setVisible(l.getEstat());
+			l.getBoto().setVisible(l.isEstat());
 			l.text.setVisible(true);
 			descoberta = true;
 		}
-		
+
 		return descoberta;
 	}
 }

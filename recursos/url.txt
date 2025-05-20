@@ -1,0 +1,6 @@
+[] land-mine-on-solid
+https://fontawesome.com/icons/land-mine-on?f=classic&s=solid
+[] blast
+https://www.flaticon.com/free-icon/blast_12695429?term=bomb&page=1&position=5&origin=search&related_id=12695429
+[]
+https://www.freepik.com/search?format=search&last_filter=page&last_value=3&page=3&people=exclude&query=battlefield+land&selection=1&type=vector#uuid=54e4a3fa-f880-4508-b3a6-8224ed687c30

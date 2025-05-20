@@ -33,8 +33,8 @@ import javafx.scene.text.Text;
 	public void reaccio() {
 		boto.setOnAction(e -> {
       	setEstat(false);
-      	boto.setVisible(getEstat());
-      	this.text.setVisible(!super.getEstat());
+      	boto.setVisible(isEstat());
+      	this.text.setVisible(!super.isEstat());
 
       	});
 	}
