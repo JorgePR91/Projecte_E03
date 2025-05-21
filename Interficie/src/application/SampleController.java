@@ -62,9 +62,11 @@ public class SampleController implements Initializable {
 
 	@FXML
 	public void reiniciar(ActionEvent e) {
+		
 		//RECARREGAR L'ESCENA? O ELIMINAR TOTS ELS OBJECTES?
 		MetodeTauler.buidar(this.nouTauler);
 		taulerGrid.getChildren().clear();
 		initialize(null, null);
+		
 	}
 }
