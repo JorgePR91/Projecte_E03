@@ -19,9 +19,7 @@ public interface MetodeTauler {
 	
 	//OMPLIR BOMBES i OMPLIR CASELLES LLIURES
 	public static Casella[][] assignarMines(Casella[][] c, int tamany, Random alea, String dificultat){
-		
-		//nombre de bombes com atribut?
-		int nMines = 0;
+		int nMines;
 		//decidir bombes
 		if(dificultat == "f") {
 			nMines=10;
@@ -38,7 +36,7 @@ public interface MetodeTauler {
 			int y = alea.nextInt(tamany);
 			
 			if(c[x][y]==null) {
-				c[x][y] = new Mina(x, y);
+				c[x][y] = new Mina(x, y, c);
 				b++;
 			}
 		}

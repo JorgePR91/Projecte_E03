@@ -69,4 +69,5 @@ public class SampleController implements Initializable {
 		initialize(null, null);
 		
 	}
+	
 }

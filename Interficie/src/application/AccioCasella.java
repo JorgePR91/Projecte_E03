@@ -5,6 +5,6 @@ public interface AccioCasella {
 	default void reaccio() {
 
 	}
-
+	
 	
 }

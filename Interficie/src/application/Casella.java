@@ -18,9 +18,6 @@ public abstract class Casella {
 			
 			this.estat = true;
 			this.container = new StackPane();
-			//container.getChildren().add(contingut);
-			// contingut.setVisible(!estat);
-			//accio();
 		}
 		
 		
@@ -55,10 +52,5 @@ public abstract class Casella {
 			this.contingut = contingut;
 		}
 
-		
-//		protected void contingut(Label l) {
-//		        container.getChildren().add(l);
-//		}
-//		
-		
+
 }
