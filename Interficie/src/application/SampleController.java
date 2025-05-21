@@ -15,8 +15,6 @@ import javafx.scene.layout.RowConstraints;
 
 public class SampleController implements Initializable {
 	@FXML
-	private BorderPane root;
-	@FXML
 	private GridPane taulerGrid;
 	@FXML
 	private Button reinici;
@@ -24,32 +22,22 @@ public class SampleController implements Initializable {
 	private Label temps;
 	@FXML
 	private Label antimines;
+	
+	private Tauler nouTauler;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		System.out.println("Initialize funcionant");
 
-		Tauler nouTauler = crearTauler("");
+		nouTauler = MetodeTauler.crearTauler("");
 		nouGP(nouTauler.getCaselles());
-	}
-
-	public Tauler crearTauler(String dificultat) {
-		System.out.println("Métode crearTauler funcionant");
-	int tamany = 0;
-	
-	switch(dificultat) {
-	case "f" -> tamany = 9;
-	case "n" -> tamany = 10;
-	case "d" -> tamany = 12;
-	default -> {dificultat = "n"; tamany = 10;}
-	}
-	return new Tauler(tamany, tamany);
-
+		
 	}
 	
 	public void nouGP(Casella[][] c) {
-		System.out.println("Mètode nou gridPane funcionant");
 		GridPane gp = this.taulerGrid;
+		
+		//https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
+		
 		//Netejar les característiques per defecte del SceneBuilder
 	    gp.getColumnConstraints().clear();
 	    gp.getRowConstraints().clear();
@@ -68,13 +56,15 @@ public class SampleController implements Initializable {
 		for(int o=0;o<c.length;o++) {
 			for(int m=0;m<c[o].length;m++) {
 				gp.add(c[o][m].getContainer(), o, m);
-
 			}
 		}
 	}
 
 	@FXML
 	public void reiniciar(ActionEvent e) {
+		//RECARREGAR L'ESCENA? O ELIMINAR TOTS ELS OBJECTES?
+		MetodeTauler.buidar(this.nouTauler);
+		taulerGrid.getChildren().clear();
 		initialize(null, null);
 	}
 }

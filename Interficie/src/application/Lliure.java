@@ -9,6 +9,7 @@ public class Lliure extends Casella implements AccioCasella {
 	private int recompte;
 	private Text text;
 	private Button boto;
+	private boolean antimines;
 	private Casella[][] c;
 
 	// RECERCA DE MINES

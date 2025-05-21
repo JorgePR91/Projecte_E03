@@ -5,6 +5,7 @@ import javafx.scene.text.Text;
 
 	public class Mina extends Casella implements AccioCasella {
 		private Text text;
+		private boolean antimines;
 		private Button boto;
 		//= new Button();
 		
@@ -30,6 +31,10 @@ import javafx.scene.text.Text;
 	//METODES
 	@Override
 	public void reaccio() {
+		//ACCEDIR A LA MATRIU I AL GIRD
+		//COMPROVAR ELS ANTIMINES
+		//CAMVIAR L'ESTAT I LA VISIBILITAT
+		
 		boto.setOnAction(e -> {
       	setEstat(false);
       	boto.setVisible(isEstat());

@@ -4,6 +4,19 @@ import java.util.Random;
 
 public interface MetodeTauler {
 	
+	public static Tauler crearTauler(String dificultat) {
+	int tamany = 0;
+	
+	switch(dificultat) {
+	case "f" -> tamany = 9;
+	case "n" -> tamany = 10;
+	case "d" -> tamany = 12;
+	default -> {dificultat = "n"; tamany = 10;}
+	}
+	return new Tauler(tamany, tamany);
+
+	}	
+	
 	//OMPLIR BOMBES i OMPLIR CASELLES LLIURES
 	public static Casella[][] assignarMines(Casella[][] c, int tamany, Random alea, String dificultat){
 		
@@ -127,8 +140,20 @@ public interface MetodeTauler {
 		return comptador;
 	}
 	
+	private void antimines() {
+		
+	}
 	
-	
+	public static void buidar(Tauler t) {
+		Casella[][] c = t.getCaselles();
+		
+		for(int fil= 0; fil<c.length; fil++) {
+			for(int col= 0; col<c.length; col++) {
+				
+				c[fil][col]=null;
+			}
 
+		}
+	}
 	
 }
