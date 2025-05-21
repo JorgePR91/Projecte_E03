@@ -1,6 +1,6 @@
 .root {
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #0e62cf);
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f594cd);
 }
 
 .label {

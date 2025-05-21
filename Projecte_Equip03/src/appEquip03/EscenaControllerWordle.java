@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class EscenaController {
+public class EscenaControllerWordle {
 
     private List<String> paraules;
     private String paraulaObjectiu;
@@ -106,7 +106,7 @@ public class EscenaController {
     }
 
     private void carregarParaules() throws IOException {
-        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/resources/paraules.txt"));
+        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/paraules.txt"));
         BufferedReader br = new BufferedReader(isr);
         paraules = br.lines()
                 .map(String::toLowerCase)
