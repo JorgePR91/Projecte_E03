@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+   <children>
+      <BorderPane>
+         <center>
+            <GridPane fx:id="taulerGrid" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+            </GridPane>
+         </center>
+         <left>
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas height="200.0" layoutX="22.0" layoutY="-7.0" width="200.0" />
+               </children></AnchorPane>
+         </right>
+         <bottom>
+            <AnchorPane prefHeight="85.0" prefWidth="602.0" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane layoutX="280.0" layoutY="22.0" prefHeight="40.0" prefWidth="41.0" style="-fx-background-color: lightgrey;" AnchorPane.rightAnchor="281.16361690300624" />
+               </children></AnchorPane>
+         </bottom>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
+   </children>
+</VBox>

@@ -23,16 +23,16 @@ public class Lliure extends Casella implements AccioCasella {
 	public Lliure(int x, int y, Casella[][] c) {
 		super(x, y);
 		this.c = c;
-		this.boto = new Button();
+		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		this.text = new Text(" ");
-		this.recompte = 0;
-		this.frontera = false;
-		this.antimines = false;
-		this.Anti.setVisible(antimines);
+		text = new Text(" ");
+		recompte = 0;
+		frontera = false;
+		antimines = false;
+		Anti.setVisible(antimines);
 		super.setContingut(this.text);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
-		this.text.setVisible(!super.estat);
+		text.setVisible(!super.estat);
 		reaccio();
 	}
 
@@ -45,7 +45,7 @@ public class Lliure extends Casella implements AccioCasella {
 		this.recompte = n;
 		this.frontera = true;
 		this.antimines = false;
-		this.Anti.setVisible(antimines);
+		this.Anti.setVisible(false);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
 		this.text.setVisible(!super.estat);
 		reaccio();
@@ -100,16 +100,19 @@ public class Lliure extends Casella implements AccioCasella {
 
 	@Override
 	public void reaccio() {
-		boto.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		Anti.setMouseTransparent(true);
+	    boto.setOnMouseClicked(null);	    
+	    Anti.setOnMouseClicked(null);
 
+		boto.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (e.getButton() == MouseButton.SECONDARY) {
+				if (e.getButton() == MouseButton.SECONDARY && (Context.getComptador()>0)) {
 					antimines = !antimines;
 					//Lliure.this.getBoto().setDisable(!antimines);
-					Lliure.this.text.setVisible(!antimines);
-					Lliure.this.Anti.setVisible(antimines);
-					System.out.println("Estat del Antimines "+Lliure.this.antimines);
+					text.setVisible(!antimines);
+					Anti.setVisible(antimines);
+					Context.disminuirComptador();
 					e.consume();
 				} 
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {
@@ -118,6 +121,8 @@ public class Lliure extends Casella implements AccioCasella {
 				}
 			}
 		});
+		
+
 	}
 
 	public Lliure despejar(Lliure l, Casella[][] c) {
@@ -153,8 +158,9 @@ public class Lliure extends Casella implements AccioCasella {
 		if (l instanceof Lliure && l.isEstat() == true) {
 
 			l.setEstat(false);
-			l.getBoto().setVisible(l.isEstat());
+			l.boto.setVisible(l.isEstat());
 			l.text.setVisible(true);
+			l.Anti.setVisible(false);
 			descoberta = true;
 		}
 

@@ -2,35 +2,56 @@ package application;
 
 import java.util.Random;
 
-public interface MetodeTauler {
+public class Context {
+		
+	protected static int comptador;
+	protected static String dificultat;
+	protected static int tamany = 0;
+	protected static Random alea = new Random();
 	
+	
+	//GETTERS I SETTERS
+	public static int getComptador() {
+		return comptador;
+	}
+	public static void setComptador(int comptador) {
+		Context.comptador = comptador;
+	}
+	public static String getDificultat() {
+		return dificultat;
+	}
+	public static void setDificultat(String dificultat) {
+		Context.dificultat = dificultat;
+	}
+	
+	//METODES
 	public static Tauler crearTauler(String dificultat) {
-	int tamany = 0;
 	
 	switch(dificultat) {
-	case "f" -> tamany = 9;
-	case "n" -> tamany = 10;
-	case "d" -> tamany = 12;
-	default -> {dificultat = "n"; tamany = 10;}
+	case "f" -> {tamany = 9; comptador = tamany;}
+	case "n" -> {tamany = 10; comptador = tamany;}
+	case "d" -> {tamany = 15; comptador = tamany;}
+	default -> {dificultat = "n"; tamany = 10; comptador = tamany;}
 	}
+	System.out.println(comptador);
 	return new Tauler(tamany, tamany);
 
 	}	
 	
 	//OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public static Casella[][] assignarMines(Casella[][] c, int tamany, Random alea, String dificultat){
-		int nMines;
-		//decidir bombes
-		if(dificultat == "f") {
-			nMines=10;
-		} else if(dificultat == "d") {
-			nMines=15;
-		} else {
-			nMines=12;
-		}
+	public static Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat){
+//		int nMines;
+//		//decidir bombes
+//		if(dificultat == "f") {
+//			nMines=10;
+//		} else if(dificultat == "d") {
+//			nMines=15;
+//		} else {
+//			nMines=12;
+//		}
 		
 		//col·locar bombes
-		for(int b=0;b<nMines;) {
+		for(int b=0;b<comptador;) {
 			
 			int x = alea.nextInt(tamany);
 			int y = alea.nextInt(tamany);
@@ -137,11 +158,7 @@ public interface MetodeTauler {
 
 		return comptador;
 	}
-	
-	private void antimines() {
 		
-	}
-	
 	public static void buidar(Tauler t) {
 		Casella[][] c = t.getCaselles();
 		
@@ -152,6 +169,12 @@ public interface MetodeTauler {
 			}
 
 		}
+	}
+	
+	public static void disminuirComptador() {
+		comptador--;
+		//SampleController.CompAntimines.setText("Antimines\n"+comptador+"/"+tamany);
+		System.out.println(comptador);
 	}
 	
 }

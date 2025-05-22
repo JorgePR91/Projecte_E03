@@ -3,42 +3,25 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class SampleController implements Initializable {
+public class SampleController implements Initializable  {
 	@FXML
 	private GridPane taulerGrid;
-	@FXML
-	private Button reinici;
-	@FXML
-	private Label caixaTemps;
-	@FXML
-	private Label compAntimines;
-	
-	
 	private Tauler nouTauler;
-	//private Context context;
-	private int Mines;
 
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
 		nouTauler = Context.crearTauler("");
-		nouTauler.assignarMines(nouTauler.getCaselles(), Context.tamany, "n");
-		//this.context = new Context();
+		Context.ompllirLlenç(nouTauler.getCaselles());
 		nouGP(nouTauler.getCaselles());
-		Mines = Context.getComptador();
-		compAntimines.setText("Antimines\n"+Mines+"/"+Context.tamany);
-		
+
 	}
-	
 	public void nouGP(Casella[][] c) {
 		GridPane gp = this.taulerGrid;
 		
@@ -65,14 +48,4 @@ public class SampleController implements Initializable {
 			}
 		}
 	}
-
-	@FXML
-	public void reiniciar(ActionEvent e) {
-		
-		Context.buidar(this.nouTauler);
-		taulerGrid.getChildren().clear();
-		initialize(null, null);
-		
-	}
-	
 }

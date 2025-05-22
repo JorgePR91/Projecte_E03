@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<HBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
       <BorderPane fx:id="root" prefHeight="600.0" prefWidth="600.0">
          <top>
@@ -20,12 +20,12 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Label fx:id="temps" alignment="CENTER" prefHeight="82.0" prefWidth="207.0" style="-fx-border-color: red;" text="Temps" textAlignment="CENTER">
+                  <Label fx:id="cixaTemps" alignment="CENTER" prefHeight="82.0" prefWidth="207.0" style="-fx-border-color: red;" textAlignment="CENTER">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="antimines" alignment="CENTER" prefHeight="79.0" prefWidth="96.0" text="Antimines &#10;10/10" textAlignment="CENTER">
+                  <Label fx:id="compAntimines" alignment="CENTER" prefHeight="79.0" prefWidth="96.0" textAlignment="CENTER">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -36,9 +36,6 @@
                </padding>
             </HBox>
          </top>
-         <bottom>
-            <AnchorPane prefHeight="50.0" BorderPane.alignment="CENTER" />
-         </bottom>
          <right>
             <AnchorPane BorderPane.alignment="CENTER" />
          </right>
@@ -52,6 +49,14 @@
          <left>
             <AnchorPane BorderPane.alignment="CENTER" />
          </left>
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" text="Tornar" />
+                  <Button fx:id="abandonar" mnemonicParsing="false" text="Abandonar" />
+               </children>
+            </HBox>
+         </bottom>
       </BorderPane>
    </children>
 </HBox>

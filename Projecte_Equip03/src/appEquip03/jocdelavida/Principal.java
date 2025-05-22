@@ -41,4 +41,7 @@ vives que hi ha, així com les que s’han creat i han mort en total.
 		
 	}
 
+//	Si quieres pausar/reanudar el temporizador, puedes usar temporizador.pause() y temporizador.play().
+//
+//	Para reiniciarlo: segundos = 60; temporizador.playFromStart();
 }
