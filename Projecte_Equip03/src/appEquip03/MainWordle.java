@@ -14,9 +14,13 @@ public class MainWordle extends Application {
     public void start(Stage primaryStage) {
         try {
             stagePrincipal = primaryStage;
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+
+            //Afegir CSS
+            scene.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
             primaryStage.setTitle("Login");
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -26,6 +30,8 @@ public class MainWordle extends Application {
     }
 
     public static void canviarEscena(Scene novaEscena) {
+        //Aplicar CSS també quan es canvia d’escena
+        novaEscena.getStylesheets().add(MainWordle.class.getResource("applicationWordle.css").toExternalForm());
         stagePrincipal.setScene(novaEscena);
         stagePrincipal.show();
     }
