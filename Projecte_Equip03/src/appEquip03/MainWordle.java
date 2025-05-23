@@ -1,27 +1,36 @@
 package appEquip03;
-	
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.fxml.FXMLLoader;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
 
 public class MainWordle extends Application {
-	@Override
-	public void start(Stage primaryStage) {
-		try {
-			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("EscenaWordle.fxml"));
-			Scene scene = new Scene(root,500,500);
-			scene.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
+
+    private static Stage stagePrincipal;
+
+    @Override
+    public void start(Stage primaryStage) {
+        try {
+            stagePrincipal = primaryStage;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaLogin.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Login");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void canviarEscena(Scene novaEscena) {
+        stagePrincipal.setScene(novaEscena);
+        stagePrincipal.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
