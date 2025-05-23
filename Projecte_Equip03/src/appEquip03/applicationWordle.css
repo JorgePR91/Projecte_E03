@@ -1,23 +1,23 @@
 .root {
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #f594cd);
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-background-color:  #24747e;
 }
 
 .label {
     -fx-font-size: 16px;
-    -fx-text-fill: black;         
+    -fx-text-fill: white;         
     -fx-font-weight: bold;        
 }
 
 .button {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #45a049;
+    -fx-background-color: #ffffff;
 }
 
 .text-field {
