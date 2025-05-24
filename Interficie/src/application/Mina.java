@@ -86,8 +86,10 @@ public class Mina extends Casella implements AccioCasella {
 					antimines = !antimines;
 					// Lliure.this.getBoto().setDisable(!antimines);
 					Anti.setVisible(antimines);
+					if(antimines == true )
 					Context.disminuirComptador();
-					System.out.println("Estat del Antimines " + antimines);
+					else
+					Context.augmentarComptador();
 					e.consume();
 				}
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {

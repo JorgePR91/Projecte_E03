@@ -1,8 +1,11 @@
 package application;
 
 import java.net.URL;
+import java.util.EventListener;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,19 +27,21 @@ public class SampleController implements Initializable {
 	
 	
 	private Tauler nouTauler;
-	//private Context context;
-	private int Mines;
+	private IntegerProperty antiMines;
+	private String minMes;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
 		nouTauler = Context.crearTauler("");
 		nouTauler.assignarMines(nouTauler.getCaselles(), Context.tamany, "n");
 		//this.context = new Context();
 		nouGP(nouTauler.getCaselles());
-		Mines = Context.getComptador();
-		compAntimines.setText("Antimines\n"+Mines+"/"+Context.tamany);
+		antiMines = new SimpleIntegerProperty(Context.getComptador());
 		
+		antiMines.bind(Context.comptadorPropietat);
+		compAntimines.textProperty().bind(antiMines.asString());
+		//compAntimines.setText("Antimines\n"+antiMines.get()+"/"+Context.tamany);
+		Context.getComptador().addListener();
 	}
 	
 	public void nouGP(Casella[][] c) {

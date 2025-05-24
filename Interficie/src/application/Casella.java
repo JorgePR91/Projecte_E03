@@ -2,7 +2,6 @@ package application;
 
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
-//import javafx.scene.text.Text;
 
 public abstract class Casella {
 		protected boolean estat;

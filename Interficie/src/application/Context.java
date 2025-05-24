@@ -2,9 +2,13 @@ package application;
 
 import java.util.Random;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Context {
 		
 	protected static int comptador;
+	protected static IntegerProperty comptadorPropietat;
 	protected static String dificultat;
 	protected static int tamany = 0;
 	protected static Random alea = new Random();
@@ -23,7 +27,18 @@ public class Context {
 	public static void setDificultat(String dificultat) {
 		Context.dificultat = dificultat;
 	}
-	
+	public static IntegerProperty getComptadorPropietat() {
+		return comptadorPropietat;
+	}
+	public static void setComptadorPropietat(IntegerProperty comptadorPropietat) {
+		Context.comptadorPropietat = comptadorPropietat;
+	}
+	public static int getTamany() {
+		return tamany;
+	}
+	public static void setTamany(int tamany) {
+		Context.tamany = tamany;
+	}
 	//METODES
 	public static Tauler crearTauler(String dificultat) {
 	
@@ -33,7 +48,7 @@ public class Context {
 	case "d" -> {tamany = 15; comptador = tamany;}
 	default -> {dificultat = "n"; tamany = 10; comptador = tamany;}
 	}
-	System.out.println(comptador);
+	comptadorPropietat = new SimpleIntegerProperty(comptador);
 	return new Tauler(tamany, tamany);
 
 	}	
@@ -173,8 +188,13 @@ public class Context {
 	
 	public static void disminuirComptador() {
 		comptador--;
-		//SampleController.CompAntimines.setText("Antimines\n"+comptador+"/"+tamany);
-		System.out.println(comptador);
+		comptadorPropietat.set(comptador);
+		System.out.println(comptadorPropietat);
 	}
-	
+	public static void augmentarComptador() {
+		comptador++;
+		comptadorPropietat.set(comptador);
+		System.out.println(comptadorPropietat);
+
+	}
 }
