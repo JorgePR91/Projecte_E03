@@ -1,16 +1,25 @@
 package application;
 
 import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 public class SampleController implements Initializable {
 	@FXML
@@ -18,25 +27,54 @@ public class SampleController implements Initializable {
 	@FXML
 	private Button reinici;
 	@FXML
-	private Label caixaTemps;
+	private Pane caixaTemps;
 	@FXML
-	private Label compAntimines;
-	
+	private Pane compAntimines;
+	@FXML
+	private HBox capçalera;
+	@FXML
+	private Pane pantallaInici;
 	
 	private Tauler nouTauler;
-	//private Context context;
-	private int Mines;
-
+	private Timeline temps;
+	private Label cronometre;
+	private int segons;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		nouTauler = Context.crearTauler("");
-		nouTauler.assignarMines(nouTauler.getCaselles(), Context.tamany, "n");
-		//this.context = new Context();
-		nouGP(nouTauler.getCaselles());
-		Mines = Context.getComptador();
-		compAntimines.setText("Antimines\n"+Mines+"/"+Context.tamany);
+		caixaTemps.getChildren().clear();
+		compAntimines.getChildren().clear();
 		
+		Context context = new Context();
+		nouTauler = Context.crearTauler("");
+		context.assignarMines(nouTauler.getCaselles(), Context.tamany, "n");
+		nouGP(nouTauler.getCaselles());
+		segons = 0;
+
+		cronometre = new Label();
+		compAntimines.getChildren().add(Context.caixaMines);
+
+		caixaTemps.getChildren().add(cronometre);
+		Format formatter = new SimpleDateFormat("mm:ss");
+
+		temps = new Timeline(
+				new KeyFrame(Duration.seconds(1), e -> {
+					segons++;
+					cronometre.setText(formatter.format(segons*1000));
+					})
+				);
+		temps.setCycleCount(Timeline.INDEFINITE);
+		
+		pantallaInici.setPrefWidth(taulerGrid.getMinWidth());
+		pantallaInici.setPrefHeight(taulerGrid.getHeight());
+				
+			//ACABAR EL PROGRAMA I DIR EL RESULTAT
+			//temps.stop
+			//botons inhabilitats
+			//pulsar antimines inhabilitat
+			//pantallaInici.setMouseTransparent(false);
+
 	}
 	
 	public void nouGP(Casella[][] c) {
@@ -48,7 +86,7 @@ public class SampleController implements Initializable {
 	    gp.getColumnConstraints().clear();
 	    gp.getRowConstraints().clear();
 
-	    //Com les cree per bucle lògic, ho hem de fer i no en el SB
+	    //Com les cree per bucle lògic, ho hem de fer per ací i no en el SB
 	    for (int i = 0; i < c.length; i++) {
 	        ColumnConstraints cC = new ColumnConstraints();
 	        cC.setPercentWidth(100.0 / c.length);
@@ -65,14 +103,24 @@ public class SampleController implements Initializable {
 			}
 		}
 	}
+	public void finalitzar() {
+		
+	}
 
 	@FXML
 	public void reiniciar(ActionEvent e) {
-		
+		temps.stop();
 		Context.buidar(this.nouTauler);
 		taulerGrid.getChildren().clear();
+		pantallaInici.setVisible(true);
+		pantallaInici.setMouseTransparent(false);
 		initialize(null, null);
-		
 	}
-	
+	@FXML
+	public void iniciarJoc(MouseEvent e) {
+		pantallaInici.setVisible(false);
+		pantallaInici.setMouseTransparent(true);
+		temps.play();
+		e.consume();
+	}
 }

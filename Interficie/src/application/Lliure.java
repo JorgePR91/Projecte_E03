@@ -29,7 +29,8 @@ public class Lliure extends Casella implements AccioCasella {
 		recompte = 0;
 		frontera = false;
 		antimines = false;
-		Anti.setVisible(antimines);
+		Anti.setVisible(false);
+		Anti.setMouseTransparent(true);
 		super.setContingut(this.text);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
 		text.setVisible(!super.estat);
@@ -46,6 +47,7 @@ public class Lliure extends Casella implements AccioCasella {
 		this.frontera = true;
 		this.antimines = false;
 		this.Anti.setVisible(false);
+		Anti.setMouseTransparent(true);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
 		this.text.setVisible(!super.estat);
 		reaccio();
@@ -100,28 +102,30 @@ public class Lliure extends Casella implements AccioCasella {
 
 	@Override
 	public void reaccio() {
-		Anti.setMouseTransparent(true);
-	    boto.setOnMouseClicked(null);	    
-	    Anti.setOnMouseClicked(null);
+		boto.setOnMouseClicked(null);
+		Anti.setOnMouseClicked(null);
 
 		boto.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (e.getButton() == MouseButton.SECONDARY && (Context.getComptador()>0)) {
-					antimines = !antimines;
-					//Lliure.this.getBoto().setDisable(!antimines);
-					text.setVisible(!antimines);
-					Anti.setVisible(antimines);
-					Context.disminuirComptador();
-					e.consume();
-				} 
+				if (e.getButton() == MouseButton.SECONDARY) {
+					 if(!antimines && Context.disminuirComptador()) {
+							antimines = !antimines;
+							Anti.setVisible(antimines);
+							e.consume();
+						} else if (antimines && Context.augmentarComptador()) {
+							antimines = !antimines;
+							Anti.setVisible(antimines);
+							e.consume();
+						}
+				}
+
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {
 					despejar(Lliure.this, Lliure.this.c);
 					e.consume();
 				}
 			}
 		});
-		
 
 	}
 
@@ -155,7 +159,16 @@ public class Lliure extends Casella implements AccioCasella {
 	public boolean descobrir(Lliure l) {
 		boolean descoberta = false;
 
-		if (l instanceof Lliure && l.isEstat() == true) {
+		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
+
+			l.setEstat(false);
+			l.boto.setVisible(l.isEstat());
+			l.text.setVisible(true);
+			l.Anti.setVisible(false);
+			Context.augmentarComptador();
+			descoberta = true;
+			
+		} else if (l instanceof Lliure && l.isEstat() == true && !l.antimines) {
 
 			l.setEstat(false);
 			l.boto.setVisible(l.isEstat());

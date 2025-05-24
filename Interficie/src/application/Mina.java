@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 public class Mina extends Casella implements AccioCasella {
 	private Text element;
 	private boolean antimines;
-	private final Text Anti = new Text("(A)");
+	private final Text simbolAntimines = new Text("(A)");
 	private Button boto;
 	private Casella[][] c;
 
@@ -20,8 +20,9 @@ public class Mina extends Casella implements AccioCasella {
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		super.setContingut(this.element);
-		this.Anti.setVisible(false);
-		super.container.getChildren().addAll(this.boto, this.element, this.Anti);
+		this.simbolAntimines.setMouseTransparent(true);
+		this.simbolAntimines.setVisible(false);
+		super.container.getChildren().addAll(this.boto, this.element, this.simbolAntimines);
 		this.element.setVisible(!super.estat);
 		reaccio();
 	}
@@ -65,30 +66,31 @@ public class Mina extends Casella implements AccioCasella {
 	public void setC(Casella[][] c) {
 		this.c = c;
 	}
-	public Text getAnti() {
-		return Anti;
-	}
-	
-	// METODES
 
+	public Text getAnti() {
+		return simbolAntimines;
+	}
+
+	// METODES
 
 	@Override
 	public void reaccio() {
-		// ACCEDIR A LA MATRIU I AL GIRD
-		// COMPROVAR ELS ANTIMINES
-		// CAMVIAR L'ESTAT I LA VISIBILITAT
 		boto.setOnMouseClicked(null);
-		Anti.setOnMouseClicked(null);
+		simbolAntimines.setOnMouseClicked(null);
+		
 		boto.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (e.getButton() == MouseButton.SECONDARY && (Context.getComptador()>0)) {
-					antimines = !antimines;
-					// Lliure.this.getBoto().setDisable(!antimines);
-					Anti.setVisible(antimines);
-					Context.disminuirComptador();
-					System.out.println("Estat del Antimines " + antimines);
-					e.consume();
+				if (e.getButton() == MouseButton.SECONDARY) {
+					 if(!antimines && Context.disminuirComptador()) {
+							antimines = !antimines;
+							simbolAntimines.setVisible(antimines);
+							e.consume();
+						} else if (antimines && Context.augmentarComptador()) {
+							antimines = !antimines;
+							simbolAntimines.setVisible(antimines);
+							e.consume();
+						}
 				}
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {
 					for (Casella[] fila : c) {
@@ -101,18 +103,22 @@ public class Mina extends Casella implements AccioCasella {
 									l.getAnti().setVisible(false);
 									l.getText().setVisible(true);
 									// l.setAnti('imatge antimines fallit');
-								} else if(cas instanceof Mina && !((Mina) cas).isAntimines()){
+								} else if (cas instanceof Mina && !((Mina) cas).isAntimines()) {
 									Mina m = (Mina) cas;
 									m.getBoto().setVisible(false);
 									m.getAnti().setVisible(false);
 									m.getElement().setVisible(true);
 
 									// FER ROIG
+								} else {
+									Mina m = (Mina) cas;
+									m.boto.setMouseTransparent(true);
+									m.simbolAntimines.setMouseTransparent(true);
 								}
-
 							}
 						}
 					}
+				//	Context.finalitzar();
 					e.consume();
 				}
 
