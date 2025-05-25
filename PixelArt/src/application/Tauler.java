@@ -5,7 +5,7 @@ import java.util.Random;
 import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
 
-public class Tauler extends Context{
+public class Tauler extends ContextPixelArt{
 	Random alea = new Random();
 	private int l;
 	private int a;
