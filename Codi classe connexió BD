@@ -1,0 +1,166 @@
+package com.jorge.exercicisbd;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ConnexioBD implements Dades {
+	private static Connection connexio;
+
+	public Connection getConnexio() {
+		return connexio;
+	}
+
+	public static void setConnexio(Connection connexio) {
+		ConnexioBD.connexio = connexio;
+	}
+
+	public boolean connectarBD(String baseD) {
+
+ //SI ES VOL CREAR UNA CARPETA BD ON GUARDAR ELS ARXIUS DE LA BD.
+//		File BD = new File("BD");
+//		if (!BD.exists()) {
+//			BD.mkdir();
+//		} else if(BD.exists() && !BD.isDirectory()) {
+//			BD.mkdir();
+//		}
+
+//CONNEXIÓ AMB LOCALHOST SI CONEGUEM EL NOM DE LA BD 
+//TODO: FER QUE ES CREE AUTOMÀTICAMENT UN USUARI AMB PERMISSOS COMPLETS
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String url = "jdbc:mariadb://localhost:3306/" + baseD;
+			String usuari = "root";
+			String contrasenya = "root";
+			connexio = DriverManager.getConnection(url, usuari, contrasenya);
+
+			System.out.println("Connexió establerta amb la base de dades: " + baseD);
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.getException();
+			return false;
+		} catch (SQLException e) {
+			System.err.println("Error SQL: "+e.getMessage());
+			return false;
+		}
+
+	}
+
+//CONNEXIÓ AMB LOCALHOST SI NO CONEGUEM EL NOM DE LA BD, SE LI HA DE PASSAR L'SCRIPT EN FORMAT STRING
+//TODO: FER QUE ES CREE AUTOMÀTICAMENT UN USUARI AMB PERMISSOS COMPLETS
+	public boolean connectarScriptBD(String script) {
+		String url = "jdbc:mariadb://localhost:3306/";
+		String[] aux = script.split(";");
+		String usuari = "root";
+		String contrasenya = "root";
+
+		try (Connection c = DriverManager.getConnection(url, usuari, contrasenya); 
+				Statement s = c.createStatement();) {
+			ConnexioBD.connexio = c;
+			Class.forName("org.mariadb.jdbc.Driver");
+			
+			for(String line : aux) {
+				s.executeUpdate(line+";");
+			}
+			System.out.println("Base de dades creada amb script.");
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.getException();
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+//MÈTODE PER A AFEGIR DADES, S'HA DE MILLORAR EL CONTROL DE CARÀCTERS AMB REGEX
+public boolean afegirDada(String taula, String camps, String linia) {
+		
+		int ncamps = camps.replaceAll("[^,]", "").length();
+		String sentencia = "INSERT INTO " + taula + "("+ camps+") VALUES (" + "?,".repeat(ncamps)+"?);";
+	
+		try (PreparedStatement ps = connexio.prepareStatement(sentencia);){
+			String[] aux = linia.split(",");
+			for(int p = 0; p<=ncamps; p++) {
+
+				if(aux[p].matches("^\\d+[^,]$")) {
+					ps.setInt(p+1, Integer.parseInt(aux[p]));
+				} else if (aux[p].matches("^\\d+,\\d$")) {
+					ps.setDouble(p+1, Double.parseDouble(aux[p]));
+				} else 
+				ps.setString(p+1, aux[p]);
+			}
+			
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} 
+
+	}
+
+//MÈTODE PER A SELECCIONAR UNA TAULA CONCRETA DE LA BD
+	public void mostrarFilaBD(String taula) {
+
+		String sentencia = "SELECT * FROM "+taula+";";
+
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); ResultSet res = s.executeQuery(sentencia);){
+
+			ResultSetMetaData rsm = res.getMetaData();
+			
+			int i = 0;
+
+			while (res.next()) {
+				i = 0;
+
+				while (i < rsm.getColumnCount()) {
+					i++;
+					String columna = rsm.getColumnName(i);
+
+					if (i != rsm.getColumnCount())
+						System.out.print(Dades.inicialsMaj(columna)+": "+ res.getString(columna) + ", ");
+					else
+						System.out.println(Dades.inicialsMaj(columna)+": "+ res.getString(columna));
+				}
+			}
+
+			if (i == 0) {
+				System.err.println("La base de dades està buida");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
+
+	//MÈTODE PER A EVITAR DUPLICATS A LHORA D'INTRODUÏR DADES (NO SÉ SI FUNCIONA CORRECTAMENT)
+	public boolean evitarDuplicats(String taula, String camp, String pk) {
+		
+		String sentencia = "DELETE FROM "+ taula+" WHERE "+camp+"="+pk+";";
+		
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+			int res = s.executeUpdate(sentencia);
+			 if(res>0) {
+				 System.out.println("Eliminada ciutat amb "+camp+": "+pk);
+				 return true;
+			 }
+			 else
+				 return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+//TANCAR BD
+	public void tancarBD() throws SQLException {
+		if (connexio != null) {
+			connexio.close();
+		}
+	}
+	
