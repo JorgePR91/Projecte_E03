@@ -80,7 +80,7 @@ public class SampleController implements Initializable {
 	};
 	@FXML
 	public void esborrarLlenç() {
-		
+		nouTauler.getCaselles();
 	};
 	@FXML
 	public void enrrere() {};

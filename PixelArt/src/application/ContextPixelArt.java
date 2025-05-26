@@ -107,12 +107,14 @@ public class ContextPixelArt {
 
 	}
 
-	public static void pintar(Node n) {
+	public static void pintar(Node n, Pixel l) {
 		String c = "#"+color.toString().substring(color.toString().indexOf("x") + 1);
 		
 		n.setOnMousePressed(e->{
 			if(e.getButton() == MouseButton.PRIMARY) {
 				n.setStyle("-fx-background-color: " + c + ";");
+			} else if(e.getButton() == MouseButton.SECONDARY) {
+				n.setStyle("-fx-background-color: " + l.base + ";");
 			}
 			e.consume();
 		});
@@ -126,6 +128,8 @@ public class ContextPixelArt {
 
 			if(e.isPrimaryButtonDown()) {
 				n.setStyle("-fx-background-color: " + c + ";");
+			} else if(e.isSecondaryButtonDown()) {
+				n.setStyle("-fx-background-color: " + l.x + ";");
 			}
 			e.consume();
 		});

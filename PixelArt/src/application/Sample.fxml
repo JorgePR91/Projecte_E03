@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <center>
-            <GridPane fx:id="taulerGrid" prefHeight="361.0" prefWidth="299.0" BorderPane.alignment="CENTER">
+            <GridPane fx:id="taulerGrid" prefHeight="361.0" prefWidth="299.0" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor></GridPane>
