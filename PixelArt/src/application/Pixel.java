@@ -14,7 +14,7 @@ public class Pixel extends Casella {
 		super(x, y);
 		px = new AnchorPane();
 		//base = new StackPane();
-		base = perDefecte(this, x,y);
+		base = ContextPixelArt.perDefecte(this, x,y);
 		px.setStyle("-fx-background-color: #" + base.toString().substring(base.toString().indexOf("x") + 1)
 		+ ";");
 
@@ -25,13 +25,7 @@ public class Pixel extends Casella {
 		
 	}
 	
-	public static Color perDefecte(Pixel p, int x, int y) {
 
-	if((x+y)%2==0)
-		return Color.LIGHTGREY;
-	 else 
-		 return Color.WHITE;
-	}
 	
 
 }

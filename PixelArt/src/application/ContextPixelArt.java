@@ -10,10 +10,12 @@ public class ContextPixelArt {
 
 	protected static int comptador;
 	protected static Color color;
+	protected static boolean borrador;
 	protected static int tamany = 0;
 	protected static Random alea = new Random();
 	static {
 		color = Color.BLACK;
+		borrador = false;
 	}
 
 	// GETTERS I SETTERS
@@ -111,10 +113,10 @@ public class ContextPixelArt {
 		String c = "#"+color.toString().substring(color.toString().indexOf("x") + 1);
 		
 		n.setOnMousePressed(e->{
-			if(e.getButton() == MouseButton.PRIMARY) {
+			if(e.getButton() == MouseButton.PRIMARY && !borrador) {
 				n.setStyle("-fx-background-color: " + c + ";");
 			} else if(e.getButton() == MouseButton.SECONDARY) {
-				n.setStyle("-fx-background-color: " + l.base + ";");
+				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
 			}
 			e.consume();
 		});
@@ -126,14 +128,20 @@ public class ContextPixelArt {
 		
 		n.setOnMouseDragEntered(e-> {
 
-			if(e.isPrimaryButtonDown()) {
+			if(e.isPrimaryButtonDown() && !borrador) {
 				n.setStyle("-fx-background-color: " + c + ";");
 			} else if(e.isSecondaryButtonDown()) {
-				n.setStyle("-fx-background-color: " + l.x + ";");
+				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
 			}
 			e.consume();
 		});
 	}
+	public static Color perDefecte(Pixel p, int x, int y) {
 
+	if((x+y)%2==0)
+		return Color.LIGHTGREY;
+	 else 
+		 return Color.WHITE;
+	}
 
 }
