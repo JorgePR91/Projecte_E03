@@ -135,4 +135,13 @@ public class SampleController implements Initializable {
 		temps.play();
 		e.consume();
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		
+		
+		
+		super.finalize();
+	}
+	
 }
