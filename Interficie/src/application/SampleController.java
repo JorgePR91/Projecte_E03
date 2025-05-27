@@ -114,6 +114,7 @@ public class SampleController implements Initializable {
 	public void guardarPartida() {
 		//SERIALIZED
 		//https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
+		
 		//UTILITZAR CLASSE
 		//ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
