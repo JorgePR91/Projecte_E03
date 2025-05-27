@@ -1,0 +1,53 @@
+
+CREATE DATABASE IF NOT EXISTS PROJECTEPROG;
+USE PROJECTEPROG;
+# usuaris registrats (id_nom, nom, cognoms, imatge, població, correu electrònic, salt, contrasenya)
+CREATE TABLE USUARIS (
+  usuari VARCHAR(50),
+  nom VARCHAR(50),
+  cognoms VARCHAR(150),
+  imatge VARCHAR(150),
+  poblacio VARCHAR(50),
+  email VARCHAR(50),
+  salt VARCHAR(4),
+  contrasenya VARCHAR(100),
+
+PRIMARY KEY nom;
+);
+
+#Pixel art(id_nom, mida, dibuix, data de guardat)
+CREATE TABLE PIXELART (
+  usuari VARCHAR(50) PRIMARY KEY,
+  mida INTEGER,
+#OPTEM PER LA URL DE LA IMATGE, SINÓ LA PODRIEM CONVERTIR A BLOB I GUARDAR-LA
+  imatge VARCHAR(150),
+  data DATE,
+
+FOREING KEY usuari REFERENCES USUARIS(usuari);
+);
+
+#Partida_pescamines(id_nom, matriu, temps)
+CREATE TABLE PARTIDES_PESCAMINES (
+  id_partida INTEGER AUTO_INCREMENT,
+  usuari VARCHAR(50),
+  partida JAVA_OBJECT,
+  temps TIME,
+  data DATE,
+
+FOREING KEY usuari REFERENCES USUARIS(usuari),
+PRIMARY KEY(usuari,id_partida);
+);
+
+#Ranking_Pecamines( id_nom, el nivell, el temps)
+CREATE TABLE RANKING_PESCAMINES (
+  id_partida INTEGER AUTO_INCREMENT,
+  usuari VARCHAR(50),
+  partida JAVA_OBJECT,
+  temps TIME,
+  data DATE,
+
+FOREING KEY usuari REFERENCES USUARIS(usuari),
+PRIMARY KEY(usuari,id_partida);
+);
+
+#woodle(if_nom, informacio de la partida: guanyada o perduda, acerts, errors, datade partida)
