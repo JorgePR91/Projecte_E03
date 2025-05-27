@@ -1,53 +1,57 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS `ProjectProg` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `ProjectProg`;
 
-CREATE DATABASE IF NOT EXISTS PROJECTEPROG;
-USE PROJECTEPROG;
 # usuaris registrats (id_nom, nom, cognoms, imatge, població, correu electrònic, salt, contrasenya)
-CREATE TABLE USUARIS (
-  usuari VARCHAR(50),
-  nom VARCHAR(50),
-  cognoms VARCHAR(150),
-  imatge VARCHAR(150),
-  poblacio VARCHAR(50),
-  email VARCHAR(50),
-  salt VARCHAR(4),
-  contrasenya VARCHAR(100),
-
-PRIMARY KEY nom;
-);
+CREATE TABLE `usuaris` (
+  `usuari` VARCHAR(50) PRIMARY KEY,
+  `nom` VARCHAR(50) NOT NULL,
+  `cognoms` VARCHAR(150) NOT NULL,
+  `imatge` VARCHAR(150) NOT NULL,
+  `poblacio` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `salt` VARCHAR(4) NOT NULL,
+  `contrasenya` VARCHAR(100) NOT NULL,
+ -- `dataInsercio` date DEFAULT CURRENT_TIMESTAMP 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 #Pixel art(id_nom, mida, dibuix, data de guardat)
-CREATE TABLE PIXELART (
-  usuari VARCHAR(50) PRIMARY KEY,
-  mida INTEGER,
+CREATE TABLE `pixelart` (
+  `id_llenc` INTEGER AUTO_INCREMENT,
+  `usuari` VARCHAR(50) NOT NULL,
+  `mida` INTEGER NOT NULL,
 #OPTEM PER LA URL DE LA IMATGE, SINÓ LA PODRIEM CONVERTIR A BLOB I GUARDAR-LA
-  imatge VARCHAR(150),
-  data DATE,
+  `imatge` VARCHAR(150) NOT NULL,
+ -- `dataInsercio` date DEFAULT CURRENT_TIMESTAMP 
 
-FOREING KEY usuari REFERENCES USUARIS(usuari);
+PRIMARY KEY(`usuari`,`id_partida`);
+FOREING KEY `usuari` REFERENCES `usuaris`(`usuari`);
 );
 
 #Partida_pescamines(id_nom, matriu, temps)
-CREATE TABLE PARTIDES_PESCAMINES (
-  id_partida INTEGER AUTO_INCREMENT,
-  usuari VARCHAR(50),
-  partida JAVA_OBJECT,
-  temps TIME,
-  data DATE,
+CREATE TABLE `Partida_pescamines`(
+  `id_partida` INTEGER AUTO_INCREMENT,
+  `usuari` VARCHAR(50) NOT NULL,
+  `partida` JAVA_OBJECT NOT NULL,
+  `temps` TIME,
+ -- `dataInsercio` date DEFAULT CURRENT_TIMESTAMP 
 
-FOREING KEY usuari REFERENCES USUARIS(usuari),
-PRIMARY KEY(usuari,id_partida);
+PRIMARY KEY(`usuari`,`id_partida`);
+FOREING KEY `usuari` REFERENCES `usuaris`(`usuari`);
 );
 
 #Ranking_Pecamines( id_nom, el nivell, el temps)
-CREATE TABLE RANKING_PESCAMINES (
-  id_partida INTEGER AUTO_INCREMENT,
-  usuari VARCHAR(50),
-  partida JAVA_OBJECT,
-  temps TIME,
-  data DATE,
-
-FOREING KEY usuari REFERENCES USUARIS(usuari),
-PRIMARY KEY(usuari,id_partida);
+CREATE TABLE `ranking_pecamines` (
+  `id_partida` INTEGER AUTO_INCREMENT,
+  `usuari` VARCHAR(50) NOT NULL,
+`dificultat` VARCHAR(10) NOT NULL,
+  `temps` TIME,
+ -- `dataInsercio` date DEFAULT CURRENT_TIMESTAMP
+ 
+PRIMARY KEY(`usuari`,`id_partida`);
+FOREING KEY `usuari` REFERENCES `usuaris`(`usuari`);
 );
 
 #woodle(if_nom, informacio de la partida: guanyada o perduda, acerts, errors, datade partida)
