@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Button?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerInici"
-      alignment="CENTER" spacing="20" style="-fx-padding: 40;" prefWidth="600" prefHeight="600">
+      alignment="CENTER" spacing="20" style="-fx-padding: 40;" prefWidth="600" prefHeight="500">
 
     <ImageView fx:id="imatgeTitol" fitWidth="500" preserveRatio="true"/>
 
