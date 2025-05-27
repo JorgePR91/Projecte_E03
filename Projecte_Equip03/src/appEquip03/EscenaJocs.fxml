@@ -13,7 +13,7 @@
       prefWidth="600"
       prefHeight="500">
 
-    <Button fx:id="botoWordle" text="Jugar al Wordle" onAction="#anarWordle">
+    <Button fx:id="botoWordle" onAction="#anarWordle">
         <graphic>
             <ImageView fitWidth="200" preserveRatio="true">
                 <image>
@@ -23,7 +23,7 @@
         </graphic>
     </Button>
 
-    <Button fx:id="botoPescamines" text="Jugar al Pescamines" onAction="#anarPescamines">
+    <Button fx:id="botoPescamines" onAction="#anarPescamines">
         <graphic>
             <ImageView fitWidth="200" preserveRatio="true">
                 <image>
@@ -33,7 +33,7 @@
         </graphic>
     </Button>
 
-    <Button fx:id="botoJocVida" text="Jugar al Joc de la Vida" onAction="#anarJocVida">
+    <Button fx:id="botoJocVida" onAction="#anarJocVida">
         <graphic>
             <ImageView fitWidth="200" preserveRatio="true">
                 <image>
@@ -43,7 +43,7 @@
         </graphic>
     </Button>
 
-    <Button fx:id="botoPixelArt" text="Jugar al PixelArt" onAction="#anarPixelArt">
+    <Button fx:id="botoPixelArt" onAction="#anarPixelArt">
         <graphic>
             <ImageView fitWidth="200" preserveRatio="true">
                 <image>

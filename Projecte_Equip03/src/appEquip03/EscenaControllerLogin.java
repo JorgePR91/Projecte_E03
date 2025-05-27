@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -21,6 +23,13 @@ public class EscenaControllerLogin {
     @FXML private PasswordField contrasenyaField;
     @FXML private Button registrarBtn;
     @FXML private Button loginBtn;
+    @FXML private ImageView loginImage;
+    
+    @FXML
+    public void initialize() {
+        Image image = new Image(getClass().getResource("/login.png").toExternalForm());
+        loginImage.setImage(image);
+    }
 
     private Connection connectar() throws Exception {
         String url = "jdbc:mysql://localhost:3306/ProjecteProg"; // Nom de la BBDD
@@ -31,17 +40,17 @@ public class EscenaControllerLogin {
 
     @FXML
     private void registrarUsuari() {
-        try (Connection conn = connectar()) {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO usuaris (usuari, contrasenya) VALUES (?, ?)");
-            ps.setString(1, usuariField.getText());
-            ps.setString(2, contrasenyaField.getText());
-            ps.executeUpdate();
-            mostrarMissatge("Usuari registrat correctament.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaRegistre.fxml"));
+            Parent root = loader.load();
+            Scene escenaRegistre = new Scene(root);
+            MainWordle.canviarEscena(escenaRegistre);
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarMissatge("Error al registrar: " + e.getMessage());
+            mostrarMissatge("Error al obrir la finestra de registre: " + e.getMessage());
         }
     }
+
 
     @FXML
     private void validarLogin() {
@@ -56,7 +65,7 @@ public class EscenaControllerLogin {
                 Scene novaEscena = new Scene(root);
                 MainWordle.canviarEscena(novaEscena);
             } else {
-                mostrarMissatge("Credencials incorrectes.");
+                mostrarMissatge("Aquest usuari no esta registrat.");
             }
         } catch (Exception e) {
             e.printStackTrace();

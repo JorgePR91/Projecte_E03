@@ -3,9 +3,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerLogin"
       spacing="15" alignment="CENTER" prefWidth="600" prefHeight="500" style="-fx-padding: 20;">
+      
+    <ImageView fx:id="loginImage" fitWidth="300" preserveRatio="true" />
     <Label text="Usuari"/>
     <TextField fx:id="usuariField" promptText="Usuari"/>
     <Label text="Contrasenya"/>
