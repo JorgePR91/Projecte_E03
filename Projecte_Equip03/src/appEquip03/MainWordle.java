@@ -2,9 +2,9 @@ package appEquip03;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
 
 public class MainWordle extends Application {
 
@@ -14,15 +14,16 @@ public class MainWordle extends Application {
     public void start(Stage primaryStage) {
         try {
             stagePrincipal = primaryStage;
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 600, 500);
 
-            //Afegir CSS
             scene.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
             primaryStage.setTitle("Login");
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false); // Opcional: evitar redimensionar
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,10 +31,13 @@ public class MainWordle extends Application {
     }
 
     public static void canviarEscena(Scene novaEscena) {
-        //Aplicar CSS també quan es canvia d’escena
         novaEscena.getStylesheets().add(MainWordle.class.getResource("applicationWordle.css").toExternalForm());
         stagePrincipal.setScene(novaEscena);
         stagePrincipal.show();
+    }
+
+    public static Stage getStagePrincipal() {
+        return stagePrincipal;
     }
 
     public static void main(String[] args) {
