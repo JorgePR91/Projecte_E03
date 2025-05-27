@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
@@ -8,7 +9,6 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import java.util.EventListener;
-import java.util.ResourceBundle;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -79,7 +79,10 @@ public class SampleController implements Initializable {
 			//botons inhabilitats
 			//pulsar antimines inhabilitat
 			//pantallaInici.setMouseTransparent(false);
-
+		
+		Context.partida.addListener((obs,oldval,newval)->{
+				acabarPartida();
+		});
 	}
 	
 	public void nouGP(Casella[][] c) {
@@ -108,9 +111,18 @@ public class SampleController implements Initializable {
 			}
 		}
 	}
-	public void finalitzar() {
-		
-	}
+//    @FXML
+//    private void tornarEnrere() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaLogin.fxml"));
+//            Parent root = loader.load();
+//            Scene escenaLogin = new Scene(root);
+//            MainWordle.canviarEscena(escenaLogin);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            mostrarMissatge("No s'ha pogut tornar a l'inici.");
+//        }
+//    }
 	public void guardarPartida() {
 		//SERIALIZED
 		//https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
@@ -135,13 +147,27 @@ public class SampleController implements Initializable {
 		temps.play();
 		e.consume();
 	}
+	public void acabarPartida() {
+		temps.stop();
+		try {
+			ConnexioBD.connectarBD();
+			if(Context.comptador == 0 && Context.lliures == 0) {
+				String[] camps = {"usuari", "dificultat", "temps"};
+				String[] valors = {"usuari", Context.dificultat, temps.toString()};
 
-	@Override
-	protected void finalize() throws Throwable {
+				ConnexioBD.afegirDada("ranking_pescamines", camps, valors);
+			}
+			ConnexioBD.tancarBD();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		//ACABAR EL PROGRAMA I DIR EL RESULTAT
+		//
+		//botons inhabilitats
+		//pulsar antimines inhabilitat
+		//pantallaInici.setMouseTransparent(false);
 		
-		
-		
-		super.finalize();
 	}
 	
 }

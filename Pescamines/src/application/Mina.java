@@ -1,12 +1,14 @@
 package application;
 
+import java.io.Serializable;
+
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
-public class Mina extends Casella implements AccioCasella {
+public class Mina extends Casella implements AccioCasella, Serializable {
 	private Text element;
 	private boolean antimines;
 	private final Text simbolAntimines = new Text("(A)");
@@ -118,7 +120,7 @@ public class Mina extends Casella implements AccioCasella {
 							}
 						}
 					}
-				//	Context.finalitzar();
+					Context.partida.set(false);
 					e.consume();
 				}
 

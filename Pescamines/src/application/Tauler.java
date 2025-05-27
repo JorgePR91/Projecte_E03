@@ -1,11 +1,12 @@
 package application;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 
-public class Tauler extends Context {
+public class Tauler extends Context implements Serializable {
 	Random alea = new Random();
 	private int l;
 	private int a;

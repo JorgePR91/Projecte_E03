@@ -1,5 +1,7 @@
 package application;
 
+import java.io.Serializable;
+
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
@@ -7,7 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class Lliure extends Casella implements AccioCasella {
+public class Lliure extends Casella implements AccioCasella, Serializable {
 
 	private boolean frontera;
 	private int recompte;

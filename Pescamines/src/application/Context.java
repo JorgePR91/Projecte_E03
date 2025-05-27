@@ -1,19 +1,24 @@
 package application;
 
+import java.util.Properties;
 import java.util.Random;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
 public class Context {
 
 	protected static int comptador;
-	protected static boolean jugant;
+	protected static BooleanProperty partida = new SimpleBooleanProperty();
 	protected static int mines;
+	protected static int lliures;
 	protected static Label caixaMines;
 	protected static String dificultat;
 	protected static int tamany;
 	protected static Random alea = new Random();
 
+	
 	// GETTERS I SETTERS
 	public static int getComptador() {
 		return comptador;
@@ -55,14 +60,6 @@ public class Context {
 		Context.alea = alea;
 	}
 	
-	public static boolean isJugant() {
-		return jugant;
-	}
-
-	public static void setJugant(boolean jugant) {		
-		Context.jugant = jugant;
-	}
-
 	public static Label getCaixaMines() {
 		return caixaMines;
 	}
@@ -94,10 +91,10 @@ public class Context {
 		}
 		}
 		comptador = mines;
-
+		partida.set(true);
 		caixaMines = new Label();
 		caixaMines.setText("Antimines\n"+Context.comptador+"/"+Context.tamany);
-
+		
 		return new Tauler(tamany, tamany);
 	}
 
@@ -135,7 +132,7 @@ public class Context {
 						c[o][m] = new Lliure(nombre, o, m, c);
 					else
 						c[o][m] = new Lliure(o, m, c);
-
+					lliures++;
 				}
 			}
 		}
