@@ -11,7 +11,7 @@ public class EscenaControllerInici {
 
     @FXML
     private ImageView imatgeTitol;
-
+   
     @FXML
     public void initialize() {
         Image img = new Image(getClass().getResourceAsStream("/interf4ce.png"));

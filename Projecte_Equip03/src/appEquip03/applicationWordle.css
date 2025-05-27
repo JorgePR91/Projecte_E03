@@ -13,7 +13,7 @@
 }
 
 .button {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #c20404;
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-cursor: hand;
@@ -21,6 +21,7 @@
 
 .button:hover {
     -fx-background-color: #ffffff;
+    -fx-opacity: 0.2;
 }
 
 .text-field {

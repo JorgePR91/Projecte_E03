@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerRegistre"
+      alignment="CENTER" spacing="10" style="-fx-padding: 30;" prefWidth="600" prefHeight="500">
+	
+	<ImageView fx:id="formImage" fitWidth="300" preserveRatio="true" />
+    <TextField fx:id="usuariField" promptText="Usuari"/>
+    <TextField fx:id="nomField" promptText="Nom"/>
+    <TextField fx:id="cognomsField" promptText="Cognoms"/>
+    <TextField fx:id="poblacioField" promptText="Població"/>
+    <TextField fx:id="correuField" promptText="Correu electrònic"/>
+    <TextField fx:id="imatgeField" promptText="Nom de la imatge (ex: avatar.png)"/>
+    <PasswordField fx:id="contrasenyaField" promptText="Contrasenya"/>
+
+    <HBox spacing="10">
+        <Button text="Registrar" onAction="#processarRegistre"/>
+        <Button text="Tornar" onAction="#tornarEnrere"/>
+    </HBox>
+</VBox>
