@@ -1,56 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="appEquip03.EscenaControllerJocs"
-      alignment="CENTER"
-      spacing="20"
-      style="-fx-padding: 40;"
-      prefWidth="600"
-      prefHeight="500">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="appEquip03.EscenaControllerJocs"
+            prefWidth="600" prefHeight="500"
+            style="-fx-padding: 20;">
 
-    <Button fx:id="botoWordle" onAction="#anarWordle">
-        <graphic>
-            <ImageView fitWidth="200" preserveRatio="true">
-                <image>
-                    <Image url="/p4r4ul4d4.png"/>
-                </image>
-            </ImageView>
-        </graphic>
-    </Button>
+    <!-- Zona superior amb usuari i logout -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+            <Label fx:id="nomUsuariLabel" text="Usuari: " />
+            <Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
+        </HBox>
+    </top>
 
-    <Button fx:id="botoPescamines" onAction="#anarPescamines">
-        <graphic>
-            <ImageView fitWidth="200" preserveRatio="true">
-                <image>
-                    <Image url="/busc4min4.png"/>
-                </image>
-            </ImageView>
-        </graphic>
-    </Button>
+    <!-- Centre amb els botons -->
+    <center>
+        <VBox alignment="CENTER" spacing="30">
+            <HBox spacing="30" alignment="CENTER">
+                <Button fx:id="botoWordle" onAction="#anarWordle">
+                    <graphic>
+                        <ImageView fitWidth="200" preserveRatio="true">
+                            <image>
+                                <Image url="/p4r4ul4d4.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
 
-    <Button fx:id="botoJocVida" onAction="#anarJocVida">
-        <graphic>
-            <ImageView fitWidth="200" preserveRatio="true">
-                <image>
-                    <Image url="/jug4vid4.png"/>
-                </image>
-            </ImageView>
-        </graphic>
-    </Button>
+                <Button fx:id="botoPescamines" onAction="#anarPescamines">
+                    <graphic>
+                        <ImageView fitWidth="200" preserveRatio="true">
+                            <image>
+                                <Image url="/busc4min4.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
 
-    <Button fx:id="botoPixelArt" onAction="#anarPixelArt">
-        <graphic>
-            <ImageView fitWidth="200" preserveRatio="true">
-                <image>
-                    <Image url="/pixel4rt.png"/>
-                </image>
-            </ImageView>
-        </graphic>
-    </Button>
+            <HBox spacing="30" alignment="CENTER">
+                <Button fx:id="botoJocVida" onAction="#anarJocVida">
+                    <graphic>
+                        <ImageView fitWidth="200" preserveRatio="true">
+                            <image>
+                                <Image url="/jug4vid4.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
 
-</VBox>
+                <Button fx:id="botoPixelArt" onAction="#anarPixelArt">
+                    <graphic>
+                        <ImageView fitWidth="200" preserveRatio="true">
+                            <image>
+                                <Image url="/pixel4rt.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
