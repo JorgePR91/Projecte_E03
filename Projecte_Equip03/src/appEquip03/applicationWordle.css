@@ -1,6 +1,9 @@
 .root {
     -fx-font-family: "Montserrat", sans-serif;
     -fx-background-color:  #24747e;
+    -fx-background-image: url("/backgr.png");
+    -fx-background-size: cover;
+    -fx-opacity: 1;
 }
 
 .label {
@@ -26,3 +29,4 @@
     -fx-border-radius: 3;
     -fx-padding: 5 10 5 10;
 }
+
