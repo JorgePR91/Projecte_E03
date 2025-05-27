@@ -45,7 +45,7 @@ CREATE TABLE `partida_pescamines` (
 CREATE TABLE `ranking_pescamines` (
   `id_ranking` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
-  -- `dificultat` ENUM('facil', 'mitja', 'dificil') NOT NULL,
+  `dificultat` ENUM('facil', 'normal', 'difícil') NOT NULL,
   `temps` TIME NOT NULL,
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
