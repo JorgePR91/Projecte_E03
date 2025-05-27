@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <center>
@@ -46,8 +46,6 @@
                         </ColorPicker>
                         <Button fx:id="pinzell" mnemonicParsing="false" onAction="#pintarLlenç" text="Pinzell" />
                         <Button fx:id="esborrar" mnemonicParsing="false" onAction="#esborrarLlenç" text="Esborrar" />
-                        <Button fx:id="undo" mnemonicParsing="false" onAction="#enrrere" text="enrrere" />
-                        <Button fx:id="avant" mnemonicParsing="false" onAction="#avant" text="avant" />
                         <Button fx:id="guardar" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
                     </buttons>
                      <opaqueInsets>

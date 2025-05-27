@@ -73,21 +73,27 @@ public class SampleController implements Initializable {
 	@FXML
 	public void pintarLlenç() {
 		ContextPixelArt.setColor(color.getValue());
+		if(ContextPixelArt.borrador)
+			ContextPixelArt.borrador = false;
 	};
 	@FXML
 	public void netejarLlenç() {
-		
+		ContextPixelArt.buidar(nouTauler);
+		initialize(null, null);
 	};
 	@FXML
 	public void esborrarLlenç() {
-		nouTauler.getCaselles();
+		ContextPixelArt.borrador = !ContextPixelArt.borrador;
 	};
 	@FXML
-	public void enrrere() {};
-	@FXML
-	public void avant() {};
-	@FXML
-	public void guardar() {};
+	public void guardar() {
+		//https://www.delftstack.com/es/howto/java/create-a-bitmap-image-in-java/
+		//SERIALITZAR PER A DESAR EL PROJECTE
+		//FER MAPA DE BITS PER A EXPORTAR
+		
+		
+		//A LA CLASSE CLAVAR CARPETA: O EN EL PROJECTE O EN DOCUMENTS(I SI FALLA EN EL PROJECTE
+	};
 	@Override
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub

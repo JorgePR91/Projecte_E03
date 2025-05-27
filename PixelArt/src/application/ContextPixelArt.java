@@ -113,11 +113,16 @@ public class ContextPixelArt {
 		String c = "#"+color.toString().substring(color.toString().indexOf("x") + 1);
 		
 		n.setOnMousePressed(e->{
-			if(e.getButton() == MouseButton.PRIMARY && !borrador) {
+			if(borrador) {
+				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
+			}else {
+				if(e.getButton() == MouseButton.PRIMARY) {
 				n.setStyle("-fx-background-color: " + c + ";");
 			} else if(e.getButton() == MouseButton.SECONDARY) {
 				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
 			}
+			}
+			
 			e.consume();
 		});
 		
@@ -127,12 +132,14 @@ public class ContextPixelArt {
 		});
 		
 		n.setOnMouseDragEntered(e-> {
-
-			if(e.isPrimaryButtonDown() && !borrador) {
+			if(borrador) {
+				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
+			}else {
+			if(e.isPrimaryButtonDown()) {
 				n.setStyle("-fx-background-color: " + c + ";");
 			} else if(e.isSecondaryButtonDown()) {
 				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
-			}
+			}}
 			e.consume();
 		});
 	}
