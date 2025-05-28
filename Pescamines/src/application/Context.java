@@ -72,20 +72,20 @@ public class Context {
 	public static Tauler crearTauler(String dificultat) {
 
 		switch (dificultat) {
-		case "f" -> {
+		case "fàcil" -> {
 			tamany = 9;
 			mines = tamany;
 		}
-		case "n" -> {
+		case "normal" -> {
 			tamany = 10;
 			mines = tamany;
 		}
-		case "d" -> {
+		case "difícil" -> {
 			tamany = 15;
 			mines = tamany;
 		}
 		default -> {
-			dificultat = "n";
+			dificultat = "normal";
 			tamany = 10;
 			mines = tamany;
 		}

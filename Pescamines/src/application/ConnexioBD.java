@@ -25,12 +25,12 @@ public class ConnexioBD {
 	public static void connectarBD() throws SQLException {
 
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/ProjecteProg";
+			Class.forName("org.mariadb.jdbc.Driver");
+			String url = "jdbc:mariadb://localhost:3306/ProjecteProg";
 			String usuari = "root";
-			String contrasenya = "root";
+			String contrasenya = "";
 			connexio = DriverManager.getConnection(url, usuari, contrasenya);
-			
+			System.out.println("Connexió establerta");
 		} catch (ClassNotFoundException e) {
 			throw new SQLException("Error al cargar el driver H2: " + e.getMessage());
 		} catch (SQLException e) {
@@ -115,6 +115,10 @@ public class ConnexioBD {
 		int resultat = 0;
 		int[] tipusCamps = tipusCamp(taula, camps);
 		
+		if(valors.length == 0 || camps.length == 0) {
+			return 0;
+		}
+		
 		String sentencia = "INSERT INTO "+taula+" (" + camps.toString().replaceAll("\\[||\\]", "") + ") VALUES (" + "?,".repeat(camps.length-1) + "?);";
 
 		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
@@ -176,27 +180,28 @@ public class ConnexioBD {
 		//Taula feta en base a un excel tret de Gemini.ia : https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
 		
 		String miss = "";
+		
 		switch (tipus) {
 		case Types.INTEGER:
 		case Types.SMALLINT:
 		case Types.TINYINT:
-			ps.setInt(pos, Integer.parseInt(valors));
+			ps.setInt(pos, Integer.parseInt(valors.trim()));
 			break;
 		case Types.BIGINT:
-			ps.setLong(pos, Long.parseLong(valors));
+			ps.setLong(pos, Long.parseLong(valors.trim()));
 			break;
 		case Types.BOOLEAN:
 		case Types.BIT:
-			ps.setBoolean(pos, Boolean.parseBoolean(valors));
+			ps.setBoolean(pos, Boolean.parseBoolean(valors.trim()));
 			break;
 		case Types.NUMERIC:
 		case Types.DECIMAL:
 		case Types.DOUBLE:
-			ps.setDouble(pos, Double.parseDouble(valors));
+			ps.setDouble(pos, Double.parseDouble(valors.trim()));
 			break;
 		case Types.REAL:
 		case Types.FLOAT:
-			ps.setFloat(pos, Float.parseFloat(valors));
+			ps.setFloat(pos, Float.parseFloat(valors.trim()));
 			break;
 		case Types.NCHAR:
 		case Types.NVARCHAR:
@@ -204,30 +209,36 @@ public class ConnexioBD {
 		case Types.VARCHAR:
 		case Types.CHAR:
 		case Types.LONGVARCHAR:
-			ps.setString(pos, valors);
+			ps.setString(pos, valors.trim());
 			break;
-	//	case Types.DATE:
-	//		ps.setDate(pos, Date.parse(valors));
-	//		break;
-	//	case Types.TIME:
-	//		ps.setTime(pos, Integer.parseInt(valors));
-	//		break;
-	//	case Types.TIMESTAMP:
-	//		ps.setTimestamp(pos, Integer.parseInt(valors));
-	//		break;
-//		case Types.ARRAY:
-//			java.sql.Array a = valors.replaceAll("\\[||\\]", "").split(",");
-//			ps.setArray(pos, a);
-//			break;		
-		case Types.STRUCT:
+		case Types.DATE:
+			ps.setDate(pos, java.sql.Date.valueOf(valors.trim()));
+			break;
+		case Types.TIME:
+			if(valors.trim().matches("\\d\\d:\\d\\d")) {
+				String tf = "00:"+valors.trim();
+				ps.setTime(pos, java.sql.Time.valueOf(tf));
+			} else {
+				ps.setTime(pos, java.sql.Time.valueOf(valors.trim()));
+			}
+			break;
+//		case Types.TIMESTAMP:
+//			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors.trim()));
+//			break;
+		case Types.ARRAY:
 			ps.setObject(pos, valors);
+			break;		
+		case Types.STRUCT:
+			ps.setObject(pos, valors.trim());
 			break;
 		case Types.JAVA_OBJECT:
-			ps.setObject(pos, valors);
+			ps.setObject(pos, valors.trim());
 			break;
 		default:
 			System.err.println("Error: de tipus de dades.");
 		}
+		
+		//CLAUDE PROPOSA CLAVAR-LO DINS D'UN TRY/CATCH
 	}
 
 }

@@ -53,7 +53,7 @@ public class SampleController implements Initializable {
 		
 		Context context = new Context();
 		nouTauler = Context.crearTauler("");
-		context.assignarMines(nouTauler.getCaselles(), Context.tamany, "n");
+		context.assignarMines(nouTauler.getCaselles(), Context.tamany, "normal");
 		nouGP(nouTauler.getCaselles());
 		segons = 0;
 
@@ -149,19 +149,19 @@ public class SampleController implements Initializable {
 	}
 	public void acabarPartida() {
 		temps.stop();
+		//if(Context.comptador == 0 && Context.lliures == 0) {
 		try {
 			ConnexioBD.connectarBD();
-			if(Context.comptador == 0 && Context.lliures == 0) {
 				String[] camps = {"usuari", "dificultat", "temps"};
-				String[] valors = {"usuari", Context.dificultat, temps.toString()};
+				String[] valors = {"usuari", Context.dificultat, caixaTemps.toString()};
 
 				ConnexioBD.afegirDada("ranking_pescamines", camps, valors);
-			}
+
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		//}
 		//ACABAR EL PROGRAMA I DIR EL RESULTAT
 		//
 		//botons inhabilitats
