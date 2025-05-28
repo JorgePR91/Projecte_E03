@@ -12,45 +12,50 @@ import javafx.stage.Stage;
 public class EscenaControllerJocs {
 
     private String nomUsuari;
+    private static Stage finestraWordle = null;
+
 
     @FXML private Label nomUsuariLabel;
     @FXML private Button logoutBtn;
+    
 
     private void obrirEscena(String fxml, String titol) {
         try {
+            // Evita obrir una altra finestra si Wordle ja està obert
+            if (fxml.equals("EscenaWordle.fxml") && finestraWordle != null && finestraWordle.isShowing()) {
+                finestraWordle.toFront(); // Porta al davant
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 
-            // Intentem passar el nom d'usuari al controlador, si el mètode existeix
             Object controller = loader.getController();
             try {
                 controller.getClass()
                     .getMethod("setNomUsuari", String.class)
                     .invoke(controller, nomUsuari);
-            } catch (Exception ignored) {
-                // Si no té el mètode, no fem res
-            }
+            } catch (Exception ignored) {}
 
             Scene escena = new Scene(root, 600, 500);
             escena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
-            // Reutilitza l'Stage principal
-            Stage stagePrincipal = MainWordle.getStagePrincipal();
-            if (stagePrincipal != null) {
-                stagePrincipal.setTitle(titol);
-                stagePrincipal.setScene(escena);
-                stagePrincipal.show();
-            } else {
-                // Si no hi ha stage principal, crea un nou stage (cas excepcional)
-                Stage stage = new Stage();
-                stage.setTitle(titol);
-                stage.setScene(escena);
-                stage.show();
+            Stage novaFinestra = new Stage();
+            novaFinestra.setTitle(titol);
+            novaFinestra.setScene(escena);
+
+            // Guarda la finestra si és Wordle
+            if (fxml.equals("EscenaWordle.fxml")) {
+                finestraWordle = novaFinestra;
+                novaFinestra.setOnCloseRequest(e -> finestraWordle = null); // Allibera la referència en tancar
             }
+
+            novaFinestra.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     private void anarWordle() {

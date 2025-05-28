@@ -21,7 +21,7 @@ public class MainWordle extends Application {
 
             scene.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
-            primaryStage.setTitle("Login");
+            primaryStage.setTitle("Inici");
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Opcional: evitar redimensionar
             primaryStage.show();
