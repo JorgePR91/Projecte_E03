@@ -1,22 +1,26 @@
 package application;
 
-import java.util.Properties;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Random;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
-public class Context {
-
+public class Context implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
 	protected static int comptador;
 	protected static BooleanProperty partida = new SimpleBooleanProperty();
 	protected static int mines;
 	protected static int lliures;
-	protected static Label caixaMines;
+	protected static transient Label caixaMines;
 	protected static String dificultat;
 	protected static int tamany;
-	protected static Random alea = new Random();
+	protected static transient Random alea = new Random();
 
 	
 	// GETTERS I SETTERS
@@ -70,7 +74,8 @@ public class Context {
 
 	// METODES
 	public static Tauler crearTauler(String dificultat) {
-
+		setDificultat(dificultat);
+		
 		switch (dificultat) {
 		case "fàcil" -> {
 			tamany = 9;
@@ -85,7 +90,7 @@ public class Context {
 			mines = tamany;
 		}
 		default -> {
-			dificultat = "normal";
+			setDificultat("normal");
 			tamany = 10;
 			mines = tamany;
 		}
@@ -238,7 +243,7 @@ public class Context {
 			return true;
 		} else
 			return false;
-
+		
 //Ens estalviaria molta feina fer-ho amb la biblioteca Property, de JavaFX.
 	}
 
@@ -249,5 +254,17 @@ public class Context {
 			return true;
 		} else
 			return false;
+	}
+	
+	public static boolean serialitzacioTauler(Tauler t, String id) {
+		
+		//https://www.discoduroderoer.es/serializacion-de-objetos-en-java/
+		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/"+id))){
+			oos.writeObject(t);
+			return true;
+		}catch(IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

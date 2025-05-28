@@ -5,8 +5,8 @@ import javafx.scene.layout.StackPane;
 
 public abstract class Casella {
 		protected boolean estat;
-		protected StackPane container;
-		protected Node contingut;
+		protected transient StackPane container;
+		protected transient Node contingut;
 		protected int x;
 		protected int y;
 		

@@ -2,6 +2,11 @@ package application;
 
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Arrays;
 
 public class ConnexioBD {
 	static Connection connexio;
@@ -25,10 +31,10 @@ public class ConnexioBD {
 	public static void connectarBD() throws SQLException {
 
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mariadb://localhost:3306/ProjecteProg";
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/ProjecteProg";
 			String usuari = "root";
-			String contrasenya = "";
+			String contrasenya = "root";
 			connexio = DriverManager.getConnection(url, usuari, contrasenya);
 			System.out.println("Connexió establerta");
 		} catch (ClassNotFoundException e) {
@@ -38,8 +44,65 @@ public class ConnexioBD {
 		}
 		
 	}
+	// -----------------------------------------------------------------------------------------------
+	public static boolean connectarBD(String baseD) {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/" + baseD;
+			String usuari = "root";
+			String contrasenya = "root";
+			connexio = DriverManager.getConnection(url, usuari, contrasenya);
+
+			System.out.println("Connexió establerta amb la base de dades: " + baseD);
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.getException();
+			return false;
+		} catch (SQLException e) {
+			System.err.println("Error SQL: " + e.getMessage());
+			System.out.println("Obs.: Comprova que el Xampp, Lampp, Wampp o programa servidor de BD estiga funcionant");
+			return false;
+		}
+
+	}
+
+	public static boolean connectarScriptBD(String direccio) {
+		String url = "jdbc:mysql://localhost:3306/";
+		String script = llegirFitxerBD(direccio);
+		String[] aux = script.split(";");
+		String usuari = "root";
+		String contrasenya = "root";
+
+		try (Connection c = DriverManager.getConnection(url, usuari, contrasenya); Statement s = c.createStatement();) {
+			ConnexioBD.connexio = c;
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			for (String line : aux) {
+				line = line+";";
+				if(!line.matches("^\\s*#.*$") || !line.matches("^\\s*--.*$")) {
+					System.out.println(line);
+					int execucio = s.executeUpdate(line);
+//					No filtras líneas vacías, causando errores con executeUpdate("")
+//					El método intenta ejecutar líneas como START TRANSACTION; que no son compatibles con executeUpdate()
+					System.out.println(execucio);
+				}
+			}
+			System.out.println("Base de dades creada amb script.");
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.getException();
+			System.err.println("Error en la class de l'script BD: "+e);
+			return false;
+		} catch (SQLException e) {
+			System.err.println("Error en la connexió de l'script BD");
+			e.printStackTrace();
+			return false;
+		}
+	}
+//--------------------------------------------------------------------------------------------------	
 	
-	//MÈTODE D'INTRODUIR DADES
+	
 	//MÈTODE DE MODIFICAR DADES(USUARI, PARTIDES GUARDADES?)
 	//MÈTODE DE PUJAR DADES
 	
@@ -50,15 +113,13 @@ public class ConnexioBD {
 	// https://java.19633.com/es/Java-2/1002019061.html
 	
 	public static String capçaleres(String taula) {
-		String[] aux;
 		String camps = "";
 		String sentencia = "SELECT * FROM "+ taula+";";
 
-		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ResultSet res = s.executeQuery(sentencia);){
 			
 			ResultSetMetaData rsm = res.getMetaData();
-			aux = new String[rsm.getColumnCount()];
 			
 			int i = 0;
 			res.last();
@@ -83,21 +144,20 @@ public class ConnexioBD {
 		int tipus[] = null;
 		String sentencia = "SELECT * FROM "+ taula+" LIMIT 1;";
 
-		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ResultSet res = s.executeQuery(sentencia);){
 			
 			ResultSetMetaData rsm = res.getMetaData();
 			
-			int i = 0;
 			tipus = new int[rsm.getColumnCount()];
-			res.first();
 			
-			for(int o =0;o<camps.length;o++) {
-				while (i < rsm.getColumnCount()) {
-					if(camps[o].equals(rsm.getColumnName(o))) {
+			for(int o = 0; o < camps.length;o++) {
+	            for(int i = 1; i <= rsm.getColumnCount(); i++) { 
+					if(camps[o].equals(rsm.getColumnName(i))) {
 						tipus[o] = rsm.getColumnType(i);
+						System.out.println(tipus[o]);
+						break;
 					}	
-					i++;
 				}
 			}
 			
@@ -108,10 +168,8 @@ public class ConnexioBD {
 		
 		return tipus;
 	}
-	
-//HASMAP PER A CLAU VALOR;
-	
-	public static int afegirDada(String taula, String[] camps, String[] valors) {
+		
+	public static int insertarDades(String taula, String[] camps, String[] valors) {
 		int resultat = 0;
 		int[] tipusCamps = tipusCamp(taula, camps);
 		
@@ -119,7 +177,7 @@ public class ConnexioBD {
 			return 0;
 		}
 		
-		String sentencia = "INSERT INTO "+taula+" (" + camps.toString().replaceAll("\\[||\\]", "") + ") VALUES (" + "?,".repeat(camps.length-1) + "?);";
+		String sentencia = "INSERT INTO "+taula+" (" + Arrays.toString(camps).replaceAll("\\[|\\]", "") + ") VALUES (" + "?,".repeat(camps.length-1) + "?);";
 
 		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
 		
@@ -134,6 +192,7 @@ public class ConnexioBD {
 			    if (r.next()) {
 			        resultat = r.getInt(1); 
 			    }
+			    System.out.println("S'han inserit "+resultat+" files.");
 			return resultat;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -142,31 +201,26 @@ public class ConnexioBD {
 
 	}
 	
-//	public static int afegirDada(String taula, String[] valors) {
-//		int resultat = 0;
-//		int[] tipusCamps = tipusCamp(taula);
-//		
-//		String sentencia = "INSERT INTO "+taula+" (" + capçaleres(taula) + ") VALUES (" + "?,".repeat(valors.length-1) + "?);";
-//
-//		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
-//			
-//			for(int o=0;o<valors.length;o++) {
-//				conversioDadesBD(ps, tipusCamps[o], o+1, valors[o]);
-//			}
-//
-//			ps.executeUpdate();
-//			
-//			ResultSet r = ps.getGeneratedKeys();
-//			    if (r.next()) {
-//			        resultat = r.getInt(1); 
-//			    }
-//			return resultat;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			return resultat;
-//		}
-//
-//	}
+	public static String ultimaID(String taula, String campId) {
+		String resultat;
+		String sentencia = "SELECT * FROM "+taula+" ORDER BY dataInsercio DESC LIMIT 1;";
+
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); ResultSet r = s.executeQuery(sentencia);) {
+			
+			if(r.next()) {
+				int id = r.getInt(campId);
+				String usuari = r.getString("usuari");
+				resultat = ""+id+"_"+usuari;
+			} else
+				resultat = null;
+
+			return resultat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return resultat = null;
+		}
+
+	}
 	
 
 	public static void tancarBD() throws SQLException {
@@ -179,29 +233,32 @@ public class ConnexioBD {
 		//https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
 		//Taula feta en base a un excel tret de Gemini.ia : https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
 		
-		String miss = "";
+		System.out.println(valors);
+		
+		if(!valors.isEmpty() || valors != null)
+			valors.trim();
 		
 		switch (tipus) {
 		case Types.INTEGER:
 		case Types.SMALLINT:
 		case Types.TINYINT:
-			ps.setInt(pos, Integer.parseInt(valors.trim()));
+			ps.setInt(pos, Integer.parseInt(valors));
 			break;
 		case Types.BIGINT:
-			ps.setLong(pos, Long.parseLong(valors.trim()));
+			ps.setLong(pos, Long.parseLong(valors));
 			break;
 		case Types.BOOLEAN:
 		case Types.BIT:
-			ps.setBoolean(pos, Boolean.parseBoolean(valors.trim()));
+			ps.setBoolean(pos, Boolean.parseBoolean(valors));
 			break;
 		case Types.NUMERIC:
 		case Types.DECIMAL:
 		case Types.DOUBLE:
-			ps.setDouble(pos, Double.parseDouble(valors.trim()));
+			ps.setDouble(pos, Double.parseDouble(valors));
 			break;
 		case Types.REAL:
 		case Types.FLOAT:
-			ps.setFloat(pos, Float.parseFloat(valors.trim()));
+			ps.setFloat(pos, Float.parseFloat(valors));
 			break;
 		case Types.NCHAR:
 		case Types.NVARCHAR:
@@ -209,30 +266,30 @@ public class ConnexioBD {
 		case Types.VARCHAR:
 		case Types.CHAR:
 		case Types.LONGVARCHAR:
-			ps.setString(pos, valors.trim());
+			ps.setString(pos, valors);
 			break;
 		case Types.DATE:
-			ps.setDate(pos, java.sql.Date.valueOf(valors.trim()));
+			ps.setDate(pos, java.sql.Date.valueOf(valors));
 			break;
 		case Types.TIME:
-			if(valors.trim().matches("\\d\\d:\\d\\d")) {
-				String tf = "00:"+valors.trim();
+			if(valors.matches("\\d\\d:\\d\\d")) {
+				String tf = "00:"+valors;
 				ps.setTime(pos, java.sql.Time.valueOf(tf));
 			} else {
-				ps.setTime(pos, java.sql.Time.valueOf(valors.trim()));
+				ps.setTime(pos, java.sql.Time.valueOf(valors));
 			}
 			break;
 //		case Types.TIMESTAMP:
-//			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors.trim()));
+//			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors));
 //			break;
 		case Types.ARRAY:
 			ps.setObject(pos, valors);
 			break;		
 		case Types.STRUCT:
-			ps.setObject(pos, valors.trim());
+			ps.setObject(pos, valors);
 			break;
 		case Types.JAVA_OBJECT:
-			ps.setObject(pos, valors.trim());
+			ps.setObject(pos, valors);
 			break;
 		default:
 			System.err.println("Error: de tipus de dades.");
@@ -241,4 +298,31 @@ public class ConnexioBD {
 		//CLAUDE PROPOSA CLAVAR-LO DINS D'UN TRY/CATCH
 	}
 
+	public static String llegirFitxerBD(String direc) {
+		String script = "";
+		String aux = "";
+		File f = new File(direc);
+
+		if (f.exists() && f.isFile()) {
+
+			try (FileReader fr = new FileReader(f);) {
+				BufferedReader br = new BufferedReader(fr);
+
+				while (br.ready()) {
+					aux = br.readLine();
+					if (!aux.matches("^--.*$"))
+						script += aux;
+				}
+				fr.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		} else
+			System.out.println("Error: la ruta indicada no és un arxiu o no existeix.");
+		return script;
+	}
+	
 }

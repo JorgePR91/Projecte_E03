@@ -6,17 +6,17 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class Lliure extends Casella implements AccioCasella, Serializable {
+    private static final long serialVersionUID = 1L;
 
 	private boolean frontera;
 	private int recompte;
-	private Text text;
-	private Button boto;
+	private transient Text text;
+	private transient Button boto;
 	private boolean antimines;
-	private final Text Anti = new Text("(A)");
+	private final transient Text Anti = new Text("(A)");
 	private Casella[][] c;
 
 	// RECERCA DE MINES

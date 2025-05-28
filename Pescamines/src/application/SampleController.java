@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javafx.beans.property.IntegerProperty;
@@ -39,23 +41,23 @@ public class SampleController implements Initializable {
 	private HBox capçalera;
 	@FXML
 	private Pane pantallaInici;
-	
+
 	private Tauler nouTauler;
 	private Timeline temps;
 	private Label cronometre;
 	private int segons;
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
-		
+
 		Context context = new Context();
 		nouTauler = Context.crearTauler("");
 		context.assignarMines(nouTauler.getCaselles(), Context.tamany, "normal");
 		nouGP(nouTauler.getCaselles());
-		segons = 0;
+		segons = 1;
 
 		cronometre = new Label();
 		compAntimines.getChildren().add(Context.caixaMines);
@@ -63,54 +65,53 @@ public class SampleController implements Initializable {
 		caixaTemps.getChildren().add(cronometre);
 		Format formatter = new SimpleDateFormat("mm:ss");
 
-		temps = new Timeline(
-				new KeyFrame(Duration.seconds(1), e -> {
-					segons++;
-					cronometre.setText(formatter.format(segons*1000));
-					})
-				);
+		temps = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+			segons++;
+			cronometre.setText(formatter.format(segons * 1000));
+		}));
 		temps.setCycleCount(Timeline.INDEFINITE);
-		
+
 		pantallaInici.setPrefWidth(taulerGrid.getMinWidth());
 		pantallaInici.setPrefHeight(taulerGrid.getHeight());
-				
-			//ACABAR EL PROGRAMA I DIR EL RESULTAT
-			//temps.stop
-			//botons inhabilitats
-			//pulsar antimines inhabilitat
-			//pantallaInici.setMouseTransparent(false);
-		
-		Context.partida.addListener((obs,oldval,newval)->{
-				acabarPartida();
+
+		// ACABAR EL PROGRAMA I DIR EL RESULTAT
+		// temps.stop
+		// botons inhabilitats
+		// pulsar antimines inhabilitat
+		// pantallaInici.setMouseTransparent(false);
+
+		Context.partida.addListener((obs, oldval, newval) -> {
+			acabarPartida();
 		});
 	}
-	
+
 	public void nouGP(Casella[][] c) {
 		GridPane gp = this.taulerGrid;
-		
-		//https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
-		
-		//Netejar les característiques per defecte del SceneBuilder
-	    gp.getColumnConstraints().clear();
-	    gp.getRowConstraints().clear();
 
-	    //Com les cree per bucle lògic, ho hem de fer per ací i no en el SB
-	    for (int i = 0; i < c.length; i++) {
-	        ColumnConstraints cC = new ColumnConstraints();
-	        cC.setPercentWidth(100.0 / c.length);
-	        gp.getColumnConstraints().add(cC);
+		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
 
-	        RowConstraints rC = new RowConstraints();
-	        rC.setPercentHeight(100.0 / c.length);
-	        gp.getRowConstraints().add(rC);
-	    }
-        
-		for(int o=0;o<c.length;o++) {
-			for(int m=0;m<c[o].length;m++) {
+		// Netejar les característiques per defecte del SceneBuilder
+		gp.getColumnConstraints().clear();
+		gp.getRowConstraints().clear();
+
+		// Com les cree per bucle lògic, ho hem de fer per ací i no en el SB
+		for (int i = 0; i < c.length; i++) {
+			ColumnConstraints cC = new ColumnConstraints();
+			cC.setPercentWidth(100.0 / c.length);
+			gp.getColumnConstraints().add(cC);
+
+			RowConstraints rC = new RowConstraints();
+			rC.setPercentHeight(100.0 / c.length);
+			gp.getRowConstraints().add(rC);
+		}
+
+		for (int o = 0; o < c.length; o++) {
+			for (int m = 0; m < c[o].length; m++) {
 				gp.add(c[o][m].getContainer(), o, m);
 			}
 		}
 	}
+
 //    @FXML
 //    private void tornarEnrere() {
 //        try {
@@ -123,12 +124,29 @@ public class SampleController implements Initializable {
 //            mostrarMissatge("No s'ha pogut tornar a l'inici.");
 //        }
 //    }
+	@FXML
 	public void guardarPartida() {
-		//SERIALIZED
-		//https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
-		
-		//UTILITZAR CLASSE
-		//ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
+		String id = "";
+		try {
+			if (!ConnexioBD.connectarBD("ProjecteProg")) {
+				ConnexioBD.connectarScriptBD(".././BD/script.sql");
+				ConnexioBD.connectarBD("ProjecteProg");
+			}
+			String[] camps = { "usuari", "temps" };
+			String[] valors = { "usuari", cronometre.getText() };
+			ConnexioBD.insertarDades("partida_pescamines", camps, valors);
+			id = ConnexioBD.ultimaID("partida_pescamines", "id_partida");
+
+			ConnexioBD.tancarBD();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// SERIALIZED
+		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
+		if(id != null)
+		Context.serialitzacioTauler(nouTauler, id);
+		// UTILITZAR CLASSE
+		// ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
 
 	@FXML
@@ -140,6 +158,7 @@ public class SampleController implements Initializable {
 		pantallaInici.setMouseTransparent(false);
 		initialize(null, null);
 	}
+
 	@FXML
 	public void iniciarJoc(MouseEvent e) {
 		pantallaInici.setVisible(false);
@@ -147,27 +166,30 @@ public class SampleController implements Initializable {
 		temps.play();
 		e.consume();
 	}
+
+	@FXML
 	public void acabarPartida() {
 		temps.stop();
-		//if(Context.comptador == 0 && Context.lliures == 0) {
-		try {
-			ConnexioBD.connectarBD();
-				String[] camps = {"usuari", "dificultat", "temps"};
-				String[] valors = {"usuari", Context.dificultat, caixaTemps.toString()};
+		if (Context.comptador == 0 && Context.lliures == 0) {
+			try {
+				if (!ConnexioBD.connectarBD("ProjecteProg")) {
+					ConnexioBD.connectarScriptBD("./BD/script.sql");
+					ConnexioBD.connectarBD("ProjecteProg");
+				}
+				String[] camps = { "usuari", "dificultat", "temps" };
+				String[] valors = { "usuari", Context.getDificultat(), cronometre.getText() };
+				ConnexioBD.insertarDades("ranking_pescamines", camps, valors);
 
-				ConnexioBD.afegirDada("ranking_pescamines", camps, valors);
-
-			ConnexioBD.tancarBD();
-		} catch (SQLException e) {
-			e.printStackTrace();
+				ConnexioBD.tancarBD();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		//}
-		//ACABAR EL PROGRAMA I DIR EL RESULTAT
+		// ACABAR EL PROGRAMA I DIR EL RESULTAT
 		//
-		//botons inhabilitats
-		//pulsar antimines inhabilitat
-		//pantallaInici.setMouseTransparent(false);
-		
+		// botons inhabilitats
+		// pulsar antimines inhabilitat
+
 	}
-	
+
 }

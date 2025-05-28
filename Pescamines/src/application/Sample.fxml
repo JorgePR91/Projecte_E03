@@ -70,8 +70,8 @@
 			<bottom>
 				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
 					<children>
-						<Button mnemonicParsing="false" text="Tornar" />
-						<Button fx:id="abandonar" mnemonicParsing="false" text="Abandonar" />
+						<Button fx:id="boto_guardarPartida" mnemonicParsing="false" onAction="#guardarPartida" text="Guardar Partida" />
+						<Button fx:id="abandonar" mnemonicParsing="false" onAction="#acabarPartida" text="Abandonar" />
 					</children>
 				</HBox>
 			</bottom>

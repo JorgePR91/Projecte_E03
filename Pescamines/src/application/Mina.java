@@ -9,10 +9,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 public class Mina extends Casella implements AccioCasella, Serializable {
-	private Text element;
+	private static final long serialVersionUID = 1L;
+
+	private transient Text element;
 	private boolean antimines;
-	private final Text simbolAntimines = new Text("(A)");
-	private Button boto;
+	private final transient Text simbolAntimines = new Text("(A)");
+	private transient Button boto;
 	private Casella[][] c;
 
 	public Mina(int x, int y, Casella[][] c) {

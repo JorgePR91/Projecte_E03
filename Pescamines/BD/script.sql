@@ -1,10 +1,10 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-CREATE DATABASE IF NOT EXISTS `ProjecteProg` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `ProjecteProg`DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `ProjecteProg`;
 
-# usuaris registrats (id_nom, nom, cognoms, imatge, població, correu electrònic, salt, contrasenya)
+-- usuaris registrats (id_nom, nom, cognoms, imatge, població, correu electrònic, salt, contrasenya)
 CREATE TABLE `usuaris` (
   `usuari` VARCHAR(50) PRIMARY KEY,
   `nom` VARCHAR(50) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `usuaris` (
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-#Pixel art(id_nom, mida, dibuix, data de guardat)
+--Pixel art(id_nom, mida, dibuix, data de guardat)
 CREATE TABLE `pixelart` (
   `id_llenc` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
@@ -25,23 +25,23 @@ CREATE TABLE `pixelart` (
   `imatge` VARCHAR(150) NOT NULL,
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY(`id_llenc`),
+  PRIMARY KEY(`id_llenc`, `usuari`),
   FOREIGN KEY (`usuari`) REFERENCES `usuaris`(`usuari`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-#Partida_pescamines(id_nom, matriu, temps)
+--Partida_pescamines(id_nom, matriu, temps)
 CREATE TABLE `partida_pescamines` (
   `id_partida` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
-  `partida` LONGTEXT NOT NULL,
+  `partida` LONGTEXT NULL DEFAULT NULL,
   `temps` TIME,
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY(`id_partida`),
+  PRIMARY KEY(`id_partida`, `usuari`),
   FOREIGN KEY (`usuari`) REFERENCES `usuaris`(`usuari`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-#Ranking_Pecamines( id_nom, el nivell, el temps)
+--Ranking_Pecamines( id_nom, el nivell, el temps)
 CREATE TABLE `ranking_pescamines` (
   `id_ranking` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE `ranking_pescamines` (
   FOREIGN KEY (`usuari`) REFERENCES `usuaris`(`usuari`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-#woodle(if_nom, informacio de la partida: guanyada o perduda, acerts, errors, datade partida)
+--woodle(if_nom, informacio de la partida: guanyada o perduda, acerts, errors, datade partida)
 CREATE TABLE `wordle` (
   `id_partida` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,

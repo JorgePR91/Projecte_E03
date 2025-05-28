@@ -4,14 +4,16 @@ import java.io.Serializable;
 import java.util.Random;
 
 import javafx.animation.Timeline;
-import javafx.scene.control.Label;
 
 public class Tauler extends Context implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+	
 	Random alea = new Random();
 	private int l;
 	private int a;
 
-	private Timeline temps;
+	private transient Timeline temps;
 
 	private Casella[][] caselles;
 
