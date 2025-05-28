@@ -5,17 +5,19 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class EscenaControllerLogin {
 
@@ -32,9 +34,9 @@ public class EscenaControllerLogin {
     }
 
     private Connection connectar() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/ProjecteProg"; // Nom de la BBDD
+        String url = "jdbc:mysql://localhost:3306/ProjecteProg"; // Ruta BBDD
         String usuari = "root";
-        String contrasenya = ""; // Canvia si tens contrasenya
+        String contrasenya = "";
         return DriverManager.getConnection(url, usuari, contrasenya);
     }
 
@@ -57,6 +59,7 @@ public class EscenaControllerLogin {
         try (Connection conn = connectar()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM usuaris WHERE usuari=? AND contrasenya=?");
             ps.setString(1, usuariField.getText());
+
             ps.setString(2, contrasenyaField.getText());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

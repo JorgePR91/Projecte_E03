@@ -62,6 +62,27 @@ public class EscenaControllerWordle {
     }
     
     @FXML
+    private void tornarMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+
+            EscenaControllerJocs controlador = loader.getController();
+            controlador.setNomUsuari(nomUsuari);
+
+            Scene novaEscena = new Scene(root, 600, 500);
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage finestraActual = (Stage) logoutBtn.getScene().getWindow();
+            finestraActual.setScene(novaEscena);
+            finestraActual.setTitle("Menú Jocs");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    @FXML
     public void initialize() {
         try {
             carregarParaules();

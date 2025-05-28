@@ -11,10 +11,11 @@
 
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-            <Label fx:id="nomUsuariLabel" text="Usuari: " />
-            <Pane HBox.hgrow="ALWAYS"/>  <!-- espaiador flexible -->
-            <Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
-        </HBox>
+    		<Label fx:id="nomUsuariLabel" text="Usuari: " />
+    		<Pane HBox.hgrow="ALWAYS"/> <!-- Espaiador flexible -->
+    		<Button fx:id="tornarMenuBtn" text="Menú Jocs" onAction="#tornarMenu"/>
+   		 	<Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
+		</HBox>
     </top>
 
     <center>
