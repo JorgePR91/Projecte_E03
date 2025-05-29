@@ -5,8 +5,6 @@ import java.util.Random;
 
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -17,16 +15,13 @@ public class Tauler extends Context implements Serializable {
 	Random alea = new Random();
 	private int l;
 	private int a;
-
 	private transient Timeline temps;
-
 	private Casella[][] caselles;
-
-	public Tauler(int l, int a) {
-
+	private Context context;
+	
+	public Tauler(int l, int a, Context context) {
 		super();
 		temps = new Timeline();
-		partida = new SimpleBooleanProperty(true);
 		this.l = l;
 		this.a = a;
 		caselles = new Casella[this.a][this.l];
@@ -65,9 +60,7 @@ public class Tauler extends Context implements Serializable {
 	public void setTemps(Timeline temps) {
 		this.temps = temps;
 	}
-
-
-	
+    
 	// MÈTODES
 
 }

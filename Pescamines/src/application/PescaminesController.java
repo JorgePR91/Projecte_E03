@@ -57,7 +57,7 @@ public class PescaminesController implements Initializable {
 		compAntimines.getChildren().clear();
 
 		Context context = new Context();
-		nouTauler = Context.crearTauler("fàcil");
+		nouTauler = Context.crearTauler("fàcil", context);
 		context.assignarMines(nouTauler.getCaselles(), Context.tamany, dif);
 		nouGP(nouTauler.getCaselles());
 		segons = 1;
@@ -83,10 +83,9 @@ public class PescaminesController implements Initializable {
 		// pulsar antimines inhabilitat
 		// pantallaInici.setMouseTransparent(false);
 
-        nouTauler.getPartida().addListener((obs, oldVal, newVal) -> {
-        	System.out.println("Entra");
+		context.getPartida().addListener((obs, oldVal, newVal) -> {
             if (!newVal) { 
-                    acabarPartida();  
+                Platform.runLater(this::acabarPartida);
             }
         });
 		/*
@@ -177,19 +176,17 @@ public class PescaminesController implements Initializable {
 	}
 
 	@FXML
-	public void iniciarJoc(MouseEvent e) {
+	public void iniciarJoc(MouseEvent event) {
 		pantallaInici.setVisible(false);
 		pantallaInici.setMouseTransparent(true);
 		temps.play();
-		e.consume();
+		event.consume();
 	}
 
 	@FXML
 	public void acabarPartida() {
 		temps.stop();
-		taulerGrid.getChildren().forEach(element -> {
-			element.setMouseTransparent(true);
-		});
+		taulerGrid.getChildren().forEach(node -> node.setMouseTransparent(true));
 
 		if (Context.comptador == 0 && Context.lliures == 0) {
 			try {
@@ -206,11 +203,13 @@ public class PescaminesController implements Initializable {
 				e.printStackTrace();
 			}
 		}
+		// Set partida to false to trigger the listener
+		Context.setPartida(false);
+		
 		// ACABAR EL PROGRAMA I DIR EL RESULTAT
 		//
 		// botons inhabilitats
 		// pulsar antimines inhabilitat
-
 	}
 
 }

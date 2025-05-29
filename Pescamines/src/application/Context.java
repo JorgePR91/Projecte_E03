@@ -15,7 +15,7 @@ public class Context implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected static int comptador;
-	protected BooleanProperty partida = new SimpleBooleanProperty(true);
+	protected static BooleanProperty partida = new SimpleBooleanProperty(true);
 	protected static int mines;
 	protected static int lliures;
 	protected static transient Label caixaMines;
@@ -72,11 +72,11 @@ public class Context implements Serializable {
 		Context.caixaMines = caixaMines;
 	}
 
-	public BooleanProperty getPartida() {
+	public static BooleanProperty getPartida() {
 		return partida;
 	}
 
-	public void setPartida(boolean estat) {
+	public static void setPartida(boolean estat) {
 		partida.set(estat);
 	}
 
@@ -89,7 +89,7 @@ public class Context implements Serializable {
 	}
 
 	// METODES
-	public static Tauler crearTauler(String dificultat) {
+	public static Tauler crearTauler(String dificultat, Context contxt ) {
 		setDificultat(dificultat.toLowerCase());
 
 		switch (dificultat) {
@@ -115,7 +115,7 @@ public class Context implements Serializable {
 		caixaMines = new Label();
 		caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
 
-		return new Tauler(tamany, tamany);
+		return new Tauler(tamany, tamany, contxt );
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
