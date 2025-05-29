@@ -1,12 +1,13 @@
 package application;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
@@ -304,12 +305,24 @@ public class Context implements Serializable {
 	}
 
 	public static boolean serialitzacioTauler(Tauler t, String id) {
-
-		// https://www.discoduroderoer.es/serializacion-de-objetos-en-java/
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id))) {
+		//https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
+		
+		//¿Crear /Partides si no existeix com fem amb les BD?
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id+".dat"))) {
 			oos.writeObject(t);
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static boolean desserialitzacioTauler(String id) {
+		
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("./Partides/" + id+".dat"))) {
+			ois.readObject();
+			return true;
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return false;
 		}

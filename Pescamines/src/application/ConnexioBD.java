@@ -145,13 +145,12 @@ public class ConnexioBD {
 			
 			ResultSetMetaData rsm = res.getMetaData();
 			
-			tipus = new int[rsm.getColumnCount()];
+			tipus = new int[camps.length];
 			
 			for(int o = 0; o < camps.length;o++) {
 	            for(int i = 1; i <= rsm.getColumnCount(); i++) { 
 					if(camps[o].equals(rsm.getColumnName(i))) {
 						tipus[o] = rsm.getColumnType(i);
-						System.out.println(tipus[o]);
 						break;
 					}	
 				}
@@ -229,16 +228,18 @@ public class ConnexioBD {
 
 		try (Statement s = connexio.createStatement(ResultSet.CONCUR_READ_ONLY, ResultSet.TYPE_FORWARD_ONLY);) {
 			ResultSet res = s.executeQuery(sentencia);
+			
 			if(!res.next()) {
 				return new String[0];
 			}
 			
 			int[] tipusCamp = tipusCamp(taula, camps);
 			
-			resultat = new String[tipusCamp.length];
-			
+			resultat = new String[camps.length];
+
 		for(int i = 0; i<tipusCamp.length; i++) {
 			resultat[i] = obtencioDadesBD(res, tipusCamp[i], camps[i]);
+
 		}
 			
 			return resultat;

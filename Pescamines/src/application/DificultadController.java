@@ -58,6 +58,13 @@ public class DificultadController implements Initializable {
 	@FXML
 	public void carregarPartida(ActionEvent e) throws IOException {
 		System.out.println(e.toString()+"  DESERIALIZAR");
+		//Primer: crear una File amb la direcció que ens han donat
+		//Crear un nou tauler amb el context deserialitzar
+		//tot comprovant si no és null
+		//associar el nou tauler al carregat?
+		//associar el Gp a les casselles del nou?
+		//deixar la pantalla d'inici no vista i el ratolí transparent
+		//encetar el temps a play
 	}
 
 	@FXML

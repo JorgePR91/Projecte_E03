@@ -28,10 +28,10 @@
          <children>
             <TableView fx:id="taulaRanquing">
               <columns>
-                <TableColumn prefWidth="75.0" text="Pos" />
-                <TableColumn prefWidth="75.0" text="Usuari" />
-                  <TableColumn prefWidth="75.0" text="Dificultad" />
-                  <TableColumn prefWidth="75.0" text="Temps" />
+                <TableColumn id="rPossicio" prefWidth="75.0" text="Pos" />
+                <TableColumn id="rUsuari" prefWidth="75.0" text="Usuari" />
+                  <TableColumn id="rDificultad" prefWidth="75.0" text="Dificultad" />
+                  <TableColumn id="rTemps" prefWidth="75.0" text="Temps" />
               </columns>
             </TableView>
          </children>
