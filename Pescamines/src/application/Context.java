@@ -74,7 +74,7 @@ public class Context implements Serializable {
 
 	// METODES
 	public static Tauler crearTauler(String dificultat) {
-		setDificultat(dificultat);
+		setDificultat(dificultat.toLowerCase());
 		
 		switch (dificultat) {
 		case "fàcil" -> {

@@ -28,7 +28,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class SampleController implements Initializable {
+public class PescaminesController implements Initializable {
 	@FXML
 	private GridPane taulerGrid;
 	@FXML
@@ -46,6 +46,15 @@ public class SampleController implements Initializable {
 	private Timeline temps;
 	private Label cronometre;
 	private int segons;
+	private String dif;
+	
+	public String getDif() {
+		return dif;
+	}
+
+	public void setDif(String dif) {
+		this.dif = dif;
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -55,7 +64,7 @@ public class SampleController implements Initializable {
 
 		Context context = new Context();
 		nouTauler = Context.crearTauler("");
-		context.assignarMines(nouTauler.getCaselles(), Context.tamany, "normal");
+		context.assignarMines(nouTauler.getCaselles(), Context.tamany, dif);
 		nouGP(nouTauler.getCaselles());
 		segons = 1;
 
@@ -143,8 +152,8 @@ public class SampleController implements Initializable {
 		}
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
-		if(id != null)
-		Context.serialitzacioTauler(nouTauler, id);
+		if (id != null)
+			Context.serialitzacioTauler(nouTauler, id);
 		// UTILITZAR CLASSE
 		// ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
@@ -170,6 +179,10 @@ public class SampleController implements Initializable {
 	@FXML
 	public void acabarPartida() {
 		temps.stop();
+		taulerGrid.getChildren().forEach(element -> {
+			element.setMouseTransparent(true);
+		});
+		
 		if (Context.comptador == 0 && Context.lliures == 0) {
 			try {
 				if (!ConnexioBD.connectarBD("ProjecteProg")) {
@@ -191,5 +204,6 @@ public class SampleController implements Initializable {
 		// pulsar antimines inhabilitat
 
 	}
+
 
 }

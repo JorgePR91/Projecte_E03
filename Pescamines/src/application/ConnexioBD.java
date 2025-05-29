@@ -81,11 +81,7 @@ public class ConnexioBD {
 			for (String line : aux) {
 				line = line+";";
 				if(!line.matches("^\\s*#.*$") || !line.matches("^\\s*--.*$")) {
-					System.out.println(line);
 					int execucio = s.executeUpdate(line);
-//					No filtras líneas vacías, causando errores con executeUpdate("")
-//					El método intenta ejecutar líneas como START TRANSACTION; que no son compatibles con executeUpdate()
-					System.out.println(execucio);
 				}
 			}
 			System.out.println("Base de dades creada amb script.");
@@ -233,7 +229,6 @@ public class ConnexioBD {
 		//https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
 		//Taula feta en base a un excel tret de Gemini.ia : https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
 		
-		System.out.println(valors);
 		
 		if(!valors.isEmpty() || valors != null)
 			valors.trim();
