@@ -57,7 +57,7 @@ public class PescaminesController implements Initializable {
 		compAntimines.getChildren().clear();
 
 		Context context = new Context();
-		nouTauler = Context.crearTauler("");
+		nouTauler = Context.crearTauler("fàcil");
 		context.assignarMines(nouTauler.getCaselles(), Context.tamany, dif);
 		nouGP(nouTauler.getCaselles());
 		segons = 1;
@@ -84,10 +84,9 @@ public class PescaminesController implements Initializable {
 		// pantallaInici.setMouseTransparent(false);
 
         nouTauler.getPartida().addListener((obs, oldVal, newVal) -> {
+        	System.out.println("Entra");
             if (!newVal) { 
-                Platform.runLater(() -> {
                     acabarPartida();  
-                });
             }
         });
 		/*

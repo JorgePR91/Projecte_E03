@@ -17,7 +17,6 @@ public class Tauler extends Context implements Serializable {
 	Random alea = new Random();
 	private int l;
 	private int a;
-	private transient BooleanProperty partida;
 
 	private transient Timeline temps;
 
@@ -67,14 +66,7 @@ public class Tauler extends Context implements Serializable {
 		this.temps = temps;
 	}
 
-	public BooleanProperty getPartida() {
-		return partida;
-	}
 
-	public void setPartida(BooleanProperty partida) {
-		this.partida = partida;
-	}
-	
 	
 	// MÈTODES
 

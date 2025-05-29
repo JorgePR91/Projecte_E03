@@ -12,10 +12,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
 public class Context implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
+	private static final long serialVersionUID = 1L;
+
 	protected static int comptador;
-	protected static BooleanProperty partida = new SimpleBooleanProperty();
+	protected BooleanProperty partida = new SimpleBooleanProperty(true);
 	protected static int mines;
 	protected static int lliures;
 	protected static transient Label caixaMines;
@@ -23,7 +23,6 @@ public class Context implements Serializable {
 	protected static int tamany;
 	protected static transient Random alea = new Random();
 
-	
 	// GETTERS I SETTERS
 	public static int getComptador() {
 		return comptador;
@@ -64,7 +63,7 @@ public class Context implements Serializable {
 	public static void setAlea(Random alea) {
 		Context.alea = alea;
 	}
-	
+
 	public static Label getCaixaMines() {
 		return caixaMines;
 	}
@@ -73,10 +72,26 @@ public class Context implements Serializable {
 		Context.caixaMines = caixaMines;
 	}
 
+	public BooleanProperty getPartida() {
+		return partida;
+	}
+
+	public void setPartida(boolean estat) {
+		partida.set(estat);
+	}
+
+	public static int getLliures() {
+		return lliures;
+	}
+
+	public static void setLliures(int lliures) {
+		Context.lliures = lliures;
+	}
+
 	// METODES
 	public static Tauler crearTauler(String dificultat) {
 		setDificultat(dificultat.toLowerCase());
-		
+
 		switch (dificultat) {
 		case "fàcil" -> {
 			tamany = 9;
@@ -97,15 +112,14 @@ public class Context implements Serializable {
 		}
 		}
 		comptador = mines;
-		partida.set(true);
 		caixaMines = new Label();
-		caixaMines.setText("Antimines\n"+Context.comptador+"/"+Context.tamany);
-		
+		caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
+
 		return new Tauler(tamany, tamany);
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public static Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat) {
+	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat) {
 //		int nMines;
 //		//decidir bombes
 //		if(dificultat == "f") {
@@ -124,7 +138,7 @@ public class Context implements Serializable {
 
 			if (c[x][y] == null) {
 				c[x][y] = new Mina(x, y, c);
-				System.out.println("Mina en: "+x+", "+y);
+				System.out.println("Mina en: " + x + ", " + y);
 				b++;
 			}
 
@@ -138,9 +152,9 @@ public class Context implements Serializable {
 					int nombre = 0;
 					nombre = recompteMines(c, o, m);
 					if (nombre > 0)
-						c[o][m] = new Lliure(nombre, o, m, c);
+						c[o][m] = new Lliure(nombre, o, m, c, this);
 					else
-						c[o][m] = new Lliure(o, m, c);
+						c[o][m] = new Lliure(o, m, c, this);
 					lliures++;
 				}
 			}
@@ -243,9 +257,9 @@ public class Context implements Serializable {
 	public static boolean disminuirComptador() {
 		if (comptador > 0) {
 			comptador--;
-			caixaMines.setText("Antimines\n"+Context.comptador+"/"+Context.tamany);
-			
-//Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
+			caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
+
+//			Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
 //			Listeners que no se ejecutan.
 //			Excepciones como IllegalStateException: Not on FX application thread.
 //			Aunque usabas Platform.runLater() para Context.partida.set(), los cambios visuales directos (boto.setVisible(), etc.) se hacían en el hilo secundario, lo que puede causar:
@@ -260,35 +274,42 @@ public class Context implements Serializable {
 //			Variable no final: descoberta se declara como variable local y luego se intenta modificar dentro del lambda.
 //
 //			Ámbito de variables: Las variables locales usadas en lambdas deben ser final o efectivamente final.
-			Platform.runLater(() -> {
-				if(lliures == 0 && comptador == 0) {
-				partida.set(false);
-			}
-			});
-
+	
 			return true;
 		} else
 			return false;
-		
+
 //Ens estalviaria molta feina fer-ho amb la biblioteca Property, de JavaFX.
 	}
 
+	public void comprovarPartida() {
+		if (lliures == 0 && comptador == 0) {
+			System.out.println("Partida acabada");
+			setPartida(false);
+		}
+	}
+
+	public void disminuirLliures() {
+	    lliures--;
+	    comprovarPartida();
+	}
+	
 	public static boolean augmentarComptador() {
 		if (comptador < mines) {
 			comptador++;
-			caixaMines.setText("Antimines\n"+Context.comptador+"/"+Context.tamany);
+			caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
 			return true;
 		} else
 			return false;
 	}
-	
+
 	public static boolean serialitzacioTauler(Tauler t, String id) {
-		
-		//https://www.discoduroderoer.es/serializacion-de-objetos-en-java/
-		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/"+id))){
+
+		// https://www.discoduroderoer.es/serializacion-de-objetos-en-java/
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id))) {
 			oos.writeObject(t);
 			return true;
-		}catch(IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}

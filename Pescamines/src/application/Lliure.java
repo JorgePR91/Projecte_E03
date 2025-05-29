@@ -19,13 +19,15 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 	private boolean antimines;
 	private final transient Text Anti = new Text("(A)");
 	private Casella[][] c;
+	private Context context;
 
 	// RECERCA DE MINES
 	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
-	public Lliure(int x, int y, Casella[][] c) {
+	public Lliure(int x, int y, Casella[][] c, Context context) {
 		super(x, y);
 		this.c = c;
+		this.context = context;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		text = new Text(" ");
@@ -40,9 +42,11 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 		reaccio();
 	}
 
-	public Lliure(int n, int x, int y, Casella[][] c) {
+	public Lliure(int n, int x, int y, Casella[][] c, Context context) {
 		super(x, y);
 		this.c = c;
+		this.context = context;
+
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		this.text = new Text("" + n);
@@ -162,29 +166,26 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 
 	public boolean descobrir(Lliure l) {
 		boolean descoberta = false;
-		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
-			descoberta = true;
-			Platform.runLater(() -> {
-				l.setEstat(false);
-				l.boto.setVisible(l.isEstat());
-				l.text.setVisible(true);
-				l.Anti.setVisible(false);
-				Context.augmentarComptador();
-				if (Context.lliures == 0 && Context.comptador == 0) {
-					Tauler.getPartida().set(false);
-				}
-			});
-
-		} else if (l instanceof Lliure && l.isEstat() == true && !l.antimines) {
+//		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
+//			descoberta = true;
+//			Platform.runLater(() -> {
+//				l.setEstat(false);
+//				l.boto.setVisible(l.isEstat());
+//				l.text.setVisible(true);
+//				l.Anti.setVisible(false);
+//				Context.augmentarComptador();
+//
+//			});
+//
+//		} else 
+			if (l instanceof Lliure && l.isEstat() == true && !l.antimines) {
 					descoberta = true;
 
 					l.setEstat(false);
 					l.boto.setVisible(l.isEstat());
 					l.text.setVisible(true);
 					l.Anti.setVisible(false);
-					if (Context.lliures == 0 && Context.comptador == 0) {
-						Context.partida.set(false);
-					}
+					context.disminuirLliures(); 
 				}
 
 		return descoberta;

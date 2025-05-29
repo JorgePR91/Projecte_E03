@@ -3,6 +3,7 @@ package application;
 import java.io.Serializable;
 
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -122,7 +123,7 @@ public class Mina extends Casella implements AccioCasella, Serializable {
 							}
 						}
 					}
-					Context.partida.set(false);
+					
 					e.consume();
 				}
 
