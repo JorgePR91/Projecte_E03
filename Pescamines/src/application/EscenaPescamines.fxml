@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<HBox fx:id="root_Pescamines" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+<HBox fx:id="root_Pescamines" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PescaminesController">
 	<children>
-		<BorderPane  prefHeight="600.0" prefWidth="600.0">
+		<BorderPane prefHeight="600.0" prefWidth="600.0">
 			<top>
 				<HBox fx:id="capçalera" alignment="TOP_CENTER" prefHeight="151.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 					<children>

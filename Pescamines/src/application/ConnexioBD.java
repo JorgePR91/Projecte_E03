@@ -218,13 +218,91 @@ public class ConnexioBD {
 
 	}
 	
-
-	public static void tancarBD() throws SQLException {
-		if (connexio != null) {
-			connexio.close();
+	public static String[] ranquing(String taula, String[] camps, String criteri) {
+		String[] resultat = null;
+	
+		if(camps.length == 0) {
+			return new String[0];
 		}
+		
+		String sentencia = "SELECT "+ Arrays.toString(camps).replaceAll("\\[|\\]", "") +" FROM "+taula+" ORDER BY "+criteri+";";
+
+		try (Statement s = connexio.createStatement(ResultSet.CONCUR_READ_ONLY, ResultSet.TYPE_FORWARD_ONLY);) {
+			ResultSet res = s.executeQuery(sentencia);
+			if(!res.next()) {
+				return new String[0];
+			}
+			
+			int[] tipusCamp = tipusCamp(taula, camps);
+			
+			resultat = new String[tipusCamp.length];
+			
+		for(int i = 0; i<tipusCamp.length; i++) {
+			resultat[i] = obtencioDadesBD(res, tipusCamp[i], camps[i]);
+		}
+			
+			return resultat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new String[0];
+		}
+
 	}
 
+	public static String obtencioDadesBD(ResultSet rs, int tipus, String col) throws SQLException {
+		//https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
+		//Taula feta en base a un excel tret de Gemini.ia : https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
+		String valor = null;
+		
+		switch (tipus) {
+		case Types.INTEGER:
+		case Types.SMALLINT:
+		case Types.TINYINT:
+			return ""+rs.getInt(col);
+		case Types.BIGINT:
+			return ""+rs.getLong(col);
+		case Types.BOOLEAN:
+		case Types.BIT:
+			return ""+rs.getBoolean(col);
+		case Types.NUMERIC:
+		case Types.DECIMAL:
+		case Types.DOUBLE:
+			return ""+rs.getDouble(col);
+		case Types.REAL:
+		case Types.FLOAT:
+			return ""+rs.getFloat(col);
+		case Types.NCHAR:
+		case Types.NVARCHAR:
+		case Types.LONGNVARCHAR:
+		case Types.VARCHAR:
+		case Types.CHAR:
+		case Types.LONGVARCHAR:
+			return rs.getString(col);
+		case Types.DATE:
+			return ""+rs.getDate(col);
+		case Types.TIME:
+
+				return ""+rs.getTime(col);
+//		case Types.TIMESTAMP:
+//			rs.getTimestamp(pos, java.sql.Timestamp.valueOf(valors));
+//			break;
+//		case Types.ARRAY:
+//			rs.getObject(pos, valors);
+//			break;		
+//		case Types.STRUCT:
+//			rs.getObject(pos, valors);
+//			break;
+//		case Types.JAVA_OBJECT:
+//			rs.getObject(pos, valors);
+//			break;
+		default:
+			System.err.println("Error: de tipus de daders.");
+			return "No existent";
+		}
+		
+		//CLAUDE PROPOSA CLAVAR-LO DINS D'UN TRY/CATCH
+	}	
+	
 	public static void conversioDadesBD(PreparedStatement ps, int tipus, int pos, String valors) throws SQLException {
 		//https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
 		//Taula feta en base a un excel tret de Gemini.ia : https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
@@ -277,15 +355,15 @@ public class ConnexioBD {
 //		case Types.TIMESTAMP:
 //			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors));
 //			break;
-		case Types.ARRAY:
-			ps.setObject(pos, valors);
-			break;		
-		case Types.STRUCT:
-			ps.setObject(pos, valors);
-			break;
-		case Types.JAVA_OBJECT:
-			ps.setObject(pos, valors);
-			break;
+//		case Types.ARRAY:
+//			ps.setObject(pos, valors);
+//			break;		
+//		case Types.STRUCT:
+//			ps.setObject(pos, valors);
+//			break;
+//		case Types.JAVA_OBJECT:
+//			ps.setObject(pos, valors);
+//			break;
 		default:
 			System.err.println("Error: de tipus de dades.");
 		}
@@ -320,4 +398,10 @@ public class ConnexioBD {
 		return script;
 	}
 	
+
+	public static void tancarBD() throws SQLException {
+		if (connexio != null) {
+			connexio.close();
+		}
+	}
 }

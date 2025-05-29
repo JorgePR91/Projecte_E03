@@ -8,12 +8,7 @@ import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-
-import java.util.Arrays;
-import java.util.EventListener;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class PescaminesController implements Initializable {
@@ -47,7 +41,7 @@ public class PescaminesController implements Initializable {
 	private Label cronometre;
 	private int segons;
 	private String dif;
-	
+
 	public String getDif() {
 		return dif;
 	}
@@ -89,9 +83,24 @@ public class PescaminesController implements Initializable {
 		// pulsar antimines inhabilitat
 		// pantallaInici.setMouseTransparent(false);
 
-		Context.partida.addListener((obs, oldval, newval) -> {
-			acabarPartida();
-		});
+        nouTauler.getPartida().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { 
+                Platform.runLater(() -> {
+                    acabarPartida();  
+                });
+            }
+        });
+		/*
+		 * Parámetros del Listener
+		observable (ObservableValue<? extends Tipo>):
+		Es la propiedad que está siendo observada (en este caso, Context.partida). Permite acceder a métodos como getValue() si necesitas el valor actual.
+
+		oldValue (Tipo):
+		El valor anterior de la propiedad antes del cambio. Ejemplo: Si partida cambiaba de 5 a 10, oldValue sería 5.
+
+		newValue (Tipo):
+		El valor nuevo de la propiedad después del cambio. Siguiendo el ejemplo anterior, newValue sería 10.
+		 */
 	}
 
 	public void nouGP(Casella[][] c) {
@@ -182,7 +191,7 @@ public class PescaminesController implements Initializable {
 		taulerGrid.getChildren().forEach(element -> {
 			element.setMouseTransparent(true);
 		});
-		
+
 		if (Context.comptador == 0 && Context.lliures == 0) {
 			try {
 				if (!ConnexioBD.connectarBD("ProjecteProg")) {
@@ -204,6 +213,5 @@ public class PescaminesController implements Initializable {
 		// pulsar antimines inhabilitat
 
 	}
-
 
 }

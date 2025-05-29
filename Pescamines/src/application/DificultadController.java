@@ -40,9 +40,9 @@ public class DificultadController implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescamines.fxml"));
 
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			PescaminesController controller = new PescaminesController();
+			//PescaminesController controller = new PescaminesController();
 
-			loader.setController(controller);
+			//loader.setController(controller);
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
@@ -57,7 +57,7 @@ public class DificultadController implements Initializable {
 
 	@FXML
 	public void carregarPartida(ActionEvent e) throws IOException {
-		System.out.println(e.toString()+"  DESSERIALIZAR");
+		System.out.println(e.toString()+"  DESERIALIZAR");
 	}
 
 	@FXML
@@ -68,7 +68,7 @@ public class DificultadController implements Initializable {
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			//RanquingController controller = ;
 
-			loader.setController(new RanquingController());
+			//loader.setController(new RanquingController());
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 

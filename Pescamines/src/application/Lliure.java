@@ -2,6 +2,7 @@ package application;
 
 import java.io.Serializable;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
@@ -9,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 public class Lliure extends Casella implements AccioCasella, Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private boolean frontera;
 	private int recompte;
@@ -111,19 +112,20 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 			@Override
 			public void handle(MouseEvent e) {
 				if (e.getButton() == MouseButton.SECONDARY) {
-					 if(!antimines && Context.disminuirComptador()) {
-							antimines = !antimines;
-							Anti.setVisible(antimines);
-							e.consume();
-						} else if (antimines && Context.augmentarComptador()) {
-							antimines = !antimines;
-							Anti.setVisible(antimines);
-							e.consume();
-						}
+					if (!antimines && Context.disminuirComptador()) {
+						antimines = !antimines;
+						Anti.setVisible(antimines);
+						e.consume();
+					} else if (antimines && Context.augmentarComptador()) {
+						antimines = !antimines;
+						Anti.setVisible(antimines);
+						e.consume();
+					}
 				}
 
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {
 					despejar(Lliure.this, Lliure.this.c);
+
 					e.consume();
 				}
 			}
@@ -160,24 +162,30 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 
 	public boolean descobrir(Lliure l) {
 		boolean descoberta = false;
-
 		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
-
-			l.setEstat(false);
-			l.boto.setVisible(l.isEstat());
-			l.text.setVisible(true);
-			l.Anti.setVisible(false);
-			Context.augmentarComptador();
 			descoberta = true;
-			
+			Platform.runLater(() -> {
+				l.setEstat(false);
+				l.boto.setVisible(l.isEstat());
+				l.text.setVisible(true);
+				l.Anti.setVisible(false);
+				Context.augmentarComptador();
+				if (Context.lliures == 0 && Context.comptador == 0) {
+					Tauler.getPartida().set(false);
+				}
+			});
+
 		} else if (l instanceof Lliure && l.isEstat() == true && !l.antimines) {
+					descoberta = true;
 
-			l.setEstat(false);
-			l.boto.setVisible(l.isEstat());
-			l.text.setVisible(true);
-			l.Anti.setVisible(false);
-			descoberta = true;
-		}
+					l.setEstat(false);
+					l.boto.setVisible(l.isEstat());
+					l.text.setVisible(true);
+					l.Anti.setVisible(false);
+					if (Context.lliures == 0 && Context.comptador == 0) {
+						Context.partida.set(false);
+					}
+				}
 
 		return descoberta;
 	}

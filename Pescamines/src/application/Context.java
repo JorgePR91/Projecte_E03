@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
@@ -123,9 +124,12 @@ public class Context implements Serializable {
 
 			if (c[x][y] == null) {
 				c[x][y] = new Mina(x, y, c);
+				System.out.println("Mina en: "+x+", "+y);
 				b++;
 			}
+
 		}
+		System.out.println("------------------------");
 
 		// col·locar caselles
 		for (int o = 0; o < c.length; o++) {
@@ -240,6 +244,28 @@ public class Context implements Serializable {
 		if (comptador > 0) {
 			comptador--;
 			caixaMines.setText("Antimines\n"+Context.comptador+"/"+Context.tamany);
+			
+//Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
+//			Listeners que no se ejecutan.
+//			Excepciones como IllegalStateException: Not on FX application thread.
+//			Aunque usabas Platform.runLater() para Context.partida.set(), los cambios visuales directos (boto.setVisible(), etc.) se hacían en el hilo secundario, lo que puede causar:
+//
+//				Comportamiento impredecible.
+//
+//				Errores silenciosos.
+//
+//				Actualizaciones UI que no se reflejan.
+//			El error ocurre porque estás intentando modificar la variable local descoberta dentro de la expresión lambda de Platform.runLater(), lo cual no está permitido en Java. Las variables locales usadas en lambdas deben ser efectivamente final (no modificables). Aquí te explico cómo solucionarlo:
+//			Problema Detectado
+//			Variable no final: descoberta se declara como variable local y luego se intenta modificar dentro del lambda.
+//
+//			Ámbito de variables: Las variables locales usadas en lambdas deben ser final o efectivamente final.
+			Platform.runLater(() -> {
+				if(lliures == 0 && comptador == 0) {
+				partida.set(false);
+			}
+			});
+
 			return true;
 		} else
 			return false;
