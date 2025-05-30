@@ -23,6 +23,23 @@ public class DificultadController implements Initializable {
 
 	private String dificultat;
 
+		
+	public VBox getRoot_dificultad() {
+		return root_dificultad;
+	}
+
+	public void setRoot_dificultad(VBox root_dificultad) {
+		this.root_dificultad = root_dificultad;
+	}
+
+	public String getDificultat() {
+		return dificultat;
+	}
+
+	public void setDificultat(String dificultat) {
+		this.dificultat = dificultat;
+	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Platform.runLater(() -> { // espera que l'inicialització siga completa.
@@ -35,7 +52,10 @@ public class DificultadController implements Initializable {
 
 		Button b = (Button) e.getSource();
 		dificultat = b.getText();
-
+		
+		DadesSingleton dada = DadesSingleton.getInstancia();
+		dada.setCadenaCompartida(dificultat);
+		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescamines.fxml"));
 

@@ -99,20 +99,20 @@ public class Context implements Serializable {
 		setDificultat(dificultat.toLowerCase());
 
 		switch (dificultat) {
-		case "fàcil" -> {
+		case "Fàcil" -> {
 			tamany = 9;
 			mines = tamany;
 		}
-		case "normal" -> {
+		case "Normal" -> {
 			tamany = 10;
 			mines = tamany;
 		}
-		case "difícil" -> {
+		case "Difícil" -> {
 			tamany = 15;
 			mines = tamany;
 		}
 		default -> {
-			setDificultat("normal");
+			setDificultat("Normal");
 			tamany = 10;
 			mines = tamany;
 		}

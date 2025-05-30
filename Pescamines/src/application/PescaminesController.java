@@ -67,9 +67,11 @@ public class PescaminesController implements Initializable {
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
 
+		DadesSingleton dada = DadesSingleton.getInstancia();
+		dif = dada.getCadenaCompartida();
+		
 		context = new Context();
-		System.out.println(context.toString());
-		nouTauler = context.crearTauler("fàcil", context);
+		nouTauler = context.crearTauler(dif, context);
 		context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
 		nouGP(nouTauler.getCaselles());
 		segons = 1;
@@ -155,6 +157,7 @@ public class PescaminesController implements Initializable {
 	@FXML
 	public void guardarPartida() {
 		String id = "";
+		
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD(".././BD/script.sql");
@@ -194,46 +197,23 @@ public class PescaminesController implements Initializable {
 		temps.play();
 		event.consume();
 	}
-
+	@FXML
 	public void acabarPartida() {
 		temps.stop();
+		boto_guardarPartida.setDisable(true);
 		taulerGrid.getChildren().forEach(node -> node.setMouseTransparent(true));
-		System.out.println(context.comptador+", "+context.lliures);
+
 		if (context.comptador == 0 && context.lliures == 0) {
 			enviarRanquing();
 			System.out.println("Rànquing enviat");
 		}
 		System.out.println("Acabada la partida");
-		// ACABAR EL PROGRAMA I DIR EL RESULTAT
-		//
-		// botons inhabilitats
-		// pulsar antimines inhabilitat
-	}
 
-	@FXML
-	public void abandonar(ActionEvent e) {
-		context.setPartida(false);
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
-
-			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			// DificultadController controller ;
-
-			// loader.setController( new DificultadController());
-			Parent root = loader.load();
-			Scene escena2 = new Scene(root);
-
-			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			window.setScene(escena2);
-			window.setTitle("Pescamines");
-			window.show();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		tornar();
 	}
 
 	public void enviarRanquing() {
-System.out.println("Entrat a enviar ranquing");
+		
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
@@ -247,6 +227,7 @@ System.out.println("Entrat a enviar ranquing");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		boto_guardarPartida.setDisable(true);
 		boto_abandonar.setDisable(true);
 		// ACABAR EL PROGRAMA I DIR EL RESULTAT
 		//
@@ -254,12 +235,12 @@ System.out.println("Entrat a enviar ranquing");
 		// pulsar antimines inhabilitat
 	}
 
-	public void tornar(ActionEvent e) {
+	public void tornar() {
 		System.out.println("Entrar en abandonar");
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
 
-			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+			Stage window = (Stage) boto_abandonar.getScene().getWindow();
 			// DificultadController controller ;
 
 			// loader.setController( new DificultadController());
