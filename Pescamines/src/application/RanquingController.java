@@ -3,10 +3,13 @@ package application;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,23 +24,42 @@ import javafx.stage.Stage;
 
 public class RanquingController implements Initializable {
 	@FXML
-	private TableView taulaRanquing;
+	private TableView<PartidaRanquing> taulaRanquing;
 	@FXML
-	private TableColumn rPossicio;
+	private TableColumn<PartidaRanquing, Integer> rPossicio;
 	@FXML
-	private TableColumn rUsuari;
+	private TableColumn<PartidaRanquing, String> rUsuari;
 	@FXML
-	private TableColumn rDificultad;
+	private TableColumn<PartidaRanquing, String> rDificultat;
 	@FXML
-	private TableColumn rTemps;
+	private TableColumn<PartidaRanquing, Time> rTemps;
+	
+	private ObservableList<PartidaRanquing> partides = FXCollections.observableArrayList();;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Platform.runLater(() -> { // espera que l'inicialització siga completa.
-			ranquing();
+			//https://www.youtube.com/watch?v=SwYczt6K_Q0
+			//https://code.makery.ch/es/library/javafx-tutorial/part2/
+			 
+			ArrayList<PartidaRanquing> arrParRan = ranquing();
+			
+			if(arrParRan.size() > 0)
+	        for (int i = 0; i < arrParRan.size(); i++) {
+	        	partides.add(arrParRan.get(i));
+	        }
+
+			
+			this.rPossicio.setCellValueFactory(new PropertyValueFactory<>("possicio"));
+			this.rUsuari.setCellValueFactory(new PropertyValueFactory<>("usuari"));
+			this.rDificultat.setCellValueFactory(new PropertyValueFactory("dificultat"));
+			this.rTemps.setCellValueFactory(new PropertyValueFactory("temps"));
+
+			taulaRanquing.setItems(partides);
+
 		});
 	}
-
+	
 	@FXML
 	public void tornar(ActionEvent e) {
 		try {
@@ -60,22 +82,24 @@ public class RanquingController implements Initializable {
 	}
 
 	@FXML
-	public void ranquing() {
+	public ArrayList<PartidaRanquing> ranquing() {
+		ArrayList<PartidaRanquing> ranquing = null;
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
 			String[] camps = { "usuari", "dificultat", "temps" };
-			String[] ranquing = ConnexioBD.ranquingPescamines("ranking_pescamines", camps);
+			ranquing = ConnexioBD.ranquingPescamines("ranking_pescamines", camps);
 			
-			System.out.println("Rank: "+Arrays.toString(ranquing));
 //https://es.stackoverflow.com/questions/212713/agregar-elementos-a-tableview-desde-una-lista-en-javafx
 // https://stackoverflow.com/questions/41304198/javafx-add-data-to-a-table
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return new ArrayList<PartidaRanquing>();
 		}
+		return ranquing;
 
 	}
 }

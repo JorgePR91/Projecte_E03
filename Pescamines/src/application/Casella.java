@@ -9,12 +9,13 @@ public abstract class Casella {
 		protected transient Node contingut;
 		protected int x;
 		protected int y;
+		protected Context context;
 		
-		public Casella(int x, int y) {
+		public Casella(int x, int y, Context context) {
 			super();
 			this.x = x;
 			this.y = y;
-			
+			this.context = context;
 			this.estat = true;
 			this.container = new StackPane();
 		}

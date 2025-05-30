@@ -51,6 +51,7 @@ public class PescaminesController implements Initializable {
 	private Label cronometre;
 	private int segons;
 	private String dif;
+	private Context context;
 
 	public String getDif() {
 		return dif;
@@ -66,15 +67,15 @@ public class PescaminesController implements Initializable {
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
 
-		Context context = new Context();
+		context = new Context();
 		System.out.println(context.toString());
-		nouTauler = Context.crearTauler("fàcil", context);
-		context.assignarMines(nouTauler.getCaselles(), Context.tamany, dif, context);
+		nouTauler = context.crearTauler("fàcil", context);
+		context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
 		nouGP(nouTauler.getCaselles());
 		segons = 1;
 
 		cronometre = new Label();
-		compAntimines.getChildren().add(Context.caixaMines);
+		compAntimines.getChildren().add(context.caixaMines);
 
 		caixaTemps.getChildren().add(cronometre);
 		Format formatter = new SimpleDateFormat("mm:ss");
@@ -94,14 +95,14 @@ public class PescaminesController implements Initializable {
 		// pulsar antimines inhabilitat
 		// pantallaInici.setMouseTransparent(false);
 
-		Context.getPartida().addListener((obs, oldVal, newVal) -> {
+		context.getPartida().addListener((obs, oldVal, newVal) -> {
 			if (!newVal) {
 				acabarPartida();
 			}
 		});
 		/*
 		 * Parámetros del Listener observable (ObservableValue<? extends Tipo>): Es la
-		 * propiedad que está siendo observada (en este caso, Context.partida). Permite
+		 * propiedad que está siendo observada (en este caso, context.partida). Permite
 		 * acceder a métodos como getValue() si necesitas el valor actual.
 		 * 
 		 * oldValue (Tipo): El valor anterior de la propiedad antes del cambio. Ejemplo:
@@ -171,7 +172,7 @@ public class PescaminesController implements Initializable {
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
-			Context.serialitzacioTauler(nouTauler, id);
+			context.serialitzacioTauler(nouTauler, id);
 		// UTILITZAR CLASSE
 		// ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
@@ -179,7 +180,7 @@ public class PescaminesController implements Initializable {
 	@FXML
 	public void reiniciar(ActionEvent e) {
 		temps.stop();
-		Context.buidar(this.nouTauler);
+		context.buidar(this.nouTauler);
 		taulerGrid.getChildren().clear();
 		pantallaInici.setVisible(true);
 		pantallaInici.setMouseTransparent(false);
@@ -197,8 +198,8 @@ public class PescaminesController implements Initializable {
 	public void acabarPartida() {
 		temps.stop();
 		taulerGrid.getChildren().forEach(node -> node.setMouseTransparent(true));
-		System.out.println(Context.comptador+", "+Context.lliures);
-		if (Context.comptador == 0 && Context.lliures == 0) {
+		System.out.println(context.comptador+", "+context.lliures);
+		if (context.comptador == 0 && context.lliures == 0) {
 			enviarRanquing();
 			System.out.println("Rànquing enviat");
 		}
@@ -211,7 +212,7 @@ public class PescaminesController implements Initializable {
 
 	@FXML
 	public void abandonar(ActionEvent e) {
-		Context.setPartida(false);
+		context.setPartida(false);
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
 
@@ -232,14 +233,14 @@ public class PescaminesController implements Initializable {
 	}
 
 	public void enviarRanquing() {
-
+System.out.println("Entrat a enviar ranquing");
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
 			String[] camps = { "usuari", "dificultat", "temps" };
-			String[] valors = { "usuari", Context.getDificultat(), cronometre.getText() };
+			String[] valors = { "usuari", context.getDificultat(), cronometre.getText() };
 			ConnexioBD.insertarDades("ranking_pescamines", camps, valors);
 
 			ConnexioBD.tancarBD();

@@ -19,15 +19,13 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 	private boolean antimines;
 	private final transient Text Anti = new Text("(A)");
 	private Casella[][] c;
-	private Context context;
 
 	// RECERCA DE MINES
 	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
 	public Lliure(int x, int y, Casella[][] c, Context context) {
-		super(x, y);
+		super(x, y, context);
 		this.c = c;
-		this.context = context;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		text = new Text(" ");
@@ -43,9 +41,8 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 	}
 
 	public Lliure(int n, int x, int y, Casella[][] c, Context context) {
-		super(x, y);
+		super(x, y, context);
 		this.c = c;
-		this.context = context;
 
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -116,11 +113,11 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 			@Override
 			public void handle(MouseEvent e) {
 				if (e.getButton() == MouseButton.SECONDARY) {
-					if (!antimines && Context.disminuirComptador()) {
+					if (!antimines && context.disminuirComptador()) {
 						antimines = !antimines;
 						Anti.setVisible(antimines);
 						e.consume();
-					} else if (antimines && Context.augmentarComptador()) {
+					} else if (antimines && context.augmentarComptador()) {
 						antimines = !antimines;
 						Anti.setVisible(antimines);
 						e.consume();
@@ -145,7 +142,7 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 		if (l == null || !l.descobrir(l)) {
 			return l;
 		}
-		if (!l.isFrontera()) {
+		if (l.recompte == 0) {
 			if (l.getX() < c.length - 1) {
 				despejar((Lliure) c[l.getX() + 1][l.getY()], c);
 			}
@@ -173,7 +170,7 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 //				l.boto.setVisible(l.isEstat());
 //				l.text.setVisible(true);
 //				l.Anti.setVisible(false);
-//				Context.augmentarComptador();
+//				context.augmentarComptador();
 //
 //			});
 //
@@ -185,7 +182,8 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 					l.boto.setVisible(l.isEstat());
 					l.text.setVisible(true);
 					l.Anti.setVisible(false);
-					context.disminuirLliures(); 
+					context.setLliures(--context.lliures);
+				    context.comprovarPartida(); 
 				}
 
 		return descoberta;

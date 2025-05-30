@@ -18,8 +18,8 @@ public class Mina extends Casella implements AccioCasella, Serializable {
 	private transient Button boto;
 	private Casella[][] c;
 
-	public Mina(int x, int y, Casella[][] c) {
-		super(x, y);
+	public Mina(int x, int y, Casella[][] c, Context context) {
+		super(x, y, context);
 		this.c = c;
 		this.element = new Text("X");
 		this.boto = new Button();
@@ -87,11 +87,11 @@ public class Mina extends Casella implements AccioCasella, Serializable {
 			@Override
 			public void handle(MouseEvent e) {
 				if (e.getButton() == MouseButton.SECONDARY) {
-					 if(!antimines && Context.disminuirComptador()) {
+					 if(!antimines && context.disminuirComptador()) {
 							antimines = !antimines;
 							simbolAntimines.setVisible(antimines);
 							e.consume();
-						} else if (antimines && Context.augmentarComptador()) {
+						} else if (antimines && context.augmentarComptador()) {
 							antimines = !antimines;
 							simbolAntimines.setVisible(antimines);
 							e.consume();

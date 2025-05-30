@@ -13,6 +13,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ConnexioBD {
@@ -28,11 +29,13 @@ public class ConnexioBD {
 
 	public static void connectarBD() throws SQLException {
 
+		String url = "jdbc:mysql://localhost:3306/ProjecteProg";
+		String usuari = "Root";
+		String contrasenya = "";
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/ProjecteProg";
-			String usuari = "Root";
-			String contrasenya = "root";
+
 			connexio = DriverManager.getConnection(url, usuari, contrasenya);
 			System.out.println("Connexió establerta");
 		} catch (ClassNotFoundException e) {
@@ -45,9 +48,9 @@ public class ConnexioBD {
 
 	// -----------------------------------------------------------------------------------------------
 	public static boolean connectarBD(String baseD) {
-		String url = "jdbc:mysql://localhost:3306/" + baseD;
-		String usuari = "Root";
-		String contrasenya = "root";
+		String url = "jdbc:mysql://localhost:3308/" + baseD;
+		String usuari = "root";
+		String contrasenya = "";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -68,11 +71,11 @@ public class ConnexioBD {
 	}
 
 	public static boolean connectarScriptBD(String direccio) {
-		String url = "jdbc:mysql://localhost:3306/";
+		String url = "jdbc:mysql://localhost:3308/";
 		String script = llegirFitxerBD(direccio);
 		String[] aux = script.split(";");
-		String usuari = "Root";
-		String contrasenya = "root";
+		String usuari = "root";
+		String contrasenya = "";
 
 		try (Connection c = DriverManager.getConnection(url, usuari, contrasenya); Statement s = c.createStatement();) {
 			ConnexioBD.connexio = c;
@@ -214,39 +217,32 @@ public class ConnexioBD {
 
 	}
 
-	public static String[] ranquingPescamines(String taula, String[] camps) {
-		String[] resultat = null;
+	public static ArrayList<PartidaRanquing> ranquingPescamines(String taula, String[] camps) {
+		ArrayList<PartidaRanquing> resultat = null;
 
 		if (camps.length == 0) {
-			return new String[0];
+			return new ArrayList<PartidaRanquing>();
 		}
 
-		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula
-				+ " ORDER BY temps;";
+		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula + " ORDER BY temps LIMIT 10;";
 		System.out.println(sentencia);
-		try (Statement s = connexio.createStatement(ResultSet.CONCUR_READ_ONLY, ResultSet.TYPE_FORWARD_ONLY);) {
-			
-			ResultSet res = s.executeQuery(sentencia);
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);) {
 			int i = 0;
-			System.out.println("entra en ranquing, "+res.getFetchSize());
+			ResultSet res = s.executeQuery(sentencia);
 				
 				int[] tipusCamp = tipusCamp(taula, camps);
 
-				resultat = new String[camps.length];
+				resultat = new ArrayList<PartidaRanquing>();
 
 				while (res.next()) {
-					
-					resultat[i] = obtencioDadesBD(res, tipusCamp[i], camps[i]);
-					System.out.println(resultat[i]+", "+tipusCamp[i]+", "+camps[i]);
+					resultat.add(new PartidaRanquing((Integer) i+1, res.getString("usuari"), res.getString("dificultat"), res.getTime("temps")));
 					i++;
 				}
-
-
 
 			return resultat;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new String[0];
+			return new ArrayList<PartidaRanquing>();
 		}
 
 	}

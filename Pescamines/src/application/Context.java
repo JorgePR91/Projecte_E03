@@ -17,85 +17,85 @@ import javafx.scene.control.Label;
 public class Context implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	protected static int comptador;
-	protected static BooleanProperty partida = new SimpleBooleanProperty(true);
-	protected static int mines;
-	protected static int lliures;
-	protected static transient Label caixaMines;
-	protected static String dificultat;
-	protected static int tamany;
-	protected static transient Random alea = new Random();
+	protected int comptador;
+	protected  BooleanProperty partida = new SimpleBooleanProperty(true);
+	protected  int mines;
+	protected  int lliures;
+	protected  transient Label caixaMines;
+	protected  String dificultat;
+	protected  int tamany;
+	protected  transient Random alea = new Random();
 
 	
 	
 
 	// GETTERS I SETTERS
-	public static int getComptador() {
+	public  int getComptador() {
 		return comptador;
 	}
 
-	public static void setComptador(int comptador) {
-		Context.comptador = comptador;
+	public  void setComptador(int comptador) {
+		this.comptador = comptador;
 	}
 
-	public static String getDificultat() {
+	public  String getDificultat() {
 		return dificultat;
 	}
 
-	public static void setDificultat(String dificultat) {
-		Context.dificultat = dificultat;
+	public  void setDificultat(String dificultat) {
+		this.dificultat = dificultat;
 	}
 
-	public static int getMines() {
+	public  int getMines() {
 		return mines;
 	}
 
-	public static void setMines(int mines) {
-		Context.mines = mines;
+	public  void setMines(int mines) {
+		this.mines = mines;
 	}
 
-	public static int getTamany() {
+	public  int getTamany() {
 		return tamany;
 	}
 
-	public static void setTamany(int tamany) {
-		Context.tamany = tamany;
+	public  void setTamany(int tamany) {
+		this.tamany = tamany;
 	}
 
-	public static Random getAlea() {
+	public  Random getAlea() {
 		return alea;
 	}
 
-	public static void setAlea(Random alea) {
-		Context.alea = alea;
+	public  void setAlea(Random alea) {
+		this.alea = alea;
 	}
 
-	public static Label getCaixaMines() {
+	public  Label getCaixaMines() {
 		return caixaMines;
 	}
 
-	public static void setCaixaMines(Label caixaMines) {
-		Context.caixaMines = caixaMines;
+	public  void setCaixaMines(Label caixaMines) {
+		this.caixaMines = caixaMines;
 	}
 
-	public static BooleanProperty getPartida() {
+	public  BooleanProperty getPartida() {
 		return partida;
 	}
 
-	public static void setPartida(boolean estat) {
-		partida.set(estat);
+	public  void setPartida(boolean estat) {
+		this.partida.set(estat);
 	}
 
-	public static int getLliures() {
+	public  int getLliures() {
 		return lliures;
 	}
 
-	public static void setLliures(int lliures) {
-		Context.lliures = lliures;
+	public  void setLliures(int lliures) {
+		this.lliures = lliures;
 	}
 
 	// METODES
-	public static Tauler crearTauler(String dificultat, Context contxt ) {
+	public  Tauler crearTauler(String dificultat, Context contxt ) {
 		setDificultat(dificultat.toLowerCase());
 
 		switch (dificultat) {
@@ -119,7 +119,7 @@ public class Context implements Serializable {
 		}
 		comptador = mines;
 		caixaMines = new Label();
-		caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
+		caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
 
 		return new Tauler(tamany, tamany);
 	}
@@ -143,7 +143,7 @@ public class Context implements Serializable {
 			int y = alea.nextInt(tamany);
 
 			if (c[x][y] == null) {
-				c[x][y] = new Mina(x, y, c);
+				c[x][y] = new Mina(x, y, c, contxt);
 				System.out.println("Mina en: " + x + ", " + y);
 				b++;
 			}
@@ -169,7 +169,7 @@ public class Context implements Serializable {
 	}
 
 	// RECOMPTE DE MINES
-	public static int recompteMines(Casella[][] c, int a, int b) {
+	public  int recompteMines(Casella[][] c, int a, int b) {
 		int comptador = 0;
 
 		// CANTO SUP ESQUERRE
@@ -248,7 +248,7 @@ public class Context implements Serializable {
 		return comptador;
 	}
 
-	public static void buidar(Tauler t) {
+	public  void buidar(Tauler t) {
 		Casella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
@@ -260,10 +260,10 @@ public class Context implements Serializable {
 		}
 	}
 
-	public static boolean disminuirComptador() {
+	public  boolean disminuirComptador() {
 		if (comptador > 0) {
 			comptador--;
-			caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
+			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
 
 //			Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
 //			Listeners que no se ejecutan.
@@ -289,28 +289,25 @@ public class Context implements Serializable {
 	}
 
 	public void comprovarPartida() {
-		System.out.println("Llires "+lliures+", comptador "+comptador);
 		if (lliures == 0 && comptador == 0) {
-			System.out.println("Partida acabada");
 			setPartida(false);
 		}
 	}
 
 	public void disminuirLliures() {
 	    lliures--;
-	    comprovarPartida();
 	}
 	
-	public static boolean augmentarComptador() {
+	public  boolean augmentarComptador() {
 		if (comptador < mines) {
 			comptador++;
-			caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
+			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
 			return true;
 		} else
 			return false;
 	}
 
-	public static boolean serialitzacioTauler(Tauler t, String id) {
+	public  boolean serialitzacioTauler(Tauler t, String id) {
 		//https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 		
 		//¿Crear /Partides si no existeix com fem amb les BD?
@@ -323,7 +320,7 @@ public class Context implements Serializable {
 		}
 	}
 	
-	public static boolean desserialitzacioTauler(String id) {
+	public  boolean desserialitzacioTauler(String id) {
 		
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("./Partides/" + id+".dat"))) {
 			ois.readObject();
