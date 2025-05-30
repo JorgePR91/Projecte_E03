@@ -214,7 +214,7 @@ public class ConnexioBD {
 
 	}
 
-	public static String[] ranquing(String taula, String[] camps, String criteri) {
+	public static String[] ranquingPescamines(String taula, String[] camps) {
 		String[] resultat = null;
 
 		if (camps.length == 0) {
@@ -222,28 +222,25 @@ public class ConnexioBD {
 		}
 
 		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula
-				+ " ORDER BY " + criteri + ";";
+				+ " ORDER BY temps;";
 		System.out.println(sentencia);
 		try (Statement s = connexio.createStatement(ResultSet.CONCUR_READ_ONLY, ResultSet.TYPE_FORWARD_ONLY);) {
 			
 			ResultSet res = s.executeQuery(sentencia);
-			int pos = 0;
+			int i = 0;
 			System.out.println("entra en ranquing, "+res.getFetchSize());
-			if (res.next()) {
 				
 				int[] tipusCamp = tipusCamp(taula, camps);
 
 				resultat = new String[camps.length];
 
-				for (int i = 0; i < tipusCamp.length; i++) {
+				while (res.next()) {
 					
 					resultat[i] = obtencioDadesBD(res, tipusCamp[i], camps[i]);
 					System.out.println(resultat[i]+", "+tipusCamp[i]+", "+camps[i]);
-
+					i++;
 				}
-	
-			} else
-				return new String[0];
+
 
 
 			return resultat;

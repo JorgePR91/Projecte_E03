@@ -67,13 +67,11 @@ public class RanquingController implements Initializable {
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
 			String[] camps = { "usuari", "dificultat", "temps" };
-			String[] ranquing = ConnexioBD.ranquing("ranking_pescamines", camps, "temps");
+			String[] ranquing = ConnexioBD.ranquingPescamines("ranking_pescamines", camps);
 			
-			System.out.println(Arrays.toString(ranquing));
+			System.out.println("Rank: "+Arrays.toString(ranquing));
 //https://es.stackoverflow.com/questions/212713/agregar-elementos-a-tableview-desde-una-lista-en-javafx
 // https://stackoverflow.com/questions/41304198/javafx-add-data-to-a-table
-			
-			
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
