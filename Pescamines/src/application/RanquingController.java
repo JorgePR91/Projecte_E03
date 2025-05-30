@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -68,10 +69,10 @@ public class RanquingController implements Initializable {
 			String[] camps = { "usuari", "dificultat", "temps" };
 			String[] ranquing = ConnexioBD.ranquing("ranking_pescamines", camps, "temps");
 			
-			System.out.println(taulaRanquing.getChildrenUnmodifiable().size());
+			System.out.println(Arrays.toString(ranquing));
 //https://es.stackoverflow.com/questions/212713/agregar-elementos-a-tableview-desde-una-lista-en-javafx
 // https://stackoverflow.com/questions/41304198/javafx-add-data-to-a-table
-
+			
 			
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {

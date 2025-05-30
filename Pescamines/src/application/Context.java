@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import javax.swing.plaf.synth.SynthScrollPaneUI;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
@@ -23,6 +25,9 @@ public class Context implements Serializable {
 	protected static String dificultat;
 	protected static int tamany;
 	protected static transient Random alea = new Random();
+
+	
+	
 
 	// GETTERS I SETTERS
 	public static int getComptador() {
@@ -116,11 +121,11 @@ public class Context implements Serializable {
 		caixaMines = new Label();
 		caixaMines.setText("Antimines\n" + Context.comptador + "/" + Context.tamany);
 
-		return new Tauler(tamany, tamany, contxt );
+		return new Tauler(tamany, tamany);
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat) {
+	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat, Context contxt) {
 //		int nMines;
 //		//decidir bombes
 //		if(dificultat == "f") {
@@ -145,7 +150,7 @@ public class Context implements Serializable {
 
 		}
 		System.out.println("------------------------");
-
+		lliures = 0;
 		// col·locar caselles
 		for (int o = 0; o < c.length; o++) {
 			for (int m = 0; m < c[o].length; m++) {
@@ -153,9 +158,9 @@ public class Context implements Serializable {
 					int nombre = 0;
 					nombre = recompteMines(c, o, m);
 					if (nombre > 0)
-						c[o][m] = new Lliure(nombre, o, m, c, this);
+						c[o][m] = new Lliure(nombre, o, m, c, contxt);
 					else
-						c[o][m] = new Lliure(o, m, c, this);
+						c[o][m] = new Lliure(o, m, c, contxt);
 					lliures++;
 				}
 			}
@@ -284,6 +289,7 @@ public class Context implements Serializable {
 	}
 
 	public void comprovarPartida() {
+		System.out.println("Llires "+lliures+", comptador "+comptador);
 		if (lliures == 0 && comptador == 0) {
 			System.out.println("Partida acabada");
 			setPartida(false);

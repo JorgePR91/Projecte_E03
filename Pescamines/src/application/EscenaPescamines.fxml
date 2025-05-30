@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<HBox fx:id="root_Pescamines" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PescaminesController">
+<HBox fx:id="root_Pescamines" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PescaminesController">
 	<children>
 		<BorderPane prefHeight="600.0" prefWidth="600.0">
 			<top>
@@ -71,7 +71,7 @@
 				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
 					<children>
 						<Button fx:id="boto_guardarPartida" mnemonicParsing="false" onAction="#guardarPartida" text="Guardar Partida" />
-						<Button fx:id="abandonar" mnemonicParsing="false" onAction="#acabarPartida" text="Abandonar" />
+						<Button fx:id="boto_abandonar" mnemonicParsing="false" onAction="#acabarPartida" text="Abandonar" />
 					</children>
 				</HBox>
 			</bottom>

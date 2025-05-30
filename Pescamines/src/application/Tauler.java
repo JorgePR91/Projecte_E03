@@ -17,9 +17,8 @@ public class Tauler extends Context implements Serializable {
 	private int a;
 	private transient Timeline temps;
 	private Casella[][] caselles;
-	private Context context;
 	
-	public Tauler(int l, int a, Context context) {
+	public Tauler(int l, int a) {
 		super();
 		temps = new Timeline();
 		this.l = l;
