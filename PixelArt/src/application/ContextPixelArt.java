@@ -1,154 +1,206 @@
 package application;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Random;
 
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class ContextPixelArt {
+public class ContextPixelArt implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	protected static int comptador;
-	protected static Color color;
-	protected static boolean borrador;
-	protected static int tamany = 0;
-	protected static Random alea = new Random();
-	static {
+	protected int comptador;
+	protected transient Color color;
+	protected boolean borrador;
+	protected int tamany;
+	protected String mida;
+	protected transient Random alea;
+	protected Tauler tauler;
+	
+	{
 		color = Color.BLACK;
 		borrador = false;
+		alea = new Random();
+	}
+	public ContextPixelArt() {
+		super();
+	}
+	
+	public ContextPixelArt(String mida) {
+		super();
+		this.mida = mida;
 	}
 
+
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+		ois.defaultReadObject(); 
+	    
+	    color = Color.BLACK;
+	    alea = new Random();
+	}
+	
+
+
 	// GETTERS I SETTERS
-	public static int getComptador() {
+	public int getComptador() {
 		return comptador;
 	}
 
-	public static void setComptador(int comptador) {
-		ContextPixelArt.comptador = comptador;
+	public void setComptador(int comptador) {
+		this.comptador = comptador;
 	}
 
-	public static Color getColor() {
+	public Color getColor() {
 		return color;
 	}
 
-	public static void setColor(Color color) {
-		ContextPixelArt.color = color;
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
-	public static int getTamany() {
+	public int getTamany() {
 		return tamany;
 	}
 
-	public static void setTamany(int tamany) {
-		ContextPixelArt.tamany = tamany;
+	public void setTamany(int tamany) {
+		this.tamany = tamany;
 	}
 
-	public static Random getAlea() {
+	public Random getAlea() {
 		return alea;
 	}
 
-	public static void setAlea(Random alea) {
-		ContextPixelArt.alea = alea;
+	public void setAlea(Random alea) {
+		this.alea = alea;
+	}
+
+	public boolean isBorrador() {
+		return borrador;
+	}
+
+	public void setBorrador(boolean borrador) {
+		this.borrador = borrador;
+	}
+
+	public String getMida() {
+		return mida;
+	}
+	public void setMida(String mida) {
+		this.mida = mida;
+	}
+	public Tauler getTauler() {
+		return tauler;
+	}
+
+	public void setTauler(Tauler tauler) {
+		this.tauler = tauler;
 	}
 
 	// METODES
-	public static Tauler crearTauler(String dificultat) {
-
-		switch (dificultat) {
-		case "f" -> {
-			tamany = 9;
-			comptador = tamany;
+	public int tamany(String t) {
+		switch (t) {
+		case "Xicotet": return 20;
+		case "Mitjà": return 30;
+		case "Gran": return 40;
+		default:
+			return 30;
 		}
-		case "n" -> {
-			tamany = 10;
-			comptador = tamany;
-		}
-		case "d" -> {
-			tamany = 15;
-			comptador = tamany;
-		}
-		default -> {
-			dificultat = "n";
-			tamany = 10;
-			comptador = tamany;
-		}
-		}
-		System.out.println(comptador);
-		return new Tauler(tamany, tamany);
+	}
+		
+	public Tauler crearTauler(int llarg, int ample) {
+		this.tauler = new Tauler(llarg, ample);
+		return tauler;
 
 	}
+	
+	public Color perDefecte( int x, int y) {
 
-	public static Tauler crearTauler(int llarg, int ample) {
-
-		return new Tauler(llarg, ample);
-
+		if ((x + y) % 2 == 0)
+			return Color.LIGHTGREY;
+		else
+			return Color.WHITE;
+	}
+	
+	public String conversioAHex(Color color) {
+		
+		//Sí IA, és lo que hi ha
+		
+		 String colorCad = String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
+				(int) (color.getBlue() * 255));
+		 return colorCad;
 	}
 
-	public static void buidar(Tauler t) {
+	public void buidar(Tauler t) {
 		Casella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
-
 				c[fil][col] = null;
 			}
-
 		}
 	}
 
-	public static void ompllirLlenç(Casella[][] c) {
+	public void pintar(Node n, Pixel l) {
+	    n.setOnMousePressed(e -> {
+	        if (borrador) {
+	            n.setStyle("-fx-background-color: " + conversioAHex(l.getBase()) + ";");
+	            l.setColorHex(""); 
+	        } else {
+	            if (e.getButton() == MouseButton.PRIMARY) {
+	                String c = conversioAHex(color);
+	                l.setColorHex(c);
+	                n.setStyle("-fx-background-color: " + c + ";");
 
-		for (int o = 0; o < c.length; o++) {
-			for (int m = 0; m < c[o].length; m++) {
-				if (c[o][m] == null) {
-					c[o][m] = new Pixel(o, m);
+	            } else if (e.getButton() == MouseButton.SECONDARY) {
+	                n.setStyle("-fx-background-color: " + conversioAHex(l.getBase()) + ";");
+	                l.setColorHex("");
+	            }
+	        }
 
-				}
-			}
+	    });
+
+	    n.setOnDragDetected(e -> {
+	        n.startFullDrag();
+	        e.consume();
+	    });
+
+	    n.setOnMouseDragEntered(e -> {
+	        if (borrador) {
+	            n.setStyle("-fx-background-color: " + conversioAHex(l.getBase()) + ";");
+	            l.setColorHex("");
+	        } else {
+	            if (e.isPrimaryButtonDown()) {
+	                String c = conversioAHex(color);
+	                l.setColorHex(c);
+	                n.setStyle("-fx-background-color: " + c + ";");
+	            } else if (e.isSecondaryButtonDown()) {
+	                n.setStyle("-fx-background-color: " + conversioAHex(l.getBase()) + ";");
+	                l.setColorHex("");
+	            }
+	        }
+	        e.consume();
+	    });
+	}
+	
+	public boolean serialitzacioPartida(ContextPixelArt cntxt, String id) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".dat"))) {
+			//this.tauler = cntxt.crearTauler(tamany, tamany); 
+			oos.writeObject(this); 
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
-
 	}
-
-	public static void pintar(Node n, Pixel l) {
-		String c = "#"+color.toString().substring(color.toString().indexOf("x") + 1);
-		
-		n.setOnMousePressed(e->{
-			if(borrador) {
-				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
-			}else {
-				if(e.getButton() == MouseButton.PRIMARY) {
-				n.setStyle("-fx-background-color: " + c + ";");
-			} else if(e.getButton() == MouseButton.SECONDARY) {
-				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
-			}
-			}
-			
-			e.consume();
-		});
-		
-		n.setOnDragDetected(e->{
-			n.startFullDrag();
-			e.consume();
-		});
-		
-		n.setOnMouseDragEntered(e-> {
-			if(borrador) {
-				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
-			}else {
-			if(e.isPrimaryButtonDown()) {
-				n.setStyle("-fx-background-color: " + c + ";");
-			} else if(e.isSecondaryButtonDown()) {
-				n.setStyle("-fx-background-color: #" + l.base.toString().substring(l.base.toString().indexOf("x") + 1));
-			}}
-			e.consume();
-		});
-	}
-	public static Color perDefecte(Pixel p, int x, int y) {
-
-	if((x+y)%2==0)
-		return Color.LIGHTGREY;
-	 else 
-		 return Color.WHITE;
-	}
-
+	
+	
 }

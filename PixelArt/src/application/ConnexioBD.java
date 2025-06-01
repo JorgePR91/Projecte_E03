@@ -218,35 +218,6 @@ public class ConnexioBD {
 
 	}
 
-	public static ArrayList<PartidaRanquing> ranquingPescamines(String taula, String[] camps) {
-		ArrayList<PartidaRanquing> resultat = null;
-
-		if (camps.length == 0) {
-			return new ArrayList<PartidaRanquing>();
-		}
-
-		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula + " ORDER BY temps LIMIT 10;";
-		System.out.println(sentencia);
-		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);) {
-			int i = 0;
-			ResultSet res = s.executeQuery(sentencia);
-				
-				int[] tipusCamp = tipusCamp(taula, camps);
-
-				resultat = new ArrayList<PartidaRanquing>();
-
-				while (res.next()) {
-					resultat.add(new PartidaRanquing((Integer) i+1, res.getString("usuari"), res.getString("dificultat"), res.getTime("temps")));
-					i++;
-				}
-
-			return resultat;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return new ArrayList<PartidaRanquing>();
-		}
-
-	}
 
 	public static String obtencioDadesBD(ResultSet rs, int tipus, String col) throws SQLException {
 		// https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java

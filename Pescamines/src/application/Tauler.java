@@ -1,26 +1,55 @@
 package application;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
 import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class Tauler extends Context implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	
 	Random alea = new Random();
+// Fer Random un atribut però transient
 	private int l;
 	private int a;
-	private transient Timeline temps;
 	private Casella[][] caselles;
+	
+
+	private void writeObject(ObjectOutputStream oos) {
+        try {
+            oos.defaultWriteObject();
+            
+            oos.writeInt(l);
+            oos.writeInt(a);
+            oos.writeObject(caselles);
+		} catch (IOException e) {
+		}
+    }
+    
+    private void readObject(ObjectInputStream ois) {
+    	try {
+            ois.defaultReadObject();
+            this.alea = new Random();
+            this.l = ois.readInt();
+            this.a = ois.readInt();
+            this.caselles = (Casella[][]) ois.readObject();
+		} catch (IOException e) {
+			// TODO: handle exception
+		} catch (ClassNotFoundException e) {
+			// TODO: handle exception
+		}
+    }
+
+	
+	public Tauler() {
+	};
 	
 	public Tauler(int l, int a) {
 		super();
-		temps = new Timeline();
 		this.l = l;
 		this.a = a;
 		caselles = new Casella[this.a][this.l];
@@ -50,14 +79,6 @@ public class Tauler extends Context implements Serializable {
 
 	public void setA(int a) {
 		this.a = a;
-	}
-
-	public Timeline getTemps() {
-		return temps;
-	}
-
-	public void setTemps(Timeline temps) {
-		this.temps = temps;
 	}
     
 	// MÈTODES

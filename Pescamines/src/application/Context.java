@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
-
-import javax.swing.plaf.synth.SynthScrollPaneUI;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,85 +17,121 @@ public class Context implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
-	protected  BooleanProperty partida = new SimpleBooleanProperty(true);
-	protected  int mines;
-	protected  int lliures;
-	protected  transient Label caixaMines;
-	protected  String dificultat;
-	protected  int tamany;
-	protected  transient Random alea = new Random();
+	protected transient BooleanProperty partida = new SimpleBooleanProperty(true);
+	protected int mines;
+	protected int lliures;
+	protected transient Label caixaMines;
+	protected String dificultat;
+	protected int tamany;
+	protected int temps;
+	protected transient Random alea = new Random();
+	protected Casella[][] caselles;
 
-	
-	
+	private void readObject(ObjectInputStream ois) {
+		try {
+			ois.defaultReadObject();
+			this.alea = new Random();
+			this.partida = new SimpleBooleanProperty(true);
+			this.caselles = (Casella[][]) ois.readObject();
+		} catch (IOException e) {
+			// TODO: handle exception
+		} catch (ClassNotFoundException e) {
+			// TODO: handle exception
+		}
+	}
+
+	public Context() {
+		super();
+	}
 
 	// GETTERS I SETTERS
-	public  int getComptador() {
+	public int getComptador() {
 		return comptador;
 	}
 
-	public  void setComptador(int comptador) {
+	public void setComptador(int comptador) {
 		this.comptador = comptador;
 	}
 
-	public  String getDificultat() {
+	public String getDificultat() {
 		return dificultat;
 	}
 
-	public  void setDificultat(String dificultat) {
+	public void setDificultat(String dificultat) {
 		this.dificultat = dificultat;
 	}
 
-	public  int getMines() {
+	public int getMines() {
 		return mines;
 	}
 
-	public  void setMines(int mines) {
+	public void setMines(int mines) {
 		this.mines = mines;
 	}
 
-	public  int getTamany() {
+	public int getTamany() {
 		return tamany;
 	}
 
-	public  void setTamany(int tamany) {
+	public void setTamany(int tamany) {
 		this.tamany = tamany;
 	}
 
-	public  Random getAlea() {
+	public Random getAlea() {
 		return alea;
 	}
 
-	public  void setAlea(Random alea) {
+	public void setAlea(Random alea) {
 		this.alea = alea;
 	}
 
-	public  Label getCaixaMines() {
+	public Label getCaixaMines() {
 		return caixaMines;
 	}
 
-	public  void setCaixaMines(Label caixaMines) {
+	public void setCaixaMines(Label caixaMines) {
 		this.caixaMines = caixaMines;
 	}
 
-	public  BooleanProperty getPartida() {
+	public BooleanProperty getPartida() {
 		return partida;
 	}
 
-	public  void setPartida(boolean estat) {
+	public void setPartida(boolean estat) {
 		this.partida.set(estat);
 	}
 
-	public  int getLliures() {
+	public int getLliures() {
 		return lliures;
 	}
 
-	public  void setLliures(int lliures) {
+	public void setLliures(int lliures) {
 		this.lliures = lliures;
 	}
 
+	public int getTemps() {
+		return temps;
+	}
+
+	public void setTemps(int temps) {
+		this.temps = temps;
+	}
+
+	public void setPartida(BooleanProperty partida) {
+		this.partida = partida;
+	}
+
+	public Casella[][] getCaselles() {
+		return caselles;
+	}
+
+	public void setCaselles(Casella[][] caselles) {
+		this.caselles = caselles;
+	}
+
 	// METODES
-	public  Tauler crearTauler(String dificultat, Context contxt ) {
-		setDificultat(dificultat.toLowerCase());
+	public Tauler crearTauler(String dificultat, Context contxt) {
+		setDificultat(dificultat);
 
 		switch (dificultat) {
 		case "Fàcil" -> {
@@ -104,21 +139,23 @@ public class Context implements Serializable {
 			mines = tamany;
 		}
 		case "Normal" -> {
-			tamany = 10;
+			tamany = 15;
 			mines = tamany;
 		}
 		case "Difícil" -> {
-			tamany = 15;
+			tamany = 20;
 			mines = tamany;
 		}
 		default -> {
 			setDificultat("Normal");
-			tamany = 10;
+			tamany = 15;
 			mines = tamany;
 		}
 		}
 		comptador = mines;
-		caixaMines = new Label();
+		if (caixaMines == null) {
+			caixaMines = new Label();
+		}
 		caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
 
 		return new Tauler(tamany, tamany);
@@ -135,6 +172,10 @@ public class Context implements Serializable {
 //		} else {
 //			nMines=12;
 //		}
+
+		if (c != null) {
+			System.out.println("No hi ha matriu");
+		}
 
 		// col·locar bombes
 		for (int b = 0; b < comptador;) {
@@ -169,7 +210,7 @@ public class Context implements Serializable {
 	}
 
 	// RECOMPTE DE MINES
-	public  int recompteMines(Casella[][] c, int a, int b) {
+	public int recompteMines(Casella[][] c, int a, int b) {
 		int comptador = 0;
 
 		// CANTO SUP ESQUERRE
@@ -248,7 +289,7 @@ public class Context implements Serializable {
 		return comptador;
 	}
 
-	public  void buidar(Tauler t) {
+	public void buidar(Tauler t) {
 		Casella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
@@ -260,7 +301,7 @@ public class Context implements Serializable {
 		}
 	}
 
-	public  boolean disminuirComptador() {
+	public boolean disminuirComptador() {
 		if (comptador > 0) {
 			comptador--;
 			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
@@ -280,7 +321,7 @@ public class Context implements Serializable {
 //			Variable no final: descoberta se declara como variable local y luego se intenta modificar dentro del lambda.
 //
 //			Ámbito de variables: Las variables locales usadas en lambdas deben ser final o efectivamente final.
-	
+
 			return true;
 		} else
 			return false;
@@ -295,10 +336,10 @@ public class Context implements Serializable {
 	}
 
 	public void disminuirLliures() {
-	    lliures--;
+		lliures--;
 	}
-	
-	public  boolean augmentarComptador() {
+
+	public boolean augmentarComptador() {
 		if (comptador < mines) {
 			comptador++;
 			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
@@ -307,27 +348,28 @@ public class Context implements Serializable {
 			return false;
 	}
 
-	public  boolean serialitzacioTauler(Tauler t, String id) {
-		//https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
-		
-		//¿Crear /Partides si no existeix com fem amb les BD?
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id+".dat"))) {
-			oos.writeObject(t);
+	public boolean serialitzacioPartida(Context cntxt, String id) {
+		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
+
+		// ¿Crear /Partides si no existeix com fem amb les BD?
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
+			oos.writeObject(cntxt);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-	
-	public  boolean desserialitzacioTauler(String id) {
-		
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("./Partides/" + id+".dat"))) {
-			ois.readObject();
-			return true;
+
+	public static Context desserialitzacioTauler(File f) {
+
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+			Context c = (Context) ois.readObject();
+			return c;
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			return false;
+			return new Context();
 		}
+
 	}
 }

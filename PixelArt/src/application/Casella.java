@@ -1,15 +1,33 @@
 package application;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
-//import javafx.scene.text.Text;
 
-public abstract class Casella {
+public abstract class Casella implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	
 		protected boolean estat;
-		protected StackPane container;
-		protected Node contingut;
+		protected transient StackPane container;
+		protected transient Node contingut;
 		protected int x;
 		protected int y;
+		
+		public Casella() {}
+
+
+		
+		private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+			ois.defaultReadObject(); 
+		    this.contingut = new StackPane();
+			this.container = new StackPane();
+			}
+		
 		
 		public Casella(int x, int y) {
 			super();

@@ -5,6 +5,8 @@ import java.io.File;
 public class DadesSingleton {
 		private String cadenaCompartida; 
 		private File partidaCompartida; 
+		private int tamanyCompartit; 
+
 
 		
 		private final static DadesSingleton INSTANCIA =  new DadesSingleton();
@@ -29,7 +31,16 @@ public class DadesSingleton {
 
 		public void setPartidaCompartida(File partidaCompartida) {
 			this.partidaCompartida = partidaCompartida;
+		}
+
+		public int getTamanyCompartit() {
+			return tamanyCompartit;
+		}
+
+		public void setTamanyCompartit(int tamanyCompartit) {
+			this.tamanyCompartit = tamanyCompartit;
 		} 
+		
 		
 		
 }

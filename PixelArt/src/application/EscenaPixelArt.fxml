@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.DificultadController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" scaleShape="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PixelArtController">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <center>
-            <GridPane fx:id="taulerGrid" prefHeight="361.0" prefWidth="299.0" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
+            <GridPane fx:id="taulerGrid" prefHeight="300.0" prefWidth="300.0" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor></GridPane>
@@ -28,9 +28,9 @@
             <AnchorPane prefWidth="100.0" BorderPane.alignment="CENTER" />
          </right>
          <bottom>
-            <AnchorPane prefHeight="50.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="78.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="tornar" layoutX="218.0" layoutY="63.0" mnemonicParsing="false" text="tornar" />
+                  <Button fx:id="tornar" alignment="CENTER" layoutX="224.0" layoutY="26.0" mnemonicParsing="false" onAction="#tornar" text="Tornar" />
                </children></AnchorPane>
          </bottom>
          <top>
@@ -38,7 +38,7 @@
                <children>
                   <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT">
                     <buttons>
-                      <Button fx:id="netejar" mnemonicParsing="false" onAction="#netejarLlenç" text="Netejar" />
+                      <Button fx:id="netejar" mnemonicParsing="false" onAction="#netejarLlenc" text="Netejar" />
                         <ColorPicker fx:id="color" editable="true" onAction="#establirColor">
                            <value>
                               <Color />
@@ -47,6 +47,7 @@
                         <Button fx:id="pinzell" mnemonicParsing="false" onAction="#pintarLlenç" text="Pinzell" />
                         <Button fx:id="esborrar" mnemonicParsing="false" onAction="#esborrarLlenç" text="Esborrar" />
                         <Button fx:id="guardar" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+                        <Button fx:id="exportarPNG" mnemonicParsing="false" onAction="#exportar" text="Exportar PNG" />
                     </buttons>
                      <opaqueInsets>
                         <Insets />
