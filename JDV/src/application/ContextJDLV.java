@@ -5,7 +5,6 @@ import java.util.Random;
 import javafx.scene.paint.Color;
 
 public class ContextJDLV {
-	private static final long serialVersionUID = 1L;
 
 	protected int comptCel;
 	protected int comptMor;
@@ -150,10 +149,6 @@ public class ContextJDLV {
 
 	public void setEstancament(boolean estancament) {
 		this.estancament = estancament;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	// METODES

@@ -238,7 +238,7 @@ public class ControllerJDLV implements Initializable {
 		temps.stop();
 		System.out.println("Entrar en abandonar");
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultat.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultatJDLV.fxml"));
 
 			Stage window = (Stage) tornar.getScene().getWindow();
 

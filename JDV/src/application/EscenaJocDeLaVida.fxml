@@ -27,7 +27,7 @@
             </AnchorPane>
          </bottom>
          <center>
-            <GridPane fx:id="taulerGrid" alignment="CENTER" prefHeight="250.0" prefWidth="250.0" scaleShape="false" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
+            <GridPane fx:id="taulerGrid" alignment="CENTER" maxHeight="450.0" maxWidth="450.0" prefHeight="250.0" prefWidth="250.0" scaleShape="false" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
