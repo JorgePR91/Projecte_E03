@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -13,7 +14,7 @@ import javafx.scene.text.Text;
 public class Mina extends Casella implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private transient Text element;
+	private transient Label element;
 	private boolean antimines;
 	//private final transient Text simbolAntimines = new Text("(A)");
 	private final BooleanProperty antiminesBP = new SimpleBooleanProperty(false);
@@ -29,7 +30,7 @@ public class Mina extends Casella implements Serializable {
 	public Mina(int x, int y, Casella[][] c, Context context) {
 		super(x, y, context);
 		this.c = c;
-		this.element = new Text("X");
+		this.element = new Label("X");
 		// this.boto = new Button();
 		// boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		super.setContingut(this.element);
@@ -40,19 +41,19 @@ public class Mina extends Casella implements Serializable {
 		// reaccio();
 	}
 
-	public Text getMina() {
+	public Label getMina() {
 		return element;
 	}
 
-	public void setMina(Text mina) {
+	public void setMina(Label mina) {
 		this.element = mina;
 	}
 
-	public Text getElement() {
+	public Label getElement() {
 		return element;
 	}
 
-	public void setElement(Text element) {
+	public void setElement(Label element) {
 		this.element = element;
 	}
 

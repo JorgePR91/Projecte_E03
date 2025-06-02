@@ -10,16 +10,13 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -52,17 +49,7 @@ public class PescaminesController implements Initializable {
 	private Label cronometre;
 	private int segons;
 	private String dif;
-	private Context context;
-
-	public Context getcontext() {
-		return context;
-	}
-
-	public void setcontext(Context context) {
-
-		this.context = context;
-
-	}
+	private ContextPescamines context;
 
 	public String getDif() {
 		return dif;
@@ -77,34 +64,15 @@ public class PescaminesController implements Initializable {
 
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
-//Posar booleà si la cadena compartida és null
+
 		DadesSingleton dada = DadesSingleton.getInstancia();
-
-		if (dada.getPartidaCompartida() != null) {
-			Context contextProvisional = context.desserialitzacioTauler(dada.getPartidaCompartida());
-			if (contextProvisional != null) {
-				System.out.println("Copiant context");
-				context = contextProvisional;
-				dif = context.getDificultat();
-				// Tauler
-				nouTauler = context.crearTauler(dif, context);
-				context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
-				taulerGrid.getChildren().clear();
-				nouGP(nouTauler.getCaselles());
-				segons = nouTauler.getTemps();
-				dada.setCadenaCompartida(null);
-				dada.setPartidaCompartida(null);
-			}
-		} else {
-			System.out.println("Nou context");
-			context = new Context();
-			dif = dada.getCadenaCompartida();
-			nouTauler = context.crearTauler(dif, context);
-			context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
-			nouGP(nouTauler.getCaselles());
-			segons = 1;
-
-		}
+		dif = dada.getCadenaCompartida();
+		
+		context = new ContextPescamines();
+		nouTauler = context.crearTauler(dif, context);
+		context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
+		nouGP(nouTauler.getCaselles());
+		segons = 1;
 
 		cronometre = new Label();
 		compAntimines.getChildren().add(context.caixaMines);
@@ -114,10 +82,8 @@ public class PescaminesController implements Initializable {
 
 		temps = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
 			segons++;
-			nouTauler.setTemps(segons);
 			cronometre.setText(formatter.format(segons * 1000));
 		}));
-		// posar límit en 59 minuts amb 59 segons
 		temps.setCycleCount(3600);
 
 		pantallaInici.setPrefWidth(taulerGrid.getMinWidth());
@@ -169,81 +135,7 @@ public class PescaminesController implements Initializable {
 
 		for (int o = 0; o < c.length; o++) {
 			for (int m = 0; m < c[o].length; m++) {
-
 				gp.add(c[o][m].getContainer(), o, m);
-
-				if (c[o][m].isEstat()) {
-					Button bot = new Button();
-					gp.add(bot, o, m);
-					bot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-					int col = o;
-					int fil = m;
-
-					bot.setOnMouseClicked((EventHandler<MouseEvent>) e -> {
-						
-						if (e.getButton() == MouseButton.PRIMARY) {
-							c[col][fil].reaccioRatoli(e, bot);
-							
-							if (!c[col][fil].isEstat()) {
-								gp.getChildren().remove(bot);
-								
-								if(c[col][fil] instanceof Mina) {
-									System.out.println("Polsat Mina");
-									Label element = new Label("X");
-									element.setAlignment(Pos.CENTER);
-									gp.add(element, col, fil);
-
-								} else {
-									System.out.println("Polsat Lliure");
-
-									Label element = ((Lliure) c[col][fil]).getText();
-									gp.add(element, col, fil);
-								}
-								
-							}
-							
-						} else if (e.getButton() == MouseButton.SECONDARY) {
-							if(c[col][fil] instanceof Mina)
-							((Mina) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-								if(newVal) {
-									Label simbolAntimines = new Label("(A)");
-									gp.add(simbolAntimines, col, fil);
-								}
-
-
-							});
-							if(c[col][fil] instanceof Lliure)
-							((Lliure) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-								if(newVal) {
-									Label simbolAntimines = new Label("(A)");
-									gp.add(simbolAntimines, col, fil);
-								}
-							});
-							c[col][fil].reaccioRatoli(e, bot);
-
-						}
-							
-
-						
-					});
-					
-					if (c[o][m] instanceof Mina) {
-						((Mina)c[o][m]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-							context.caixaMines.setText("Antimines\n" + context.getComptador() + "/" + context.getTamany());
-						});
-					}
-					
-					c[o][m].getEstatBP().addListener((obs, oldVal, newVal) -> {
-						if (!newVal) {
-							gp.getChildren().remove(bot);
-
-						}
-					});
-
-				} else {
-
-				}
-
 			}
 		}
 	}
@@ -251,7 +143,7 @@ public class PescaminesController implements Initializable {
 	@FXML
 	public void guardarPartida() {
 		String id = "";
-
+		
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD(".././BD/script.sql");
@@ -269,12 +161,11 @@ public class PescaminesController implements Initializable {
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
-			context.serialitzacioPartida(context, id);
+			context.serialitzacioTauler(nouTauler, id);
 		// UTILITZAR CLASSE
-		// ENVIAR VARIABLES NECESSÀRIES DESDE context
+		// ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
 
-//¿Posar ací el mètode de carregar partida??
 	@FXML
 	public void reiniciar(ActionEvent e) {
 		temps.stop();
@@ -292,7 +183,6 @@ public class PescaminesController implements Initializable {
 		temps.play();
 		event.consume();
 	}
-
 	@FXML
 	public void acabarPartida() {
 		temps.stop();
@@ -309,7 +199,7 @@ public class PescaminesController implements Initializable {
 	}
 
 	public void enviarRanquing() {
-
+		
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
