@@ -90,7 +90,7 @@ public class JocDeLaVidaController implements Initializable {
 			cronometre.setText(formatter.format(segons * 1000));
 			estancament = context.preCicle(context.getCellula());
 
-			System.out.println("Estancamiento detectado: " + estancament);
+			System.out.println("Estancamient detectat: " + estancament);
 			context.Resum(0);
 			context.cicleDeLaVida();
 			actualizarGrid(context.getCellula());
@@ -101,7 +101,7 @@ public class JocDeLaVidaController implements Initializable {
 				actualizarGrid(context.getCellula());
 
 				System.out.println(
-						"SIMULACIÓN DETENIDA - Células: " + context.recompteCel() + ", Estancamiento: " + estancament);
+						"SIMULACIÓ DETESA - Cèl·lules: " + context.recompteCel() + ", Estancament: " + estancament);
 			}
 
 		}));

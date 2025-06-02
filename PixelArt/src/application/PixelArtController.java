@@ -3,8 +3,10 @@ package application;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -122,8 +124,10 @@ public class PixelArtController implements Initializable {
 				planol.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
 				if (c[o][m] == null) {
+			        System.out.println("Crea nou pixel");
 					c[o][m] = new Pixel(o, m, context);
 					String fons = context.conversioAHex(((Pixel) c[o][m]).getBase());
+					System.out.println(""+context.conversioAColor(fons));
 					planol.setStyle("-fx-background-color: " + fons + ";");
 					//Falten Proporcions!!
 				} else {
@@ -131,8 +135,11 @@ public class PixelArtController implements Initializable {
 		            p.context = context;
 		            p.base = context.perDefecte(o, m);
 
-					if (!p.colorHex.isBlank())
-						planol.setStyle("-fx-background-color: " + Color.web(p.colorHex) + ";");
+					if (!p.colorHex.isEmpty())
+						int llongitud = p.colorHex.length();
+						System.out.println("-fx-background-color: " +p.colorHex + ";");
+						
+						planol.setStyle("-fx-background-color: #" + p.colorHex + ";");
 				}
 				context.pintar(planol, (Pixel) c[o][m]);
 				gp.add(planol, o, m);
@@ -193,7 +200,7 @@ public class PixelArtController implements Initializable {
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
-			context.serialitzacioPartida(context, id);
+			serialitzacioPartida(context, id);
 
 	};
 
@@ -258,10 +265,10 @@ public class PixelArtController implements Initializable {
 	public ContextPixelArt desserialitzacioTauler(File f) {
 	    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
 	        ContextPixelArt c = (ContextPixelArt) ois.readObject();
-	        
-	        if(c.getTauler() != null) {
-	        	taulerGrid.getChildren().clear();
-	        	nouGP(c.getTauler().getCaselles());
+	        	//this.context = c;
+//	        if(c.getTauler() != null) {
+//	        	taulerGrid.getChildren().clear();
+//	        	nouGP(c.getTauler().getCaselles());
 	        	
 	        	
 //	            Casella[][] caselles = c.getTauler().getCaselles();
@@ -289,7 +296,7 @@ public class PixelArtController implements Initializable {
 //	    				
 //	    			}
 //	    		}
-	        }
+//	        }
 	        return c;
 	    } catch (IOException | ClassNotFoundException e) {
 	        e.printStackTrace();
@@ -301,6 +308,17 @@ public class PixelArtController implements Initializable {
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
 		// super.finalize();
+	}
+	
+	public boolean serialitzacioPartida(ContextPixelArt cntxt, String id) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".ser"))) {
+			//this.tauler = cntxt.crearTauler(tamany, tamany); 
+			oos.writeObject(cntxt); 
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }

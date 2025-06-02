@@ -1,7 +1,5 @@
 package application;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,8 +9,6 @@ import java.util.Random;
 
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class ContextPixelArt implements Serializable {
@@ -136,7 +132,25 @@ public class ContextPixelArt implements Serializable {
 		
 		 String colorCad = String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
 				(int) (color.getBlue() * 255));
+		 System.out.println(colorCad);
 		 return colorCad;
+	}
+	public Color conversioAColor(String color) {
+		
+		//Aquest és meu 100%, volia utilitzar el Color.web però me donava problemes
+		color = color.substring(1);
+		
+		double roig = (double) (Integer.parseInt(color.substring(0,2), 16)/255);
+		double verd = (double) (Integer.parseInt(color.substring(2,4), 16)/255);
+		double blau = (double) (Integer.parseInt(color.substring(4,6), 16)/255);
+		Color col = new Color(blau, roig, verd, blau);
+//		 String colorCad = String.format("#%02X%02X%02X", 
+//				 
+//				 (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
+//				(int) (color.getBlue() * 255));
+		 
+		 
+		 return col;
 	}
 
 	public void buidar(Tauler t) {
@@ -191,16 +205,6 @@ public class ContextPixelArt implements Serializable {
 	    });
 	}
 	
-	public boolean serialitzacioPartida(ContextPixelArt cntxt, String id) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".dat"))) {
-			//this.tauler = cntxt.crearTauler(tamany, tamany); 
-			oos.writeObject(this); 
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
+
 	
 }
