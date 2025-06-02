@@ -18,7 +18,9 @@ public class ContextPixelArt implements Serializable {
 	protected int tamany;
 	protected String mida;
 	protected transient Random alea;
+
 	protected TaulerPixelArt tauler;
+	protected Tauler tauler;
 	
 	{
 		color = Color.BLACK;
@@ -91,11 +93,17 @@ public class ContextPixelArt implements Serializable {
 	public void setMida(String mida) {
 		this.mida = mida;
 	}
+
 	public TaulerPixelArt getTauler() {
 		return tauler;
 	}
 
 	public void setTauler(TaulerPixelArt tauler) {
+	public Tauler getTauler() {
+		return tauler;
+	}
+
+	public void setTauler(Tauler tauler) {
 		this.tauler = tauler;
 	}
 
@@ -110,8 +118,12 @@ public class ContextPixelArt implements Serializable {
 		}
 	}
 		
+
 	public TaulerPixelArt crearTauler(int llarg, int ample) {
 		this.tauler = new TaulerPixelArt(llarg, ample);
+=======
+	public Tauler crearTauler(int llarg, int ample) {
+		this.tauler = new Tauler(llarg, ample);
 		return tauler;
 
 	}
@@ -151,8 +163,12 @@ public class ContextPixelArt implements Serializable {
 		 return col;
 	}
 
+
 	public void buidar(TaulerPixelArt t) {
 		CasellaPixelArt[][] c = t.getCaselles();
+
+	public void buidar(Tauler t) {
+		Casella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
@@ -161,7 +177,9 @@ public class ContextPixelArt implements Serializable {
 		}
 	}
 
+
 	public void pintar(Node n, PixelPixelArt l) {
+	public void pintar(Node n, Pixel l) {
 	    n.setOnMousePressed(e -> {
 	        if (borrador) {
 	            n.setStyle("-fx-background-color: " + conversioAHex(l.getBase()) + ";");
