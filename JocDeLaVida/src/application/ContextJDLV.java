@@ -1,25 +1,14 @@
 package application;
 
 import java.util.Random;
-
 import javafx.scene.paint.Color;
 
 public class ContextJDLV {
 	private static final long serialVersionUID = 1L;
 
-	protected int comptCel;
-	protected int comptMor;
-	public int getComptMor() {
-		return comptMor;
-	}
-
-	public void setComptMor(int comptMor) {
-		this.comptMor = comptMor;
-	}
-
+	protected int comptador;
 	protected int tamany;
 	protected int morts;
-	protected int vives;
 	protected int moribundes;
 	protected int naixements;
 	protected String mida;
@@ -30,30 +19,24 @@ public class ContextJDLV {
 
 	public ContextJDLV() {
 		super();
-		morts = 0;
-		naixements = 0;
 	}
 
 	public ContextJDLV(Cellula[][] cellules) {
 		this.cellules = cellules;
-		morts = 0;
-		naixements = 0;
 	}
 
 	public ContextJDLV(String t) {
 		this.tamany = calcularTamany(t);
 		cellules = new Cellula[tamany][tamany];
-		morts = 0;
-		naixements = 0;
 	}
 
 	// GETTERS I SETTERS
 	public int getComptador() {
-		return comptCel;
+		return comptador;
 	}
 
 	public void setComptador(int comptador) {
-		this.comptCel = comptador;
+		this.comptador = comptador;
 	}
 
 	public int getTamany() {
@@ -104,54 +87,6 @@ public class ContextJDLV {
 		LIMIT_inici = lIMIT_inici;
 	}
 
-	public int getComptCel() {
-		return comptCel;
-	}
-
-	public void setComptCel(int comptCel) {
-		this.comptCel = comptCel;
-	}
-
-	public int getVives() {
-		return vives;
-	}
-
-	public void setVives(int vives) {
-		this.vives = vives;
-	}
-
-	public int getMoribundes() {
-		return moribundes;
-	}
-
-	public void setMoribundes(int moribundes) {
-		this.moribundes = moribundes;
-	}
-
-	public int getNaixements() {
-		return naixements;
-	}
-
-	public void setNaixements(int naixements) {
-		this.naixements = naixements;
-	}
-
-	public Cellula[][] getCellules() {
-		return cellules;
-	}
-
-	public void setCellules(Cellula[][] cellules) {
-		this.cellules = cellules;
-	}
-
-	public boolean isEstancament() {
-		return estancament;
-	}
-
-	public void setEstancament(boolean estancament) {
-		this.estancament = estancament;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -179,17 +114,8 @@ public class ContextJDLV {
 	}
 
 	// mètode de creació inicial
-	public void creacio(Random alea, int limit) {
+	public void creacio(Cellula[][] c, Random alea, int limit) {
 		int o2;
-
-		for (int i = 0; i < cellules.length; i++) {
-			for (int j = 0; j < cellules[0].length; j++) {
-				if (cellules[i][j] == null) {
-					cellules[i][j] = new Cellula();
-					cellules[i][j].setEstat("morta");
-				}
-			}
-		}
 
 		do {
 			o2 = alea.nextInt(limit);
@@ -198,11 +124,12 @@ public class ContextJDLV {
 		for (int i = 0; i < 10; i++) {
 			if (o2 != limit) {
 				for (int a = 0; a < o2; a++) {
-					cellules = crearVida(cellules, alea);
+					c = crearVida(c, alea);
 				}
 			}
 		}
 
+		this.setCellula(c);
 	}
 
 	// mètode de creació de cel·lules
@@ -211,9 +138,10 @@ public class ContextJDLV {
 		int a = alea.nextInt(c.length);
 		int b = alea.nextInt(c.length);
 
-		if (c[a][b].getEstat().equals("morta")) {
-			c[a][b].setEstat("viva");
-			comptCel++;
+		if (c[a][b] == null) {
+			c[a][b] = new Cellula(a, b);
+			comptador++;
+			return c;
 		} else
 			crearVida(c, alea);
 
@@ -221,42 +149,58 @@ public class ContextJDLV {
 	}
 
 	public void cicleDeLaVida() {
-
+		morts = 0;
+		naixements = 0;
+System.out.println("Nou cicle");
 		int[][] aux = seleccioNatural(cellules);
 
 		Cellula[][] nova = new Cellula[cellules.length][cellules.length];
 
 		for (int i = 0; i < aux.length; i++) {
 			for (int j = 0; j < aux[0].length; j++) {
-				
-				nova[i][j] = new Cellula();
-				//nova[i][j].setEstat("morta");
+				Cellula actual = cellules[i][j];
 
-				if (cellules[i][j].getEstat().equals("moribunda")) {
-					nova[i][j].setEstat("morta");
-				}else if (cellules[i][j].getEstat().equals("naixement")) {
-					nova[i][j].setEstat("viva");
-					comptCel++;
-				} else 
+				// ACTUAL VIVA
+				if (actual != null) {
+					// Viva Viva
 					if (aux[i][j] == 1) {
+						nova[i][j] = new Cellula(i, j);
 
-					if (cellules[i][j].getEstat().equals("morta") || cellules[i][j].getEstat().equals("moribunda")) {
-						nova[i][j].setEstat("naixement");
-						comptCel++;
+						if (actual.isMoribunda()) {
+							nova[i][j].setNaix(true);
+							nova[i][j].setMoribunda(false);
+							naixements++;
+						} else if (actual.isNaix()) {
+							nova[i][j].setNaix(false);
+							nova[i][j].setViva(true);
+						} else {
+							nova[i][j].setViva(true);
+						}
+						// VIVA morta
 					} else {
-						nova[i][j].setEstat("viva");
+						if (actual.isViva()) {
+							nova[i][j] = new Cellula(i, j);
+							actual.setViva(false);
+							actual.setMoribunda(true);
+						} else if (actual.isMoribunda()) {
+							nova[i][j] = null;
+							morts++;
+						}
 					}
+					// MORTA
 				} else {
-					if (cellules[i][j].getEstat().equals("viva")) {
-						nova[i][j].setEstat("moribunda");
-						comptMor++;
-
-					} else {
-						comptMor++;
-						nova[i][j].setEstat("morta");
-
+					// MORTA A VIVA
+					if (aux[i][j] == 1) {
+						nova[i][j] = new Cellula(i, j);
+						nova[i][j].setNaix(true);
+						naixements++;
+					}
+					// MORTA A MORTA: RES{
+					else {
+						nova[i][j] = null;
 					}
 				}
+
 			}
 		}
 		this.setCellula(nova);
@@ -264,23 +208,28 @@ public class ContextJDLV {
 
 	// creació de plantilla d'integers per a indicar qui mor i qui viu
 	public int[][] seleccioNatural(Cellula[][] c) {
-
 		int[][] aux = new int[c.length][c.length];
-		int veines;
+		int veines = 0;
 
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				veines = 0;
 				veines = estatVida(c, i, j);
 
-				if (c[i][j].getEstat().equals("viva")) {
-					if (veines == 2 || veines == 3)
+				if (c[i][j] != null) {
+					if (veines < 2) {
+						aux[i][j] = 0;
+					} else if (veines == 2 || veines == 3) {
 						aux[i][j] = 1;
-				} else if (c[i][j].getEstat().equals("morta")) {
-					if (veines == 3)
+					} else if (veines > 3) {
+						aux[i][j] = 0;
+					}
+				} else {
+					if (veines == 3) {
 						aux[i][j] = 1;
-				} else
-					aux[i][j] = 0;
+					} else {
+						aux[i][j] = 0;
+					}
+				}
 			}
 		}
 
@@ -295,7 +244,7 @@ public class ContextJDLV {
 		if (a == 0 && b == 0) {
 			for (int k = a; k <= a + 1; k++) {
 				for (int l = b; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -303,7 +252,7 @@ public class ContextJDLV {
 		else if (a == c.length - 1 && b == 0) {
 			for (int k = a - 1; k <= a; k++) {
 				for (int l = b; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -311,7 +260,7 @@ public class ContextJDLV {
 		else if (a == 0 && b == c.length - 1) {
 			for (int k = a; k <= a + 1; k++) {
 				for (int l = b - 1; l <= b; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -319,7 +268,7 @@ public class ContextJDLV {
 		else if (a == c.length - 1 && b == c.length - 1) {
 			for (int k = a - 1; k <= a; k++) {
 				for (int l = b - 1; l <= b; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -327,7 +276,7 @@ public class ContextJDLV {
 		else if (a == 0 && (b != 0 && b != c.length - 1)) {
 			for (int k = a; k <= a + 1; k++) {
 				for (int l = b - 1; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -335,7 +284,7 @@ public class ContextJDLV {
 		else if (a == c.length - 1 && (b != 0 && b != c.length - 1)) {
 			for (int k = a - 1; k <= a; k++) {
 				for (int l = b - 1; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -343,7 +292,7 @@ public class ContextJDLV {
 		else if (b == 0 && (a != 0 && a != c.length - 1)) {
 			for (int k = a - 1; k <= a + 1; k++) {
 				for (int l = b; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
@@ -351,7 +300,7 @@ public class ContextJDLV {
 		else if (b == c.length - 1 && (a != 0 && a != c.length - 1)) {
 			for (int k = a - 1; k <= a + 1; k++) {
 				for (int l = b - 1; l <= b; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 
@@ -359,12 +308,12 @@ public class ContextJDLV {
 			// RESTA
 			for (int k = a - 1; k <= a + 1; k++) {
 				for (int l = b - 1; l <= b + 1; l++)
-					if (c[k][l] != null && c[k][l].getEstat().equals("viva"))
+					if (c[k][l] != null)
 						comptador++;
 			}
 		}
 
-		return (comptador - 1);
+		return comptador - 1;
 	}
 
 	public static Cellula[][] copiaMatriu(Cellula[][] original) {
@@ -374,8 +323,11 @@ public class ContextJDLV {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				if (original[i][j] != null) {
-					copia[i][j] = new Cellula();
-					copia[i][j].setEstat(original[i][j].getEstat());
+					copia[i][j] = new Cellula(original[i][j].getX(), original[i][j].getY());
+					copia[i][j].setViva(original[i][j].isViva());
+					copia[i][j].setNaix(original[i][j].isNaix());
+					copia[i][j].setMoribunda(original[i][j].isMoribunda());
+					copia[i][j].setMorta(original[i][j].isMorta());
 				}
 			}
 		}
@@ -384,60 +336,51 @@ public class ContextJDLV {
 	}
 
 	// anàlisi del que passarà als pròxims torns
-	public boolean preCicle() {
+	public boolean preCicle(Cellula[][] c) {
 		// https://www.techiedelight.com/es/copy-object-array-java/
 		boolean resultat = false;
-
-		ContextJDLV[] postCicle = new ContextJDLV[5];
-		Cellula[][] original = copiaMatriu(cellules);
+		ContextJDLV[] postCicle = new ContextJDLV[4];
+		Cellula[][] original = copiaMatriu(c);
 
 		for (int i = 0; i < postCicle.length; i++) {
 			postCicle[i] = new ContextJDLV(copiaMatriu(original));
 			for (int j = 0; j < i; j++) {
 				postCicle[i].cicleDeLaVida();
+				System.out.println("PostCicle amb cicle de la vida	");
 			}
 		}
 
 		if (postCicle[0].compararCaselles(postCicle[1].getCellula())
 				|| postCicle[0].compararCaselles(postCicle[2].getCellula())
-				|| postCicle[0].compararCaselles(postCicle[3].getCellula())
-				|| postCicle[0].compararCaselles(postCicle[4].getCellula()))
+				|| postCicle[0].compararCaselles(postCicle[3].getCellula()))
 			return true;
 		else
 			return false;
 	}
 
 	// Recompte de dades
-	public void recompteCel() {
-		int vives = 0;
-		int mortes = 0;
-		int moribundes = 0;
-		int naixements = 0;
+	public int recompteCel() {
+
+		int recompte = 0;
 
 		for (int i = 0; i < cellules.length; i++) {
 			for (int j = 0; j < cellules[0].length; j++) {
-				String estat = cellules[i][j].getEstat();
-				switch (estat) {
-				case "viva" -> vives++;
-				case "morta" -> mortes++;
-				case "moribunda" -> moribundes++;
-				case "naixement" -> naixements++;
+				if (cellules[i][j] != null) {
+					recompte++;
+					if (cellules[i][j].moribunda)
+						moribundes++;
+					else if (cellules[i][j].naix)
+						naixements++;
+					// PENSAR SI LES MORTES I LES QUE HI HA TAMBÉ
 				}
 			}
 		}
-
-		morts = mortes;
-		this.moribundes = moribundes;
-		this.vives = vives;
-		this.naixements = naixements;
-
-		System.out.println("Vives: " + vives + ", Mortes: " + mortes + ", Moribundes: " + moribundes + ", Naixements: "
-				+ naixements);
+		return recompte;
 	}
 
 	// Comparar l'actual matriu amb la que se li envia
-	public boolean compararCaselles(Cellula[][] c, int ñ) {
-		boolean result = true;
+	public boolean compararCaselles(Cellula[][] c) {
+		boolean f = false;
 		// https: //
 		// www.lawebdelprogramador.com/foros/Java/674725-Saber-si-un-objeto-existe.html
 		for (int i = 0; i < c.length; i++) {
@@ -447,35 +390,25 @@ public class ContextJDLV {
 				Cellula a = this.cellules[i][j];
 				Cellula b = c[i][j];
 
-				if (!a.getEstat().equals(b.getEstat()))
+				if ((a == null && b != null) || (a != null && b == null)) {
 					return false;
+				} else if (a != null && b != null) {
+					if (a.isViva() != b.isViva() || a.isNaix() != b.isNaix() || a.isMoribunda() != b.isMoribunda()
+							|| a.isMorta() != b.isMorta()) {
+						return false;
+					} else
+						return true;
+				}
 			}
 		}
-		return result;
-
+		return f;
 	}
 
-	public boolean compararCaselles(Cellula[][] c) {
-		boolean result = true;
-		// https: //
-		// www.lawebdelprogramador.com/foros/Java/674725-Saber-si-un-objeto-existe.html
+	public void depurar(Cellula[][] c) {
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				Cellula a = this.cellules[i][j];
-				Cellula b = c[i][j];
-				if (!a.getEstat().equals(b.getEstat()))
-					return false;
-			}
-		}
-		return result;
-	}
-
-	public void depurar() {
-		for (int i = 0; i < cellules.length; i++) {
-			for (int j = 0; j < cellules[0].length; j++) {
-				if (cellules[i][j].getEstat().equals("moribunda")) {
-					cellules[i][j].setEstat("morta");
-				}
+				if (c[i][j] != null && c[i][j].isMoribunda())
+					c[i][j] = null;
 			}
 		}
 		System.out.println("Depuració");
@@ -488,7 +421,7 @@ public class ContextJDLV {
 		return colorCad;
 	}
 
-	public void buidar(Cellula[][] c) {
+	public void buidar(Cellula [][] c) {
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
@@ -500,8 +433,8 @@ public class ContextJDLV {
 	}
 
 	public void Resum(int a) {
-		System.out.println("Generació: " + a + ", Cèl·lules: " + getComptCel());
-		System.out.println("Total creades: " + this.comptCel + ", Total mortes: " + this.morts);
+		System.out.println("Generació: " + a + ", Cèl·lules: " + recompteCel());
+		System.out.println("Total creades: " + this.comptador + ", Total mortes: " + this.morts);
 	}
 
 }
