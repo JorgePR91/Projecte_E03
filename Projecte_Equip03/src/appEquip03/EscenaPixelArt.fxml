@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+
+<VBox fx:controller="appEquip03.EscenaControllerPixelArt"
+      xmlns:fx="http://javafx.com/fxml"
+      prefWidth="700" prefHeight="600"
+      style="-fx-padding: 20 0 20 20;">
+   <children>
+      <BorderPane maxHeight="700" maxWidth="600">
+
+         <!-- Barra superior comuna -->
+         <top>
+            <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+               <Label fx:id="nomUsuariLabel" text="Usuari: " />
+               <Pane HBox.hgrow="ALWAYS"/>
+               <Button fx:id="tornarMenuBtn" text="Menú Jocs" onAction="#tornarMenu"/>
+               <Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
+            </HBox>
+         </top>
+
+         <!-- Cos principal del joc -->
+         <center>
+            <VBox spacing="10" alignment="CENTER">
+               <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT">
+                  <buttons>
+                     <Button fx:id="netejar" mnemonicParsing="false" onAction="#netejarLlenc" text="Netejar" />
+                     <ColorPicker fx:id="color" editable="true" onAction="#establirColor">
+                        <value><Color /></value>
+                     </ColorPicker>
+                     <Button fx:id="pinzell" mnemonicParsing="false" onAction="#pintarLlenç" text="Pinzell" />
+                     <Button fx:id="esborrar" mnemonicParsing="false" onAction="#esborrarLlenç" text="Esborrar" />
+                     <Button fx:id="guardar" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+                     <Button fx:id="exportarPNG" mnemonicParsing="false" onAction="#exportar" text="Exportar PNG" />
+                  </buttons>
+                  <padding>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </padding>
+                  <cursor>
+                     <Cursor fx:constant="DEFAULT" />
+                  </cursor>
+               </ButtonBar>
+
+               <GridPane fx:id="taulerGrid" prefHeight="300.0" prefWidth="300.0" style="-fx-border-width: 2px; -fx-border-color: black;">
+                  <cursor>
+                     <Cursor fx:constant="DEFAULT" />
+                  </cursor>
+               </GridPane>
+            </VBox>
+         </center>
+
+         <!-- Costat esquerre (si el vols mantenir) -->
+         <left>
+            <HBox prefHeight="202.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+         </left>
+
+         <!-- Eliminat el costat dret -->
+
+         <!-- Botó per tornar -->
+         <bottom>
+            <AnchorPane prefHeight="78.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="tornar" alignment="CENTER" layoutX="224.0" layoutY="26.0" mnemonicParsing="false" onAction="#tornar" text="Tornar" />
+               </children>
+            </AnchorPane>
+         </bottom>
+
+      </BorderPane>
+   </children>
+</VBox>

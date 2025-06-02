@@ -27,18 +27,17 @@ public class EscenaControllerWordle {
     private List<String> paraules;
     private String paraulaObjectiu;
     private int intentsFets = 0;
-    private String nomUsuari;
-
 
     @FXML private VBox root;
     @FXML private TextField entrada;
     @FXML private Button enviar;
     @FXML private Label pista;
     @FXML private Button reiniciar;
+    
+    
+    private String nomUsuari;
     @FXML private Label nomUsuariLabel;
     @FXML private Button logoutBtn;
-
-
     public void setNomUsuari(String nomUsuari) {
         this.nomUsuari = nomUsuari;
         nomUsuariLabel.setText("Usuari: " + nomUsuari);
@@ -119,7 +118,7 @@ public class EscenaControllerWordle {
         filaIntent.setAlignment(Pos.CENTER);
         boolean encertTotal = true;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             char lletra = intent.charAt(i);
             Label casella = new Label(String.valueOf(Character.toUpperCase(lletra)));
             casella.setMinSize(40, 40);
