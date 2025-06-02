@@ -14,10 +14,8 @@ public class EscenaControllerJocs {
     private String nomUsuari;
     private static Stage finestraWordle = null;
 
-
     @FXML private Label nomUsuariLabel;
     @FXML private Button logoutBtn;
-    
 
     private void obrirEscena(String fxml, String titol) {
         try {
@@ -37,7 +35,7 @@ public class EscenaControllerJocs {
                     .invoke(controller, nomUsuari);
             } catch (Exception ignored) {}
 
-            Scene escena = new Scene(root, 600, 500);
+            Scene escena = new Scene(root, 700, 600);  // <- Mida fixa aquí
             escena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
             Stage novaFinestra = new Stage();
@@ -56,7 +54,6 @@ public class EscenaControllerJocs {
         }
     }
 
-
     @FXML
     private void anarWordle() {
         obrirEscena("EscenaWordle.fxml", "Wordle");
@@ -69,12 +66,12 @@ public class EscenaControllerJocs {
 
     @FXML
     private void anarJocVida() {
-        obrirEscena("EscenaJocVida.fxml", "Joc de la Vida");
+        obrirEscena("EscenaDificultatJocVida.fxml", "Joc de la Vida");
     }
 
     @FXML
     private void anarPixelArt() {
-        obrirEscena("EscenaPixelArt.fxml", "Pixel Art");
+        obrirEscena("EscenaDificultatPixelArt.fxml", "Pixel Art");
     }
 
     public void setNomUsuari(String nomUsuari) {
@@ -89,7 +86,7 @@ public class EscenaControllerJocs {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
             Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 600, 500);
+            Scene novaEscena = new Scene(root, 700, 600);  // <- També aquí!
             novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
             MainWordle.canviarEscena(novaEscena);

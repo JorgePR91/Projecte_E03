@@ -30,4 +30,11 @@
     -fx-border-radius: 3;
     -fx-padding: 5 10 5 10;
 }
-
+.pixel_imparell{
+	-fx-background-color: lightgrey;
+		
+}
+.pixel_parell{
+	-fx-background-color: white;
+		
+}
