@@ -9,8 +9,12 @@ Antón
 atizo
 avala
 avión
-azul
-abaco
+ansia
+pablo
+jorge
+jaume
+tetas
+abajo
 abate
 abeja
 aboya
@@ -526,7 +530,6 @@ topar
 tocar
 tomar
 toser
-tóner
 traer
 tumba
 Túnez
@@ -560,10 +563,8 @@ vasto
 vasta
 viajes
 vídeo
-weber
+huevo
 wikis
-wones
-xolas
 Yemen
 yates
 yemas
@@ -584,3 +585,4 @@ zeína
 zéjel
 zocar
 zocas
+Carla

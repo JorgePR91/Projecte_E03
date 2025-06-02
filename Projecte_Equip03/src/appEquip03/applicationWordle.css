@@ -1,0 +1,40 @@
+.root {
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-background-color:  #24747e;
+    -fx-background-image: url("/backgr.png");
+    -fx-background-size: cover;
+    -fx-opacity: 1;
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: black;         
+    -fx-font-weight: bold;        
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: grey;
+    -fx-opacity: 0.7;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-padding: 5 10 5 10;
+}
+.pixel_imparell{
+	-fx-background-color: lightgrey;
+		
+}
+.pixel_parell{
+	-fx-background-color: white;
+		
+}
