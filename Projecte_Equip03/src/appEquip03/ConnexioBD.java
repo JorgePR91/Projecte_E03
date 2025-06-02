@@ -14,7 +14,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+
 import java.util.ArrayList;
+
 import java.util.Arrays;
 
 public class ConnexioBD {

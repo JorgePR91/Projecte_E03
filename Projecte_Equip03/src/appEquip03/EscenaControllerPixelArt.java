@@ -10,9 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
 import javax.imageio.ImageIO;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,6 +23,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -47,6 +46,16 @@ public class EscenaControllerPixelArt implements Initializable {
 	private ColorPicker color;
 	@FXML
 	private Button tornar;
+
+
+	private ContextPixelArt context;
+	private TaulerPixelArt nouTauler;
+	private int tamany;
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		DadesSingletonPixelArt dada = DadesSingletonPixelArt.getInstancia();
+
 	@FXML 
 	private Label nomUsuariLabel;
     @FXML 
@@ -103,6 +112,10 @@ public class EscenaControllerPixelArt implements Initializable {
 		if (dada.getPartidaCompartida() != null) {
 			ContextPixelArt contextProvisional = desserialitzacioTauler(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
+
+				this.context = contextProvisional;
+				this.nouTauler = contextProvisional.getTauler();
+
 				System.out.println("Copiant Context");
 				System.out.println(contextProvisional.getTauler() == null);
 				System.out.println(contextProvisional.getTauler().getCaselles().length);
@@ -111,10 +124,23 @@ public class EscenaControllerPixelArt implements Initializable {
 				this.nouTauler = contextProvisional.getTauler();
 				printDebug();
 
+
 				taulerGrid.getChildren().clear();
 				nouGP(nouTauler.getCaselles());
 				dada.setCadenaCompartida(null);
 				dada.setPartidaCompartida(null);
+
+			}
+		} else {
+			context = new ContextPixelArt(dada.getCadenaCompartida());
+			nouTauler = context.crearTauler(context.tamany(dada.getCadenaCompartida()), context.tamany(dada.getCadenaCompartida()));
+			nouGP(nouTauler.getCaselles());
+		}
+	}
+
+	public void nouGP(CasellaPixelArt[][] c) {
+		GridPane gp = this.taulerGrid;
+
 			} else {
 				System.err.println("No hi ha res serialitzat");
 			}
@@ -148,6 +174,7 @@ public class EscenaControllerPixelArt implements Initializable {
 		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
 
 		// Netejar les característiques per defecte del SceneBuilder
+
 		gp.getColumnConstraints().clear();
 		gp.getRowConstraints().clear();
 
@@ -167,6 +194,19 @@ public class EscenaControllerPixelArt implements Initializable {
 				planol.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
 				if (c[o][m] == null) {
+
+					c[o][m] = new PixelPixelArt(o, m, context);
+					String fons = context.conversioAHex(((PixelPixelArt) c[o][m]).getBase());
+					planol.setStyle("-fx-background-color: " + fons + ";");
+				} else {
+					PixelPixelArt p = (PixelPixelArt) c[o][m];
+					p.context = context;
+					p.base = context.perDefecte(o, m);
+					planol.setStyle("-fx-background-color: #" + p.colorHex + ";");
+				}
+				context.pintar(planol, (PixelPixelArt) c[o][m]);
+				gp.add(planol, o, m);
+
 			        System.out.println("Crea nou pixel");
 					c[o][m] = new Pixel(o, m, context);
 					String fons = context.conversioAHex(((Pixel) c[o][m]).getBase());
@@ -187,6 +227,7 @@ public class EscenaControllerPixelArt implements Initializable {
 				context.pintar(planol, (Pixel) c[o][m]);
 				gp.add(planol, o, m);
 				this.taulerGrid = gp;
+
 			}
 		}
 	}
@@ -194,25 +235,45 @@ public class EscenaControllerPixelArt implements Initializable {
 	@FXML
 	public void establirColor() {
 		context.setColor(color.getValue());
+
+	}
+
 	};
+
 
 	@FXML
 	public void pintarLlenç() {
 		context.setColor(context.color);
 
+		context.borrador = false;
+	}
+
+
 		if (context.isBorrador())
 			context.borrador = false;
 	};
+
 
 	@FXML
 	public void netejarLlenc() {
 		this.context.buidar(nouTauler);
 		nouGP(nouTauler.getCaselles());
+
+	}
+
 	};
+
 
 	@FXML
 	public void esborrarLlenç() {
 		context.setBorrador(!context.borrador);
+
+	}
+
+	@FXML
+	public void guardar() {
+		String id = "";
+
 	};
 
 	@FXML
@@ -225,6 +286,7 @@ public class EscenaControllerPixelArt implements Initializable {
 		// PROJECTE
 			
 		String id = "";
+
 
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
@@ -240,6 +302,19 @@ public class EscenaControllerPixelArt implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		if (id != null)
+			serialitzacioPartida(context, id);
+	}
+
+	@FXML
+	public void tornar() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaControllerDificultatPixelArt.fxml"));
+			Stage window = (Stage) tornar.getScene().getWindow();
+			Parent root = loader.load();
+			Scene escena2 = new Scene(root);
+
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
@@ -258,6 +333,7 @@ public class EscenaControllerPixelArt implements Initializable {
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
+
 			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("PixelArt");
@@ -270,6 +346,44 @@ public class EscenaControllerPixelArt implements Initializable {
 	@FXML
 	public void exportar() {
 		Stage window = (Stage) exportarPNG.getScene().getWindow();
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Guardar imagen");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files", "*.png"));
+		File file = fileChooser.showSaveDialog(window);
+
+		if (file != null) {
+			int tamany = this.taulerGrid.getColumnCount();
+			try {
+				BufferedImage imatge = new BufferedImage(tamany, tamany, BufferedImage.TYPE_INT_RGB);
+				for (int r = 0; r < tamany; r++) {
+					for (int c = 0; c < tamany; c++) {
+						PixelPixelArt p = (PixelPixelArt) nouTauler.getCaselles()[r][c];
+						Color color = Color.web("#" + p.colorHex);
+						int rgb = (int) (color.getRed() * 255) << 16 | (int) (color.getGreen() * 255) << 8 | (int) (color.getBlue() * 255);
+						imatge.setRGB(c, r, rgb);
+					}
+				}
+				ImageIO.write(imatge, "PNG", file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public ContextPixelArt desserialitzacioTauler(File f) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+			return (ContextPixelArt) ois.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean serialitzacioPartida(ContextPixelArt cntxt, String id) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".ser"))) {
+			oos.writeObject(cntxt);
+
 		
 		        FileChooser fileChooser = new FileChooser();
 		        fileChooser.setTitle("Guardar imagen");
@@ -357,11 +471,11 @@ public class EscenaControllerPixelArt implements Initializable {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".ser"))) {
 			//this.tauler = cntxt.crearTauler(tamany, tamany); 
 			oos.writeObject(cntxt); 
+
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-	
 }
