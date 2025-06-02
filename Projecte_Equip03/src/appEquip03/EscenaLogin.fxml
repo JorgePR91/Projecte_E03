@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerLogin"
+      spacing="15" alignment="CENTER" prefWidth="700" prefHeight="600" style="-fx-padding: 20;">
+      
+    <ImageView fx:id="loginImage" fitWidth="200" preserveRatio="true">
+        <VBox.margin>
+            <Insets bottom="30"/>
+        </VBox.margin>
+    </ImageView>
+
+    <Label text="Usuari"/>
+    <TextField fx:id="usuariField" promptText="Usuari"/>
+    <Label text="Contrasenya"/>
+    <PasswordField fx:id="contrasenyaField" promptText="Contrasenya"/>
+    
+    <HBox spacing="10">
+        <Button fx:id="registrarBtn" text="Registrar" onAction="#registrarUsuari"/>
+        <Button fx:id="loginBtn" text="Login" onAction="#validarLogin"/>
+        <VBox.margin>
+            <Insets bottom="50"/>
+        </VBox.margin>
+    </HBox>
+</VBox>
+
+

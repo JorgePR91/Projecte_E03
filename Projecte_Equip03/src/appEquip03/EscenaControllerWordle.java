@@ -9,7 +9,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -17,19 +20,65 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class EscenaController {
+public class EscenaControllerWordle {
 
     private List<String> paraules;
     private String paraulaObjectiu;
     private int intentsFets = 0;
+    private String nomUsuari;
+
 
     @FXML private VBox root;
     @FXML private TextField entrada;
     @FXML private Button enviar;
     @FXML private Label pista;
     @FXML private Button reiniciar;
+    @FXML private Label nomUsuariLabel;
+    @FXML private Button logoutBtn;
 
+
+    public void setNomUsuari(String nomUsuari) {
+        this.nomUsuari = nomUsuari;
+        nomUsuariLabel.setText("Usuari: " + nomUsuari);
+    }
+    
+    @FXML
+    private void tornarInici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            MainWordle.canviarEscena(novaEscena);
+            
+            // Tanca l'escena actual
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void tornarMenu() {
+    	try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            MainWordle.canviarEscena(novaEscena);
+            
+            // Tanca l'escena actual
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
     @FXML
     public void initialize() {
         try {
@@ -106,7 +155,7 @@ public class EscenaController {
     }
 
     private void carregarParaules() throws IOException {
-        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/resources/paraules.txt"));
+        InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/paraules.txt"));
         BufferedReader br = new BufferedReader(isr);
         paraules = br.lines()
                 .map(String::toLowerCase)
