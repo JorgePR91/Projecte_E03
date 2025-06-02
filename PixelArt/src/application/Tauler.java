@@ -2,48 +2,27 @@ package application;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
-
-import javafx.animation.Timeline;
 
 public class Tauler extends ContextPixelArt implements Serializable {
     private static final long serialVersionUID = 1L;
 
-	
-	Random alea = new Random();
-// Fer Random un atribut però transient
+	private Random alea = new Random();
 	private int l;
 	private int a;
 	private Casella[][] caselles;
-	
-
-//	private void writeObject(ObjectOutputStream oos) {
-//        try {
-//            oos.defaultWriteObject();
-//            
-//            oos.writeInt(l);
-//            oos.writeInt(a);
-//            oos.writeObject(caselles);
-//		} catch (IOException e) {
-//		}
-//    }
-    
+	    
     private void readObject(ObjectInputStream ois) {
     	try {
             ois.defaultReadObject();
             this.alea = new Random();
-//            this.l = ois.readInt();
-//            this.a = ois.readInt();
- //           this.caselles = (Casella[][]) ois.readObject();
 		} catch (IOException e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
     }
-
 
 	public Tauler(int l, int a) {
 		this.l = l;
@@ -74,6 +53,21 @@ public class Tauler extends ContextPixelArt implements Serializable {
 
 	public void setA(int a) {
 		this.a = a;
+	}
+
+
+	public Random getAlea() {
+		return alea;
+	}
+
+
+	public void setAlea(Random alea) {
+		this.alea = alea;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
     
 	// MÈTODES

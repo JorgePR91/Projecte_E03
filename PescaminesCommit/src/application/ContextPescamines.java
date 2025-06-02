@@ -1,10 +1,6 @@
 package application;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -294,15 +290,4 @@ public class ContextPescamines implements Serializable {
 	}
 
 
-
-//	public static ContextPescamines desserialitzacioTauler(String id) {
-//
-//		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("./Partides/" + id + ".dat"))) {
-//			ois.readObject();
-//			return true;
-//		} catch (IOException | ClassNotFoundException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
 }

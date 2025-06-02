@@ -1,24 +1,14 @@
 package application;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 public class Pixel extends Casella implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-
-	//color per defecte
 	protected transient Color base;
-	//color si está pintat
 	protected String colorHex;
-	//context compartit
 	protected transient ContextPixelArt context;
-
 
 	public Pixel(int x, int y, ContextPixelArt c) {
 		super(x, y);
@@ -27,16 +17,6 @@ public class Pixel extends Casella implements Serializable {
 		colorHex = "";
 	}
 	
-	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		ois.defaultReadObject();
-		
-		//context = new ContextPixelArt();
-		//base = context.perDefecte(x, y);
-		
-	}
-
-
-
 	public Color getBase() {
 		return base;
 	}

@@ -2,9 +2,7 @@ package application;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
