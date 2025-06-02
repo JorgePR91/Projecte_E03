@@ -7,21 +7,20 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?> <!-- AIXÒ ÉS EL QUE FALTAVA -->
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="appEquip03.EscenaControllerJocs"
             prefWidth="700" prefHeight="600"
             style="-fx-padding: 20;">
-
-    <!-- Zona superior amb usuari i logout -->
     <top>
-        <HBox spacing="20" alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+        <HBox spacing="20" alignment="CENTER_LEFT" BorderPane.alignment="TOP_CENTER" style="-fx-padding: 0 0 10 0;">
             <Label fx:id="nomUsuariLabel" text="Usuari: " />
+            <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
         </HBox>
     </top>
-
-    <!-- Centre amb els botons -->
+     <!-- Centre amb els botons -->
     <center>
         <VBox alignment="CENTER" spacing="30">
             <HBox spacing="30" alignment="CENTER">
@@ -69,5 +68,4 @@
             </HBox>
         </VBox>
     </center>
-
 </BorderPane>
