@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerInici"
+      alignment="CENTER" spacing="20" style="-fx-padding: 40;" prefWidth="700" prefHeight="600">
+
+    <ImageView fx:id="imatgeTitol" fitWidth="500" preserveRatio="true"/>
+
+    <Button fx:id="botoLogin" onAction="#anarALogin">
+        <graphic>
+            <ImageView fitWidth="200" preserveRatio="true">
+                <image>
+                    <Image url="/jug4.png"/>
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+</VBox>
+
+
