@@ -97,15 +97,15 @@ public class ContextJDLV implements Serializable {
 
 		switch (t) {
 		case "Xicotet" -> {
-			LIMIT_inici = 30;
+			LIMIT_inici = 35;
 			return 20;
 		}
 		case "Mitjà" -> {
-			LIMIT_inici = 40;
+			LIMIT_inici = 45;
 			return 30;
 		}
 		case "Gran" -> {
-			LIMIT_inici = 50;
+			LIMIT_inici = 80;
 			return 40;
 		}
 		default -> {
@@ -150,6 +150,8 @@ public class ContextJDLV implements Serializable {
 	}
 
 	public void cicleDeLaVida() {
+		morts = 0;
+		naixements = 0;
 
 		int[][] aux = seleccioNatural(cellules);
 
@@ -157,28 +159,30 @@ public class ContextJDLV implements Serializable {
 
 		for (int i = 0; i < aux.length; i++) {
 			for (int j = 0; j < aux[0].length; j++) {
-				if ((aux[i][j] == 1) && cellules[i][j] == null) {
-					nova[i][j] = new Cellula(i, j);
-					nova[i][j].setNaix(true);
-					if (nova[i][j].isMorta())
-						nova[i][j].setMorta(false);
-				} else if ((aux[i][j] == 1) && cellules[i][j] != null) {
-					nova[i][j] = new Cellula(i, j);
-					nova[i][j].setNaix(false);
-					nova[i][j].setViva(true);
-				} else if ((aux[i][j] == 0) && cellules[i][j] == null) {
-					nova[i][j] = new Cellula(i, j);
+				Cellula actual = cellules[i][j];
 
-					nova[i][j].setViva(false);
-					nova[i][j].setMoribunda(true);
-				} else if ((aux[i][j] == 0) && cellules[i][j] == null) {
+				if (actual != null && actual.isMoribunda()) {
+					nova[i][j] = null;
+					morts++;
+				} else if (aux[i][j] == 1) {
 					nova[i][j] = new Cellula(i, j);
-					nova[i][j].setMoribunda(false);
-					if (!nova[i][j].isMorta())
-						nova[i][j].setMorta(true);
-					else
+					if (actual == null) {
+						nova[i][j].setNaix(true);
+						naixements++;
+					} else {
+						nova[i][j].setNaix(false);
+						nova[i][j].setViva(true);
+					}
+				} else {
+					if (actual != null) {
+						nova[i][j] = new Cellula(i, j);
+						nova[i][j].setMoribunda(true);
+						nova[i][j].setNaix(false);
+						nova[i][j].setViva(false);
+						morts++;
+					} else {
 						nova[i][j] = null;
-
+					}
 				}
 
 			}
@@ -190,27 +194,26 @@ public class ContextJDLV implements Serializable {
 	// creació de plantilla d'integers per a indicar qui mor i qui viu
 	public int[][] seleccioNatural(Cellula[][] c) {
 		int[][] aux = new int[c.length][c.length];
-		int r = 0;
+		int veines = 0;
 
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				r = estatVida(c, i, j);
+				veines = estatVida(c, i, j);
 
 				if (c[i][j] != null) {
-					if (r < 3) {
+					if (veines < 2) {
 						aux[i][j] = 0;
-						morts++;
-					} else if (r > 4) {
-						aux[i][j] = 0;
-						morts++;
-					} else
+					} else if (veines == 2 || veines == 3) {
 						aux[i][j] = 1;
+					} else if (veines > 3) {
+						aux[i][j] = 0;
+					}
 				} else {
-					if (r == 3) {
+					if (veines == 3) {
 						aux[i][j] = 1;
-						comptador++;
-					} else
+					} else {
 						aux[i][j] = 0;
+					}
 				}
 			}
 		}
@@ -295,7 +298,26 @@ public class ContextJDLV implements Serializable {
 			}
 		}
 
-		return comptador;
+		return comptador - 1;
+	}
+
+	public static Cellula[][] copiaMatriu(Cellula[][] original) {
+		int n = original.length;
+		Cellula[][] copia = new Cellula[n][n];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (original[i][j] != null) {
+					copia[i][j] = new Cellula(original[i][j].getX(), original[i][j].getY());
+					copia[i][j].setViva(original[i][j].isViva());
+					copia[i][j].setNaix(original[i][j].isNaix());
+					copia[i][j].setMoribunda(original[i][j].isMoribunda());
+					copia[i][j].setMorta(original[i][j].isMorta());
+				}
+			}
+		}
+
+		return copia;
 	}
 
 	// anàlisi del que passarà als pròxims torns
@@ -303,13 +325,13 @@ public class ContextJDLV implements Serializable {
 		// https://www.techiedelight.com/es/copy-object-array-java/
 		boolean resultat = false;
 		ContextJDLV[] postCicle = new ContextJDLV[4];
+		Cellula[][] original = copiaMatriu(c);
 
 		for (int i = 0; i < postCicle.length; i++) {
-			postCicle[i] = new ContextJDLV(getCellula());
+			postCicle[i] = new ContextJDLV(copiaMatriu(original));
 			for (int j = 0; j < i; j++) {
 				postCicle[i].cicleDeLaVida();
 			}
-
 		}
 
 		if (postCicle[0].compararCaselles(postCicle[1].getCellula())
@@ -318,7 +340,6 @@ public class ContextJDLV implements Serializable {
 			return true;
 		else
 			return false;
-
 	}
 
 	// Recompte de dades
@@ -329,6 +350,7 @@ public class ContextJDLV implements Serializable {
 		for (int i = 0; i < cellules.length; i++) {
 			for (int j = 0; j < cellules[0].length; j++) {
 				if (cellules[i][j] != null) {
+					recompte++;
 					if (cellules[i][j].moribunda)
 						moribundes++;
 					else if (cellules[i][j].naix)
@@ -337,7 +359,6 @@ public class ContextJDLV implements Serializable {
 				}
 			}
 		}
-		System.out.println(recompte);
 		return recompte;
 	}
 
@@ -348,29 +369,36 @@ public class ContextJDLV implements Serializable {
 		// www.lawebdelprogramador.com/foros/Java/674725-Saber-si-un-objeto-existe.html
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				if (cellules[i][j] == null) {
-					if (c[i][j] == null) {
-						f = true;
-					} else {
-						f = false;
-						return f;
-					}
-				} else {
-					if (c[i][j] != null) {
-						f = true;
-					} else {
-						f = false;
-						return f;
-					}
+
+				// Comparació en profunditat
+				Cellula a = this.cellules[i][j];
+				Cellula b = c[i][j];
+
+				if ((a == null && b != null) || (a != null && b == null)) {
+					return false;
+				} else if (a != null && b != null) {
+					if (a.isViva() != b.isViva() || a.isNaix() != b.isNaix() || a.isMoribunda() != b.isMoribunda()
+							|| a.isMorta() != b.isMorta()) {
+						return false;
+					} else
+						return true;
 				}
 			}
 		}
 		return f;
 	}
 
-	public String conversioAHex(Color color) {
+	public void depurar(Cellula[][] c) {
+		for (int i = 0; i < c.length; i++) {
+			for (int j = 0; j < c[0].length; j++) {
+				if(c[i][j] != null && c[i][j].isMoribunda())
+					c[i][j] = null;
+			}
+		}
+		System.out.println("Depuració");
+	}
 
-		// Sí IA, és lo que hi ha
+	public String conversioAHex(Color color) {
 
 		String colorCad = String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
 				(int) (color.getBlue() * 255));

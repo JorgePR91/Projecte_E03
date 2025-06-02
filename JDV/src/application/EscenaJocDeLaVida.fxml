@@ -21,19 +21,27 @@
                </cursor></GridPane>
          </center>
          <left>
-            <HBox prefHeight="202.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+            <VBox prefHeight="267.0" prefWidth="65.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Moribundes" />
+                  <Label fx:id="r_moribundes" text="Label" />
+                  <Label text="Mortes" />
+                  <Label text="Vives" />
+                  <Label text="Moribundes" />
+                  <Label text="Label" />
+                  <Label text="Mortes" />
+                  <Label text="Vives" />
+               </children>
+            </VBox>
          </left>
          <right>
-            <AnchorPane prefWidth="100.0" BorderPane.alignment="CENTER" />
+            <AnchorPane prefHeight="300.0" prefWidth="56.0" BorderPane.alignment="CENTER" />
          </right>
          <bottom>
             <AnchorPane prefHeight="78.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="tornar" alignment="CENTER" layoutX="224.0" layoutY="26.0" mnemonicParsing="false" onAction="#tornar" text="Tornar" />
-                  <Label layoutX="69.0" layoutY="31.0" text="Label" />
-                  <Label layoutX="118.0" layoutY="31.0" text="Label" />
-                  <Label layoutX="162.0" layoutY="31.0" text="Label" />
-                  <Label layoutX="27.0" layoutY="31.0" text="Label" />
+                  <Button fx:id="reiniciar" alignment="CENTER" layoutX="293.0" layoutY="26.0" mnemonicParsing="false" onAction="#reiniciar" text="Reiniciar" />
                </children></AnchorPane>
          </bottom>
          <top>
@@ -41,7 +49,7 @@
                <children>
                   <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="256.0">
                     <buttons>
-                      <Button fx:id="Endarrerir" mnemonicParsing="false" onAction="#endarrerir" text="Netejar" />
+                      <Button fx:id="Endarrerir" mnemonicParsing="false" onAction="#endarrerir" text="Endarrerir" />
                         <Button fx:id="accelerar" minWidth="0.0" mnemonicParsing="false" onAction="#accelerar" prefHeight="26.0" prefWidth="298.0" text="Accelerar" />
                     </buttons>
                      <opaqueInsets>
