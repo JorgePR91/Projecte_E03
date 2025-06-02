@@ -9,8 +9,6 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,22 +24,29 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class JocDeLaVidaController implements Initializable {
+public class ControllerJDLV implements Initializable {
 	@FXML
 	private GridPane taulerGrid;
-	@FXML
-	private Button exportarPNG;
 	@FXML
 	private Button tornar;
 	@FXML
 	private Label cronometre;
+	@FXML
+	private Label cicles;
+	@FXML
+	private Label r_moribundes;
+	@FXML
+	private Label r_vives;
+	@FXML
+	private Label r_mortes;
+	@FXML
+	private Label r_naix;
 
 	private ContextJDLV context;
 	private int segons;
-	private int tamany;
 	private Timeline temps;
 	private boolean estancament;
-	public int cicles;
+	public int contCicles;
 	private Pane[][] planols;
 
 	public Label getCronometre() {
@@ -79,13 +84,18 @@ public class JocDeLaVidaController implements Initializable {
 		
 		nouGP(context.getCellula());
 
-		if (segons > 0)
+		taulerGrid.prefHeightProperty().bind(taulerGrid.widthProperty());
+		
+		if (segons > 0 )
 			segons = 0;
+		if (contCicles > 0 )
+			contCicles = 0;
 
 		Format formatter = new SimpleDateFormat("mm:ss");
-
+		
+		
 		temps = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-			cicles++;
+			contCicles++;
 			segons++;
 			
 			cronometre.setText(formatter.format(segons * 1000));
@@ -108,8 +118,7 @@ public class JocDeLaVidaController implements Initializable {
 				System.out.println(
 						"SIMULACIÓ DETESA - Cèl·lules: " + context.getComptCel() + ", Estancament: " + estancament);
 			}
-			System.out.println("paco");
-
+			actualitzarLabel(this.context);
 		}));
 		temps.setCycleCount(Timeline.INDEFINITE);
 		temps.play();
@@ -185,17 +194,23 @@ public class JocDeLaVidaController implements Initializable {
 		
 		// Falten Proporcions!!
 	}
+	
+	public void actualitzarLabel(ContextJDLV context) {
+		cicles.setText("Cicle: "+this.contCicles+"\nTotal creades: "+context.comptCel+"\nTotal mortes: "+context.comptMor);
+		r_moribundes.setText(""+context.getMoribundes());
+		r_vives.setText(""+context.getVives());
+		r_mortes.setText(""+context.getMorts());
+		r_naix.setText(""+context.getNaixements());
+	}
 
 	@FXML
 	public void accelerar() {
-		temps.setRate(temps.getRate() * 0.25);
-
+		temps.setRate(temps.getRate() / 0.25);
 	};
 
 	@FXML
 	public void endarrerir() {
-		temps.setRate(temps.getRate() / 0.25);
-
+		temps.setRate(temps.getRate() * 0.25);
 	};
 
 	@FXML

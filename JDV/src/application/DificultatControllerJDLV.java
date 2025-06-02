@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,23 +13,21 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class JDLVDificultatController implements Initializable {
+public class DificultatControllerJDLV implements Initializable {
 	@FXML
-	private VBox root_dificultad;
+	private BorderPane root_dificultad;
 
 	private String tamany;
 
-	public VBox getRoot_dificultad() {
+	public BorderPane getRoot_dificultad() {
 		return root_dificultad;
 	}
 
-	public void setRoot_dificultad(VBox root_dificultad) {
+	public void setRoot_dificultad(BorderPane root_dificultad) {
 		this.root_dificultad = root_dificultad;
 	}
 

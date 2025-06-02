@@ -242,6 +242,7 @@ public class ContextJDLV {
 
 					if (cellules[i][j].getEstat().equals("morta") || cellules[i][j].getEstat().equals("moribunda")) {
 						nova[i][j].setEstat("naixement");
+						naixements++;
 						comptCel++;
 					} else {
 						nova[i][j].setEstat("viva");
@@ -386,7 +387,6 @@ public class ContextJDLV {
 	// anàlisi del que passarà als pròxims torns
 	public boolean preCicle() {
 		// https://www.techiedelight.com/es/copy-object-array-java/
-		boolean resultat = false;
 
 		ContextJDLV[] postCicle = new ContextJDLV[5];
 		Cellula[][] original = copiaMatriu(cellules);
