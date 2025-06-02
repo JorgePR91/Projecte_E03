@@ -1,10 +1,9 @@
 package application;
 
-import java.io.Serializable;
 import java.util.Random;
 import javafx.scene.paint.Color;
 
-public class ContextJDLV implements Serializable {
+public class ContextJDLV {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
@@ -152,7 +151,7 @@ public class ContextJDLV implements Serializable {
 	public void cicleDeLaVida() {
 		morts = 0;
 		naixements = 0;
-
+System.out.println("Nou cicle");
 		int[][] aux = seleccioNatural(cellules);
 
 		Cellula[][] nova = new Cellula[cellules.length][cellules.length];
@@ -161,33 +160,49 @@ public class ContextJDLV implements Serializable {
 			for (int j = 0; j < aux[0].length; j++) {
 				Cellula actual = cellules[i][j];
 
-				if (actual != null && actual.isMoribunda()) {
-					nova[i][j] = null;
-					morts++;
-				} else if (aux[i][j] == 1) {
-					nova[i][j] = new Cellula(i, j);
-					if (actual == null) {
+				// ACTUAL VIVA
+				if (actual != null) {
+					// Viva Viva
+					if (aux[i][j] == 1) {
+						nova[i][j] = new Cellula(i, j);
+
+						if (actual.isMoribunda()) {
+							nova[i][j].setNaix(true);
+							nova[i][j].setMoribunda(false);
+							naixements++;
+						} else if (actual.isNaix()) {
+							nova[i][j].setNaix(false);
+							nova[i][j].setViva(true);
+						} else {
+							nova[i][j].setViva(true);
+						}
+						// VIVA morta
+					} else {
+						if (actual.isViva()) {
+							nova[i][j] = new Cellula(i, j);
+							actual.setViva(false);
+							actual.setMoribunda(true);
+						} else if (actual.isMoribunda()) {
+							nova[i][j] = null;
+							morts++;
+						}
+					}
+					// MORTA
+				} else {
+					// MORTA A VIVA
+					if (aux[i][j] == 1) {
+						nova[i][j] = new Cellula(i, j);
 						nova[i][j].setNaix(true);
 						naixements++;
-					} else {
-						nova[i][j].setNaix(false);
-						nova[i][j].setViva(true);
 					}
-				} else {
-					if (actual != null) {
-						nova[i][j] = new Cellula(i, j);
-						nova[i][j].setMoribunda(true);
-						nova[i][j].setNaix(false);
-						nova[i][j].setViva(false);
-						morts++;
-					} else {
+					// MORTA A MORTA: RES{
+					else {
 						nova[i][j] = null;
 					}
 				}
 
 			}
 		}
-
 		this.setCellula(nova);
 	}
 
@@ -331,6 +346,7 @@ public class ContextJDLV implements Serializable {
 			postCicle[i] = new ContextJDLV(copiaMatriu(original));
 			for (int j = 0; j < i; j++) {
 				postCicle[i].cicleDeLaVida();
+				System.out.println("PostCicle amb cicle de la vida	");
 			}
 		}
 
@@ -391,7 +407,7 @@ public class ContextJDLV implements Serializable {
 	public void depurar(Cellula[][] c) {
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				if(c[i][j] != null && c[i][j].isMoribunda())
+				if (c[i][j] != null && c[i][j].isMoribunda())
 					c[i][j] = null;
 			}
 		}

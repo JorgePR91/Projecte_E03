@@ -136,7 +136,7 @@ public class PixelArtController implements Initializable {
 		            p.base = context.perDefecte(o, m);
 
 					if (!p.colorHex.isEmpty())
-						int llongitud = p.colorHex.length();
+					//	int longitud = p.colorHex.length();
 						System.out.println("-fx-background-color: " +p.colorHex + ";");
 						
 						planol.setStyle("-fx-background-color: #" + p.colorHex + ";");

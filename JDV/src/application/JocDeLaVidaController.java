@@ -208,6 +208,11 @@ public class JocDeLaVidaController implements Initializable {
 		temps.setRate(temps.getRate() / 0.5);
 
 	};
+	@FXML
+	public void reiniciar() {
+		temps.setRate(temps.getRate() / 0.5);
+
+	};
 
 	@FXML
 	public void tornar() {
