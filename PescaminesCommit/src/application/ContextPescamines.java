@@ -16,13 +16,13 @@ public class ContextPescamines implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
-	protected BooleanProperty partida = new SimpleBooleanProperty(true);
 	protected int mines;
 	protected int lliures;
 	protected transient Label caixaMines;
 	protected String dificultat;
 	protected int tamany;
 	protected transient Random alea = new Random();
+	protected BooleanProperty partida = new SimpleBooleanProperty(true);
 
 	// GETTERS I SETTERS
 	public int getComptador() {
@@ -293,18 +293,7 @@ public class ContextPescamines implements Serializable {
 			return false;
 	}
 
-	public boolean serialitzacioTauler(Tauler t, String id) {
-		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 
-		// ¿Crear /Partides si no existeix com fem amb les BD?
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
-			oos.writeObject(t);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 //	public static ContextPescamines desserialitzacioTauler(String id) {
 //

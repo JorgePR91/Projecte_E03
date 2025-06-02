@@ -1,6 +1,8 @@
 package application;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.Format;
@@ -161,11 +163,22 @@ public class PescaminesController implements Initializable {
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
-			context.serialitzacioTauler(nouTauler, id);
+			serialitzacioTauler(this.context, id);
 		// UTILITZAR CLASSE
 		// ENVIAR VARIABLES NECESSÀRIES DESDE CONTEXT
 	}
+	public boolean serialitzacioTauler(ContextPescamines contxt, String id) {
+		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 
+		// ¿Crear /Partides si no existeix com fem amb les BD?
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
+			oos.writeObject(contxt);
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	@FXML
 	public void reiniciar(ActionEvent e) {
 		temps.stop();

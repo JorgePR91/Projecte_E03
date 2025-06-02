@@ -8,7 +8,7 @@ import java.util.Random;
 
 import javafx.animation.Timeline;
 
-public class Tauler extends Context implements Serializable {
+public class Tauler extends PescaminesContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	

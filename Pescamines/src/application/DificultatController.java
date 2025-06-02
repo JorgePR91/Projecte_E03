@@ -116,7 +116,7 @@ public class DificultatController implements Initializable {
     		
     		try {
     			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescamines.fxml"));
-    			Context context = Context.desserialitzacioTauler(f);
+    			PescaminesContext context = PescaminesContext.desserialitzacioTauler(f);
     			if(context == null)
     				throw new IOException("L'arxiu no conté res deserialitzable");
     			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();

@@ -4,13 +4,7 @@ import java.io.Serializable;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 
 public class Lliure extends Casella implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -28,7 +22,7 @@ public class Lliure extends Casella implements Serializable {
 	// RECERCA DE MINES
 	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
-	public Lliure(int x, int y, Casella[][] c, Context context) {
+	public Lliure(int x, int y, Casella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 		// boto = new Button();
@@ -45,11 +39,11 @@ public class Lliure extends Casella implements Serializable {
 		// reaccio();
 	}
 
-	public Lliure(int x, int y, Context context) {
+	public Lliure(int x, int y, PescaminesContext context) {
 		super(x, y, context);
 	}
 
-	public Lliure(int n, int x, int y, Casella[][] c, Context context) {
+	public Lliure(int n, int x, int y, Casella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 

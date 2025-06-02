@@ -1,6 +1,8 @@
 package application;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.Format;
@@ -52,13 +54,13 @@ public class PescaminesController implements Initializable {
 	private Label cronometre;
 	private int segons;
 	private String dif;
-	private Context context;
+	private PescaminesContext context;
 
-	public Context getcontext() {
+	public PescaminesContext getcontext() {
 		return context;
 	}
 
-	public void setcontext(Context context) {
+	public void setcontext(PescaminesContext context) {
 
 		this.context = context;
 
@@ -81,7 +83,7 @@ public class PescaminesController implements Initializable {
 		DadesSingleton dada = DadesSingleton.getInstancia();
 
 		if (dada.getPartidaCompartida() != null) {
-			Context contextProvisional = context.desserialitzacioTauler(dada.getPartidaCompartida());
+			PescaminesContext contextProvisional = context.desserialitzacioTauler(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
 				System.out.println("Copiant context");
 				context = contextProvisional;
@@ -97,7 +99,7 @@ public class PescaminesController implements Initializable {
 			}
 		} else {
 			System.out.println("Nou context");
-			context = new Context();
+			context = new PescaminesContext();
 			dif = dada.getCadenaCompartida();
 			nouTauler = context.crearTauler(dif, context);
 			context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
@@ -269,11 +271,22 @@ public class PescaminesController implements Initializable {
 		// SERIALIZED
 		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
 		if (id != null)
-			context.serialitzacioPartida(context, id);
+			serialitzacioPartida(context, id);
 		// UTILITZAR CLASSE
 		// ENVIAR VARIABLES NECESSÀRIES DESDE context
 	}
+	public boolean serialitzacioPartida(PescaminesContext cntxt, String id) {
+		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 
+		// ¿Crear /Partides si no existeix com fem amb les BD?
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
+			oos.writeObject(cntxt);
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 //¿Posar ací el mètode de carregar partida??
 	@FXML
 	public void reiniciar(ActionEvent e) {

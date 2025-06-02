@@ -22,12 +22,12 @@ public class Mina extends Casella implements Serializable {
 	private Casella[][] c;
 
 
-	public Mina(int x, int y, Context context) {
+	public Mina(int x, int y, PescaminesContext context) {
 		super(x, y, context);
 
 	}
 
-	public Mina(int x, int y, Casella[][] c, Context context) {
+	public Mina(int x, int y, Casella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 		this.element = new Label("X");

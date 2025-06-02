@@ -13,7 +13,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
-public class Context implements Serializable {
+public class PescaminesContext implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
@@ -40,7 +40,7 @@ public class Context implements Serializable {
 		}
 	}
 
-	public Context() {
+	public PescaminesContext() {
 		super();
 	}
 
@@ -130,7 +130,7 @@ public class Context implements Serializable {
 	}
 
 	// METODES
-	public Tauler crearTauler(String dificultat, Context contxt) {
+	public Tauler crearTauler(String dificultat, PescaminesContext contxt) {
 		setDificultat(dificultat);
 
 		switch (dificultat) {
@@ -162,7 +162,7 @@ public class Context implements Serializable {
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat, Context contxt) {
+	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat, PescaminesContext contxt) {
 //		int nMines;
 //		//decidir bombes
 //		if(dificultat == "f") {
@@ -348,27 +348,15 @@ public class Context implements Serializable {
 			return false;
 	}
 
-	public boolean serialitzacioPartida(Context cntxt, String id) {
-		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 
-		// ¿Crear /Partides si no existeix com fem amb les BD?
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
-			oos.writeObject(cntxt);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public static Context desserialitzacioTauler(File f) {
+	public static PescaminesContext desserialitzacioTauler(File f) {
 
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-			Context c = (Context) ois.readObject();
+			PescaminesContext c = (PescaminesContext) ois.readObject();
 			return c;
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			return new Context();
+			return new PescaminesContext();
 		}
 
 	}

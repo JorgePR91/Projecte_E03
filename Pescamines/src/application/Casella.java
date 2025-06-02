@@ -12,13 +12,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 public abstract class Casella implements AccioCasella {
+	
 		protected boolean estat;
 		protected BooleanProperty estatBP;
 		protected transient StackPane container;
 		protected transient Node contingut;
 		protected int x;
 		protected int y;
-		protected Context context;
+		protected PescaminesContext context;
 		
 		private void writeObject(ObjectOutputStream oos) {
 	        try {
@@ -40,7 +41,7 @@ public abstract class Casella implements AccioCasella {
 	            this.estat = ois.readBoolean();
 	            this.x = ois.readInt();
 	            this.y = ois.readInt();
-	            this.context = (Context) ois.readObject();
+	            this.context = (PescaminesContext) ois.readObject();
 			} catch (IOException e) {
 				// TODO: handle exception
 			} catch (ClassNotFoundException e) {
@@ -54,7 +55,7 @@ public abstract class Casella implements AccioCasella {
 
 		}
 
-		public Casella(int x, int y, Context context) {
+		public Casella(int x, int y, PescaminesContext context) {
 			super();
 			this.x = x;
 			this.y = y;
@@ -109,11 +110,11 @@ public abstract class Casella implements AccioCasella {
 			this.estatBP.set(estat);
 		}
 		
-		public Context getContext() {
+		public PescaminesContext getContext() {
 			return context;
 		}
 
-		public void setContext(Context context) {
+		public void setContext(PescaminesContext context) {
 			this.context = context;
 		}
 
