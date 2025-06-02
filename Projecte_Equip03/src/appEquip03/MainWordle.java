@@ -17,13 +17,13 @@ public class MainWordle extends Application {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 600, 500);
+            Scene scene = new Scene(root, 700, 600);
 
             scene.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
             primaryStage.setTitle("Inici");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false); // Opcional: evitar redimensionar
+            primaryStage.setResizable(false); // evita redimensionar
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

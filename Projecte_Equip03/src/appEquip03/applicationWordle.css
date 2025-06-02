@@ -13,14 +13,14 @@
 }
 
 .button {
-    -fx-background-color: #c20404;
+    -fx-background-color: white;
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #ffffff;
+    -fx-background-color: grey;
     -fx-opacity: 0.7;
 }
 

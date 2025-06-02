@@ -7,7 +7,7 @@
 
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="appEquip03.EscenaControllerRegistre"
-      alignment="CENTER" spacing="10" style="-fx-padding: 30;" prefWidth="600" prefHeight="500">
+      alignment="CENTER" spacing="10" style="-fx-padding: 30;" prefWidth="700" prefHeight="600">
 	
 	<ImageView fx:id="formImage" fitWidth="300" preserveRatio="true" />
     <TextField fx:id="usuariField" promptText="Usuari"/>

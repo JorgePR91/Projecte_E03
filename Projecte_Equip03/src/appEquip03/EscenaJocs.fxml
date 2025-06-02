@@ -10,7 +10,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="appEquip03.EscenaControllerJocs"
-            prefWidth="600" prefHeight="500"
+            prefWidth="700" prefHeight="600"
             style="-fx-padding: 20;">
 
     <!-- Zona superior amb usuari i logout -->
@@ -29,7 +29,7 @@
                     <graphic>
                         <ImageView fitWidth="200" preserveRatio="true">
                             <image>
-                                <Image url="/p4r4ul4d4.png"/>
+                                <Image url="/p4r4ul4d4_Mesa de trabajo 1.png"/>
                             </image>
                         </ImageView>
                     </graphic>
@@ -39,7 +39,7 @@
                     <graphic>
                         <ImageView fitWidth="200" preserveRatio="true">
                             <image>
-                                <Image url="/busc4min4.png"/>
+                                <Image url="/busc4min4_Mesa de trabajo 1.png"/>
                             </image>
                         </ImageView>
                     </graphic>
@@ -51,7 +51,7 @@
                     <graphic>
                         <ImageView fitWidth="200" preserveRatio="true">
                             <image>
-                                <Image url="/jug4vid4.png"/>
+                                <Image url="/jug4vid4_Mesa de trabajo 1.png"/>
                             </image>
                         </ImageView>
                     </graphic>
@@ -59,9 +59,9 @@
 
                 <Button fx:id="botoPixelArt" onAction="#anarPixelArt">
                     <graphic>
-                        <ImageView fitWidth="200" preserveRatio="true">
+                        <ImageView fitWidth="200" fitHeight="200">
                             <image>
-                                <Image url="/pixel4rt.png"/>
+                                <Image url="/pixel4rt_Mesa de trabajo 1.png"/>
                             </image>
                         </ImageView>
                     </graphic>
