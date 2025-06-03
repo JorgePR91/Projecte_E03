@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="appEquip03.EscenaControllerJocVida"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="700" prefHeight="600"
+            style="-fx-padding: 20 20 20 20;"> <!-- Padding dret eliminat -->
+
+    <top>
+        <VBox spacing="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label fx:id="nomUsuariLabel" text="Usuari: " />
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="tornarMenuBtn" text="Menú Jocs" onAction="#tornarMenu"/>
+                <Button fx:id="logoutBtn" text="LogOut" onAction="#tornarInici"/>
+            </HBox>
+
+            <!-- Barres i dades del joc -->
+            <HBox prefHeight="112.0" prefWidth="500.0">
+                <children>
+                    <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="256.0">
+                        <buttons>
+                            <Button fx:id="Endarrerir" mnemonicParsing="false" onAction="#endarrerir" text="Endarrerir" />
+                            <Button fx:id="accelerar" minWidth="0.0" mnemonicParsing="false" onAction="#accelerar" prefHeight="26.0" prefWidth="298.0" text="Accelerar" />
+                        </buttons>
+                        <padding>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </padding>
+                        <cursor>
+                            <Cursor fx:constant="DEFAULT" />
+                        </cursor>
+                    </ButtonBar>
+                    <Label fx:id="cronometre" alignment="CENTER" prefHeight="112.0" prefWidth="125.0" text="00:00" />
+                    <Label fx:id="cicles" alignment="CENTER" prefHeight="112.0" prefWidth="125.0" />
+                </children>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <BorderPane>
+            <right>
+                <AnchorPane prefHeight="300.0" prefWidth="56.0" BorderPane.alignment="CENTER"/>
+            </right>
+            <bottom>
+                <AnchorPane prefHeight="78.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="tornar" alignment="CENTER" layoutX="224.0" layoutY="26.0" mnemonicParsing="false" onAction="#tornar" text="Tornar" />
+                        <Button fx:id="reiniciar" alignment="CENTER" layoutX="293.0" layoutY="26.0" mnemonicParsing="false" onAction="#reiniciar" text="Reiniciar" />
+                        <Button fx:id="pause" layoutX="136.0" layoutY="26.0" mnemonicParsing="false" onAction="#aturar" text="Pause/Play" />
+                    </children>
+                </AnchorPane>
+            </bottom>
+            <center>
+                <GridPane fx:id="taulerGrid" alignment="CENTER" prefHeight="250.0" prefWidth="250.0"
+                          style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
+                    <cursor>
+                        <Cursor fx:constant="DEFAULT"/>
+                    </cursor>
+                </GridPane>
+            </center>
+            <left>
+                <VBox prefHeight="300.0" prefWidth="99.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label text="Moribundes"/>
+                        <Label fx:id="r_moribundes"/>
+                        <Label text="Mortes"/>
+                        <Label fx:id="r_mortes"/>
+                        <Label text="Vives"/>
+                        <Label fx:id="r_vives"/>
+                        <Label text="Naixements"/>
+                        <Label fx:id="r_naix"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                </VBox>
+            </left>
+        </BorderPane>
+    </center>
+
+</BorderPane>

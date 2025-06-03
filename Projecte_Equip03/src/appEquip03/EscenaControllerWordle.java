@@ -21,13 +21,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class EscenaControllerWordle {
 
     private List<String> paraules;
     private String paraulaObjectiu;
     private int intentsFets = 0;
-    private String nomUsuari;
 
 
     @FXML private VBox root;
@@ -37,13 +37,11 @@ public class EscenaControllerWordle {
     @FXML private Button reiniciar;
     @FXML private Label nomUsuariLabel;
     @FXML private Button logoutBtn;
-
-
+	private String nomUsuari;
     public void setNomUsuari(String nomUsuari) {
         this.nomUsuari = nomUsuari;
         nomUsuariLabel.setText("Usuari: " + nomUsuari);
     }
-    
     @FXML
     private void tornarInici() {
         try {
@@ -51,16 +49,24 @@ public class EscenaControllerWordle {
             Parent root = loader.load();
             Scene novaEscena = new Scene(root, 700, 600);
 
-            MainWordle.canviarEscena(novaEscena);
-            
-            // Tanca l'escena actual
-            Stage actual = (Stage) logoutBtn.getScene().getWindow();
-            actual.close();
+            // Afegim el CSS correcte
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+            stageActual.setScene(novaEscena);
+            stageActual.setTitle("Inici");
+
+            // Tanquem altres finestres menys aquesta
+            for (Window window : Stage.getWindows()) {
+                if (window instanceof Stage && window != stageActual) {
+                    ((Stage) window).close();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void tornarMenu() {
     	try {
@@ -77,7 +83,6 @@ public class EscenaControllerWordle {
             e.printStackTrace();
         }
     }
-
     
     @FXML
     public void initialize() {

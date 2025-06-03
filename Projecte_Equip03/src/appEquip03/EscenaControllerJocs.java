@@ -1,12 +1,13 @@
 package appEquip03;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class EscenaControllerJocs {
@@ -14,8 +15,10 @@ public class EscenaControllerJocs {
     private String nomUsuari;
     private static Stage finestraWordle = null;
 
-    @FXML private Label nomUsuariLabel;
-    @FXML private Button logoutBtn;
+    @FXML
+    private Label nomUsuariLabel;
+    @FXML 
+    private Button logoutBtn;
 
     private void obrirEscena(String fxml, String titol) {
         try {
@@ -61,7 +64,7 @@ public class EscenaControllerJocs {
 
     @FXML
     private void anarPescamines() {
-        obrirEscena("EscenaPescamines.fxml", "Pescamines");
+        obrirEscena("EscenaDificultatPescamines.fxml", "Pescamines");
     }
 
     @FXML
