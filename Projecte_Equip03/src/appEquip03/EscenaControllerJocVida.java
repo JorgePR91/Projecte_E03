@@ -22,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 public class EscenaControllerJocVida implements Initializable {
@@ -41,6 +42,56 @@ public class EscenaControllerJocVida implements Initializable {
 	private Label r_mortes;
 	@FXML
 	private Label r_naix;
+	
+	@FXML private Label nomUsuariLabel;
+    @FXML private Button logoutBtn;
+	private String nomUsuari;
+    public void setNomUsuari(String nomUsuari) {
+        this.nomUsuari = nomUsuari;
+        nomUsuariLabel.setText("Usuari: " + nomUsuari);
+    }
+    @FXML
+    private void tornarInici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            // Afegim el CSS correcte
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+            stageActual.setScene(novaEscena);
+            stageActual.setTitle("Inici");
+
+            // Tanquem altres finestres menys aquesta
+            for (Window window : Stage.getWindows()) {
+                if (window instanceof Stage && window != stageActual) {
+                    ((Stage) window).close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void tornarMenu() {
+    	try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            MainWordle.canviarEscena(novaEscena);
+            
+            // Tanca l'escena actual
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 	private ContextJocVida context;
 	private int segons;

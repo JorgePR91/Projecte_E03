@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -27,6 +28,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class EscenaControllerPixelArt implements Initializable {
 	@FXML
@@ -47,6 +49,54 @@ public class EscenaControllerPixelArt implements Initializable {
 	private ColorPicker color;
 	@FXML
 	private Button tornar;
+	@FXML private Label nomUsuariLabel;
+    @FXML private Button logoutBtn;
+	private String nomUsuari;
+    public void setNomUsuari(String nomUsuari) {
+        this.nomUsuari = nomUsuari;
+        nomUsuariLabel.setText("Usuari: " + nomUsuari);
+    }
+    @FXML
+    private void tornarInici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            // Afegim el CSS correcte
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+            stageActual.setScene(novaEscena);
+            stageActual.setTitle("Inici");
+
+            // Tanquem altres finestres menys aquesta
+            for (Window window : Stage.getWindows()) {
+                if (window instanceof Stage && window != stageActual) {
+                    ((Stage) window).close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void tornarMenu() {
+    	try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            MainWordle.canviarEscena(novaEscena);
+            
+            // Tanca l'escena actual
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	private ContextPixelArt context;
 	private TaulerPixelArt nouTauler;

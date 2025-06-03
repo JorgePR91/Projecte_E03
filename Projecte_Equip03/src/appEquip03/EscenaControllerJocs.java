@@ -64,7 +64,7 @@ public class EscenaControllerJocs {
 
     @FXML
     private void anarPescamines() {
-        obrirEscena("EscenaPescamines.fxml", "Pescamines");
+        obrirEscena("EscenaDificultatPescamines.fxml", "Pescamines");
     }
 
     @FXML
