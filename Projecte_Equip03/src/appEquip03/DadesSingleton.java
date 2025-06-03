@@ -2,14 +2,15 @@ package appEquip03;
 
 import java.io.File;
 
-public class DadesSingletonPescamines {
+public class DadesSingleton {
 		private String cadenaCompartida; 
+		private String usuari; 
 		private File partidaCompartida; 
+		private int tamanyCompartit; 
+
 
 		
-		private final static DadesSingletonPescamines INSTANCIA =  new DadesSingletonPescamines();
-		
-		private DadesSingletonPescamines() {}
+		private final static DadesSingleton INSTANCIA =  new DadesSingleton();
 
 		public String getCadenaCompartida() {
 			return cadenaCompartida;
@@ -19,7 +20,7 @@ public class DadesSingletonPescamines {
 			this.cadenaCompartida = cadenaCompartida;
 		}
 
-		public static DadesSingletonPescamines getInstancia() {
+		public static DadesSingleton getInstancia() {
 			return INSTANCIA;
 		}
 
@@ -29,7 +30,24 @@ public class DadesSingletonPescamines {
 
 		public void setPartidaCompartida(File partidaCompartida) {
 			this.partidaCompartida = partidaCompartida;
+		}
+
+		public int getTamanyCompartit() {
+			return tamanyCompartit;
+		}
+
+		public void setTamanyCompartit(int tamanyCompartit) {
+			this.tamanyCompartit = tamanyCompartit;
+		}
+
+		public String getUsuari() {
+			return usuari;
+		}
+
+		public void setUsuari(String usuari) {
+			this.usuari = usuari;
 		} 
+		
 		
 		
 }

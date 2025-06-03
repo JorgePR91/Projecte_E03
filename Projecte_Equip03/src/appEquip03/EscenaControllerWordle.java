@@ -3,13 +3,16 @@ package appEquip03;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,7 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class EscenaControllerWordle {
+public class EscenaControllerWordle implements Initializable{
 
     private List<String> paraules;
     private String paraulaObjectiu;
@@ -38,10 +41,18 @@ public class EscenaControllerWordle {
     @FXML private Label nomUsuariLabel;
     @FXML private Button logoutBtn;
 	private String nomUsuari;
+	
     public void setNomUsuari(String nomUsuari) {
         this.nomUsuari = nomUsuari;
         nomUsuariLabel.setText("Usuari: " + nomUsuari);
     }
+    
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		DadesSingleton dada = DadesSingleton.getInstancia();
+		setNomUsuari(dada.getUsuari());
+		nomUsuariLabel.setText("Usuari: " + nomUsuari);
+	}
     @FXML
     private void tornarInici() {
         try {
@@ -74,7 +85,7 @@ public class EscenaControllerWordle {
             Parent root = loader.load();
             Scene novaEscena = new Scene(root, 700, 600);
 
-            MainWordle.canviarEscena(novaEscena);
+            Main.canviarEscena(novaEscena);
             
             // Tanca l'escena actual
             Stage actual = (Stage) logoutBtn.getScene().getWindow();

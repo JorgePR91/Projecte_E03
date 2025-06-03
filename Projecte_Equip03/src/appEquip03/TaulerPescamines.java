@@ -1,8 +1,5 @@
 package appEquip03;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -15,34 +12,7 @@ public class TaulerPescamines extends ContextPescamines implements Serializable 
 	private int l;
 	private int a;
 	private CasellaPescamines[][] caselles;
-	
-
-	private void writeObject(ObjectOutputStream oos) {
-        try {
-            oos.defaultWriteObject();
-            
-            oos.writeInt(l);
-            oos.writeInt(a);
-            oos.writeObject(caselles);
-		} catch (IOException e) {
-		}
-    }
-    
-    private void readObject(ObjectInputStream ois) {
-    	try {
-            ois.defaultReadObject();
-            this.alea = new Random();
-            this.l = ois.readInt();
-            this.a = ois.readInt();
-            this.caselles = (CasellaPescamines[][]) ois.readObject();
-		} catch (IOException e) {
-			// TODO: handle exception
-		} catch (ClassNotFoundException e) {
-			// TODO: handle exception
-		}
-    }
-
-	
+		
 	public TaulerPescamines() {
 	};
 	

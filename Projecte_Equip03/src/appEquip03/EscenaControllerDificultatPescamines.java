@@ -56,7 +56,7 @@ public class EscenaControllerDificultatPescamines implements Initializable {
 		Button b = (Button) e.getSource();
 		dificultat = b.getText();
 		
-		DadesSingletonPescamines dada = DadesSingletonPescamines.getInstancia();
+		DadesSingleton dada = DadesSingleton.getInstancia();
 		dada.setCadenaCompartida(dificultat);
 		
 		try {
@@ -78,61 +78,30 @@ public class EscenaControllerDificultatPescamines implements Initializable {
 	@FXML
 	public void carregarPartida(ActionEvent e) throws IOException {
 		System.out.println(e.toString()+"  DESERIALIZAR");
-		//Primer: crear una File amb la direcció que ens han donat
-		//Crear un nou tauler amb el context deserialitzar
-		//tot comprovant si no és null
-		//associar el nou tauler al carregat?
-		//associar el Gp a les casselles del nou?
-		//deixar la pantalla d'inici no vista i el ratolí transparent
-		//encetar el temps a play
 		
 		//https://acodigo.blogspot.com/2014/12/file-chooser-javafx-abrir-archivos.html
 		
-				
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setInitialDirectory(new File("./Partides"));
         fileChooser.setTitle("Buscar partida guardada");
 
-        // Agregar filtros para facilitar la busqueda
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Tots els arxius", "*.*"),
                 new FileChooser.ExtensionFilter("DAT", "*.dat")
         );
 
-        // Obtener la imagen seleccionada
         File f = fileChooser.showOpenDialog(root_dificultad.getScene().getWindow());
 
-        // Mostar la imagen
         if (f != null) {
             File partida = new File(f.getAbsolutePath());
-// Crear un tauler nou amb el context deserialitzar, fent referència a l'arxiu seleccionat amb el nom .getName()
-//Si no és null es fa una funció inicialització de components amb el tauler(sols el temps amb setTemps new Timeline()), es carrega el nou tauler en this.nouTauler(ell ho ha fet tot en un però crec que puc fer-ho amb el traspàs de dades Singleton), s'apliquen les caselles i es fa la GP, i s0inicialitza el temps.play
 
-    		DadesSingletonPescamines dada = DadesSingletonPescamines.getInstancia();
+    		DadesSingleton dada = DadesSingleton.getInstancia();
     		dada.setPartidaCompartida(partida);
-    		
-//    		try {
-//    			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescamines.fxml"));
-//    			ContextPescamines context = ContextPescamines.desserialitzacioTauler(f.getName());
-//    			if(context == null)
-//    				throw new IOException("L'arxiu no conté res deserialitzable");
-//    			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//    			//PescaminesController controller = new PescaminesController();
-//
-//    			//loader.setController(controller);
-//    			Parent root = loader.load();
-//    			Scene escena2 = new Scene(root);
-//
-//    			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-//    			window.setScene(escena2);
-//    			window.setTitle("Pescamines");
-//    			window.show();
-//    		} catch (IOException e1) {
-//    			e1.printStackTrace();
-//    		}
+ 
             
         }
 	}
+
 
 	@FXML
 	public void ranquing(ActionEvent e) {

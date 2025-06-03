@@ -21,6 +21,7 @@ public class EscenaControllerDificultatJocVida implements Initializable {
 	@FXML
 	private BorderPane root_dificultad;
 
+
 	private String tamany;
 
 	public BorderPane getRoot_dificultad() {
@@ -52,7 +53,7 @@ public class EscenaControllerDificultatJocVida implements Initializable {
 		Button b = (Button) e.getSource();
 		tamany = b.getText();
 
-		DadesSingletonJocVida dada = DadesSingletonJocVida.getInstancia();
+		DadesSingleton dada = DadesSingleton.getInstancia();
 
 		switch (tamany) {
 		case "Xicotet" -> {
@@ -76,13 +77,12 @@ public class EscenaControllerDificultatJocVida implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocVida.fxml"));
 
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			// PescaminesController controller = new PescaminesController();
 
-			// loader.setController(controller);
+;
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
+
 			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
-        	escena2.getStylesheets().add(getClass().getResource("/appEquip03/EscenaJocVida.fxml").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("Joc de la Vida");
 			window.show();
@@ -90,5 +90,6 @@ public class EscenaControllerDificultatJocVida implements Initializable {
 			e1.printStackTrace();
 		}
 	}
+
 
 }

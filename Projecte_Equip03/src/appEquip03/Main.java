@@ -6,8 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MainWordle extends Application {
-
+public class Main extends Application {
+	
     private static Stage stagePrincipal;
 
     @Override
@@ -31,7 +31,7 @@ public class MainWordle extends Application {
     }
 
     public static void canviarEscena(Scene novaEscena) {
-        novaEscena.getStylesheets().add(MainWordle.class.getResource("applicationWordle.css").toExternalForm());
+        novaEscena.getStylesheets().add(Main.class.getResource("applicationWordle.css").toExternalForm());
         stagePrincipal.setScene(novaEscena);
         stagePrincipal.show();
     }

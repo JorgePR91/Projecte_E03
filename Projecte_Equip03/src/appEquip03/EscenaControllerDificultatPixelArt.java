@@ -20,113 +20,110 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class EscenaControllerDificultatPixelArt implements Initializable {
-    @FXML
-    private VBox root_dificultad;
+	@FXML
+	private VBox root_dificultad;
 
-    private String tamany;
+	private String tamany;
 
-    public VBox getRoot_dificultad() {
-        return root_dificultad;
-    }
+	public VBox getRoot_dificultad() {
+		return root_dificultad;
+	}
 
-    public void setRoot_dificultad(VBox root_dificultad) {
-        this.root_dificultad = root_dificultad;
-    }
+	public void setRoot_dificultad(VBox root_dificultad) {
+		this.root_dificultad = root_dificultad;
+	}
 
-    public String getDificultat() {
-        return tamany;
-    }
+	public String getDificultat() {
+		return tamany;
+	}
 
-    public void setDificultat(String tamany) {
-        this.tamany = tamany;
-    }
+	public void setDificultat(String tamany) {
+		this.tamany = tamany;
+	}
 
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-        Platform.runLater(() -> {
-            @SuppressWarnings("unused")
-			Window window = root_dificultad.getScene().getWindow();
-            // Aquí pots afegir codi que necessiti la finestra ja carregada
-        });
-    }
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		Platform.runLater(() -> { // espera que l'inicialització siga completa.
+			Window window = (Stage) root_dificultad.getScene().getWindow();
+		});
+	}
 
-    @FXML
-    public void tamany(ActionEvent e) throws IOException {
-        Button b = (Button) e.getSource();
-        tamany = b.getText();
+	@FXML
+	public void tamany(ActionEvent e) throws IOException {
 
-        DadesSingletonPixelArt dada = DadesSingletonPixelArt.getInstancia();
+		Button b = (Button) e.getSource();
+		tamany = b.getText();
 
-        switch (tamany) {
-            case "Xicotet" -> {
-                dada.setTamanyCompartit(20);
-                dada.setCadenaCompartida(tamany);
-            }
-            case "Mitjà" -> {
-                dada.setTamanyCompartit(40);
-                dada.setCadenaCompartida(tamany);
-            }
-            case "Gran" -> {
-                dada.setTamanyCompartit(60);
-                dada.setCadenaCompartida(tamany);
-            }
-            default -> {
-                dada.setTamanyCompartit(40);
-                dada.setCadenaCompartida("Normal");
-            }
-        }
+		DadesSingleton dada = DadesSingleton.getInstancia();
 
-        try {
-        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/appEquip03/EscenaPixelArt.fxml"));
-        	Parent root = loader.load();
-        	Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+		switch (tamany) {
+		case "Xicotet" -> {
+			dada.setTamanyCompartit(40);
+		}
+		case "Mitjà" -> {
+			dada.setTamanyCompartit(60);
+		}
+		case "Gran" -> {
+			dada.setTamanyCompartit(80);
+		}
+		default -> {
+			dada.setTamanyCompartit(60);
+		}
+		}
 
-        	Scene escena2 = new Scene(root);
-        	escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
-        	escena2.getStylesheets().add(getClass().getResource("/appEquip03/EscenaPixelArt.fxml").toExternalForm());
-        	window.setScene(escena2);
-        	window.setTitle("PixelArt");
-        	window.show();
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPixelArt.fxml"));
 
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
+			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 
-    @FXML
-    public void carregarPartida(ActionEvent e) throws IOException {
-        System.out.println(e.toString() + "  DESERIALIZAR");
+			Parent root = loader.load();
+			Scene escena2 = new Scene(root);
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("./Llenços"));
-        fileChooser.setTitle("Buscar partida guardada");
+			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+			window.setScene(escena2);
+			window.setTitle("PixelArt");
+			window.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Tots els arxius", "*.*"),
-                new FileChooser.ExtensionFilter("DAT", "*.dat"));
+	@FXML
+	public void carregarPartida(ActionEvent e) throws IOException {
+		System.out.println(e.toString() + "  DESERIALIZAR");
 
-        File f = fileChooser.showOpenDialog(root_dificultad.getScene().getWindow());
+		// https://acodigo.blogspot.com/2014/12/file-chooser-javafx-abrir-archivos.html
 
-        if (f != null) {
-            File partida = new File(f.getAbsolutePath());
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(new File("./Llenços"));
+		fileChooser.setTitle("Buscar partida guardada");
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Tots els arxius", "*.*"),
+				new FileChooser.ExtensionFilter("DAT", "*.dat"));
+		File f = fileChooser.showOpenDialog(root_dificultad.getScene().getWindow());
 
-            DadesSingletonPixelArt dada = DadesSingletonPixelArt.getInstancia();
-            dada.setPartidaCompartida(partida);
+		if (f != null) {
+			File partida = new File(f.getAbsolutePath());
 
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/appEquip03/EscenaPixelArt.fxml"));
-                Parent root = loader.load();
-                Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+			DadesSingleton dada = DadesSingleton.getInstancia();
+			dada.setPartidaCompartida(partida);
 
-                Scene escena2 = new Scene(root);
-                escena2.getStylesheets().add(getClass().getResource("/appEquip03/application.css").toExternalForm());
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPixelArt.fxml"));
 
-                window.setScene(escena2);
-                window.setTitle("Pixel Art");
-                window.show();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
+				Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+				Parent root = loader.load();
+				Scene escena2 = new Scene(root);
+
+				escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+				window.setScene(escena2);
+				window.setTitle("Pixel Art");
+				window.show();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+	}
+
 }

@@ -1,6 +1,7 @@
 package appEquip03;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,82 +50,52 @@ public class EscenaControllerPixelArt implements Initializable {
 	private ColorPicker color;
 	@FXML
 	private Button tornar;
-	@FXML private Label nomUsuariLabel;
-    @FXML private Button logoutBtn;
-	private String nomUsuari;
-    public void setNomUsuari(String nomUsuari) {
-        this.nomUsuari = nomUsuari;
-        nomUsuariLabel.setText("Usuari: " + nomUsuari);
-    }
+	@FXML
+	private Label nomUsuariLabel;
     @FXML
-    private void tornarInici() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
-
-            // Afegim el CSS correcte
-            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
-
-            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
-            stageActual.setScene(novaEscena);
-            stageActual.setTitle("Inici");
-
-            // Tanquem altres finestres menys aquesta
-            for (Window window : Stage.getWindows()) {
-                if (window instanceof Stage && window != stageActual) {
-                    ((Stage) window).close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    private Button tornarMenuBtn;
     @FXML
-    private void tornarMenu() {
-    	try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
+    private Button logoutBtn;
 
-            MainWordle.canviarEscena(novaEscena);
-            
-            // Tanca l'escena actual
-            Stage actual = (Stage) logoutBtn.getScene().getWindow();
-            actual.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+	private int tamany;
+	private String id;
 	private ContextPixelArt context;
 	private TaulerPixelArt nouTauler;
-	private int tamany;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		DadesSingletonPixelArt dada = DadesSingletonPixelArt.getInstancia();
 
+		DadesSingleton dada = DadesSingleton.getInstancia();
+        nomUsuariLabel.setText("Usuari: " + dada.getUsuari());
+		id = dada.getUsuari();
+		
 		if (dada.getPartidaCompartida() != null) {
-			ContextPixelArt contextProvisional = desserialitzacioTauler(dada.getPartidaCompartida());
+			ContextPixelArt contextProvisional = desserialitzacioLlenç(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
+				System.out.println("Copiant Context");
 				this.context = contextProvisional;
 				this.nouTauler = contextProvisional.getTauler();
-				taulerGrid.getChildren().clear();
 				nouGP(nouTauler.getCaselles());
 				dada.setCadenaCompartida(null);
 				dada.setPartidaCompartida(null);
+			} else {
+				System.err.println("No hi ha res serialitzat");
 			}
 		} else {
+			System.out.println("Nou context");
 			context = new ContextPixelArt(dada.getCadenaCompartida());
-			nouTauler = context.crearTauler(context.tamany(dada.getCadenaCompartida()), context.tamany(dada.getCadenaCompartida()));
+			nouTauler = context.crearTauler(dada.getTamanyCompartit(),
+					dada.getTamanyCompartit());
 			nouGP(nouTauler.getCaselles());
+
 		}
 	}
 
 	public void nouGP(CasellaPixelArt[][] c) {
 		GridPane gp = this.taulerGrid;
+
+		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
+		// Netejar les característiques per defecte del SceneBuilder
 		gp.getColumnConstraints().clear();
 		gp.getRowConstraints().clear();
 
@@ -145,16 +116,21 @@ public class EscenaControllerPixelArt implements Initializable {
 
 				if (c[o][m] == null) {
 					c[o][m] = new PixelPixelArt(o, m, context);
-					String fons = context.conversioAHex(((PixelPixelArt) c[o][m]).getBase());
+					PixelPixelArt p = (PixelPixelArt) c[o][m];
+					String fons = context.conversioAHex(p.getBase());
 					planol.setStyle("-fx-background-color: " + fons + ";");
 				} else {
 					PixelPixelArt p = (PixelPixelArt) c[o][m];
-					p.context = context;
-					p.base = context.perDefecte(o, m);
-					planol.setStyle("-fx-background-color: #" + p.colorHex + ";");
+					p.setBase(context.perDefecte(o, m));
+					if (!p.colorHex.isEmpty()) {
+						planol.setStyle("-fx-background-color: " + p.colorHex + ";");
+					} else {
+						planol.setStyle("-fx-background-color: " + context.conversioAHex(p.getBase()) + ";");
+					}
 				}
 				context.pintar(planol, (PixelPixelArt) c[o][m]);
 				gp.add(planol, o, m);
+				this.taulerGrid = gp;
 			}
 		}
 	}
@@ -162,53 +138,73 @@ public class EscenaControllerPixelArt implements Initializable {
 	@FXML
 	public void establirColor() {
 		context.setColor(color.getValue());
-	}
+	};
 
 	@FXML
 	public void pintarLlenç() {
 		context.setColor(context.color);
-		context.borrador = false;
-	}
+
+		if (context.isBorrador())
+			context.borrador = false;
+	};
 
 	@FXML
 	public void netejarLlenc() {
 		this.context.buidar(nouTauler);
 		nouGP(nouTauler.getCaselles());
-	}
+	};
 
 	@FXML
 	public void esborrarLlenç() {
 		context.setBorrador(!context.borrador);
-	}
+	};
 
 	@FXML
 	public void guardar() {
-		String id = "";
+		// https://www.delftstack.com/es/howto/java/create-a-bitmap-image-in-java/
+
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD(".././BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
-			String[] camps = { "usuari", "mida", "imatge" };
-			String[] valors = { "usuari", "" + tamany, "imatge" };
-			ConnexioBD.insertarDades("pixelart", camps, valors);
-			id = ConnexioBD.ultimaID("pixelart", "id_llenc");
+			if (id != null) {
+				byte[] arxiu = serialitzacioLlenç(context, id);
+				
+				if(arxiu.length == 0)
+					System.err.println("Ha fallat la serialització");
+					else
+						if(guardarEnPC(arxiu, id)) {
+							
+						} else
+							System.err.println("Ha fallat el desat en ordinador.");
+				String[] camps = { "usuari", "mida", "imatge" };
+				String[] valors = { "usuari", (""+tamany), " " };
+				ConnexioBD.insertarDades("pixelart", arxiu, camps, valors);
+				id = ConnexioBD.ultimaID("pixelart", "id_llenc");
+			}
+						
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (id != null)
-			serialitzacioPartida(context, id);
-	}
+		// SERIALIZED
+		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
+
+	};
 
 	@FXML
 	public void tornar() {
+		System.out.println("Entrar en abandonar");
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaControllerDificultatPixelArt.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultatPixelArt.fxml"));
+
 			Stage window = (Stage) tornar.getScene().getWindow();
+
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
-			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("PixelArt");
 			window.show();
@@ -220,46 +216,142 @@ public class EscenaControllerPixelArt implements Initializable {
 	@FXML
 	public void exportar() {
 		Stage window = (Stage) exportarPNG.getScene().getWindow();
+
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Guardar imagen");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files", "*.png"));
 		File file = fileChooser.showSaveDialog(window);
 
+//https://stackoverflow.com/questions/4216123/how-to-scale-a-bufferedimage
 		if (file != null) {
-			int tamany = this.taulerGrid.getColumnCount();
 			try {
-				BufferedImage imatge = new BufferedImage(tamany, tamany, BufferedImage.TYPE_INT_RGB);
-				for (int r = 0; r < tamany; r++) {
-					for (int c = 0; c < tamany; c++) {
+				int tamany = this.taulerGrid.getColumnCount();
+				int escala = 10;
+
+				BufferedImage imatge = new BufferedImage((tamany * escala), (tamany * escala),
+						BufferedImage.TYPE_INT_RGB);
+
+				for (int r = 0; r < nouTauler.getCaselles().length; r++) {
+					for (int c = 0; c < nouTauler.getCaselles().length; c++) {
 						PixelPixelArt p = (PixelPixelArt) nouTauler.getCaselles()[r][c];
-						Color color = Color.web("#" + p.colorHex);
-						int rgb = (int) (color.getRed() * 255) << 16 | (int) (color.getGreen() * 255) << 8 | (int) (color.getBlue() * 255);
-						imatge.setRGB(c, r, rgb);
+
+						int roig;
+						int verd;
+						int blau;
+						int rgb = 0;
+
+						if (!p.getColorHex().isEmpty()) {
+							Color colAux = Color.web(p.getColorHex());
+
+							roig = (int) (colAux.getRed() * 255);
+							verd = (int) (colAux.getGreen() * 255);
+							blau = (int) (colAux.getBlue() * 255);
+
+						} else {
+
+							roig = (int) (Color.WHITE.getRed() * 255);
+							verd = (int) (Color.WHITE.getGreen() * 255);
+							blau = (int) (Color.WHITE.getBlue() * 255);
+
+						}
+
+						// estes dos Fórmules són de la IA
+						rgb = (roig << 16) | (verd << 8) | blau;
+
+						for (int dy = 0; dy < escala; dy++) {
+							for (int dx = 0; dx < escala; dx++) {
+								int x = c * escala + dx;
+								int y = r * escala + dy;
+								imatge.setRGB(x, y, rgb);
+							}
+						}
+
 					}
 				}
-				ImageIO.write(imatge, "PNG", file);
-			} catch (IOException e) {
+				ImageIO.write(imatge, "png", file);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public ContextPixelArt desserialitzacioTauler(File f) {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-			return (ContextPixelArt) ois.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-			return null;
+	public byte[] serialitzacioLlenç(ContextPixelArt cntxt, String id) {
+		try  {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+			oos.writeObject(cntxt);
+			baos.close();
+			oos.close();
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();	
+			return new byte[0];
 		}
 	}
-
-	public boolean serialitzacioPartida(ContextPixelArt cntxt, String id) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Llenços/" + id + ".ser"))) {
-			oos.writeObject(cntxt);
+	public boolean guardarEnPC(byte[] arxiu, String id) {
+		try {
+			FileOutputStream fos = new FileOutputStream("./Llenços/" + id + ".d");
+			fos.write(arxiu);
+			fos.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
+
+	public ContextPixelArt desserialitzacioLlenç(File f) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+			ContextPixelArt c = (ContextPixelArt) ois.readObject();
+			return c;
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return new ContextPixelArt();
+		}
+	}
+    @FXML
+    private void tornarInici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+            stageActual.setScene(novaEscena);
+            stageActual.setTitle("Inici");
+
+            for (Window window : Stage.getWindows()) {
+                if (window instanceof Stage && window != stageActual) {
+                    ((Stage) window).close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void tornarMenu() {
+    	try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            Main.canviarEscena(novaEscena);
+            
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	@Override
+	protected void finalize() throws Throwable {
+		// TODO Auto-generated method stub
+		// super.finalize();
+	}
+
 }

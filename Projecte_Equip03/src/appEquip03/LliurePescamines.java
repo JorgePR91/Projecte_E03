@@ -4,32 +4,27 @@ import java.io.Serializable;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 
 public class LliurePescamines extends CasellaPescamines implements AccioCasellaPescamines, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private boolean frontera;
-	private int recompte;
-	private transient Text text;
-	private transient Button boto;
 	private boolean antimines;
-	private final transient Text Anti = new Text("(A)");
+	private int recompte;
+	private transient Label text;
+	private transient Button boto;
+	private final transient Label Anti = new Label("(A)");
 	private CasellaPescamines[][] c;
-
-	// RECERCA DE MINES
-	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
 	public LliurePescamines(int x, int y, CasellaPescamines[][] c, ContextPescamines context) {
 		super(x, y, context);
 		this.c = c;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		text = new Text(" ");
+		text = new Label(" ");
 		recompte = 0;
-		frontera = false;
 		antimines = false;
 		Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
@@ -45,23 +40,14 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		this.text = new Text("" + n);
+		this.text = new Label("" + n);
 		this.recompte = n;
-		this.frontera = true;
 		this.antimines = false;
 		this.Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
 		this.text.setVisible(!super.estat);
 		reaccio();
-	}
-
-	public boolean isFrontera() {
-		return frontera;
-	}
-
-	public void setFrontera(boolean frontera) {
-		this.frontera = frontera;
 	}
 
 	public int getRecompte() {
@@ -72,13 +58,12 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 		this.recompte = recompte;
 	}
 
-	public Text getText() {
+	public Label getText() {
 		return text;
 	}
 
-	public void setText(Text text) {
+	public void setText(Label text) {
 		this.text = text;
-		this.setContingut(text);
 	}
 
 	public Button getBoto() {
@@ -97,7 +82,7 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 		this.antimines = antimines;
 	}
 
-	public Text getAnti() {
+	public Label getAnti() {
 		return Anti;
 	}
 
@@ -134,9 +119,6 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 	}
 
 	public LliurePescamines despejar(LliurePescamines l, CasellaPescamines[][] c) {
-		// ES LLIURE
-		// NO ES FRONTERA
-		// DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
 
 		if (l == null || !l.descobrir(l)) {
 			return l;
@@ -162,28 +144,20 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 
 	public boolean descobrir(LliurePescamines l) {
 		boolean descoberta = false;
-//		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
-//			descoberta = true;
-//			Platform.runLater(() -> {
-//				l.setEstat(false);
-//				l.boto.setVisible(l.isEstat());
-//				l.text.setVisible(true);
-//				l.Anti.setVisible(false);
-//				context.augmentarComptador();
-//
-//			});
-//
-//		} else 
-			if (l instanceof LliurePescamines && l.isEstat() == true && !l.antimines) {
-					descoberta = true;
 
-					l.setEstat(false);
-					l.boto.setVisible(l.isEstat());
-					l.text.setVisible(true);
-					l.Anti.setVisible(false);
-					context.setLliures(--context.lliures);
-				    context.comprovarPartida(); 
-				}
+		if (l instanceof LliurePescamines && l.isEstat() == true && !l.antimines) {
+			descoberta = true;
+
+			l.setEstat(false);
+			l.boto.setVisible(l.isEstat());
+			l.text.setVisible(true);
+			l.Anti.setVisible(false);
+			context.setLliures(--context.lliures);
+			context.getCaixaMines().setText("Antimines\n" + context.getComptador() + "/" + context.getTamany()
+					+ "\nCaselles descobertes: " + (context.getGrandaria() - context.getLliures()));
+
+			context.comprovarPartida();
+		}
 
 		return descoberta;
 	}

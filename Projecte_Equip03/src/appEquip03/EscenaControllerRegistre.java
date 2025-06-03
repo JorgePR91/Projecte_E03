@@ -34,7 +34,7 @@ public class EscenaControllerRegistre {
     private Connection connectar() throws Exception {
         String url = "jdbc:mysql://localhost:3306/ProjecteProg";
         String usuari = "root";
-        String contrasenya = "";
+        String contrasenya = "root";
         return DriverManager.getConnection(url, usuari, contrasenya);
     }
 
@@ -66,7 +66,7 @@ public class EscenaControllerRegistre {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaLogin.fxml"));
             Parent root = loader.load();
             Scene escenaLogin = new Scene(root);
-            MainWordle.canviarEscena(escenaLogin);
+            Main.canviarEscena(escenaLogin);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarMissatge("No s'ha pogut tornar a l'inici.");

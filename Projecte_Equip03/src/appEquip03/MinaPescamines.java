@@ -4,23 +4,23 @@ import java.io.Serializable;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 
 public class MinaPescamines extends CasellaPescamines implements AccioCasellaPescamines, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private transient Text element;
+	private transient Label element;
 	private boolean antimines;
-	private final transient Text simbolAntimines = new Text("(A)");
+	private final transient Label simbolAntimines = new Label("(A)");
 	private transient Button boto;
 	private CasellaPescamines[][] c;
 
 	public MinaPescamines(int x, int y, CasellaPescamines[][] c, ContextPescamines context) {
 		super(x, y, context);
 		this.c = c;
-		this.element = new Text("X");
+		this.element = new Label("X");
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		super.setContingut(this.element);
@@ -31,19 +31,19 @@ public class MinaPescamines extends CasellaPescamines implements AccioCasellaPes
 		reaccio();
 	}
 
-	public Text getMina() {
+	public Label getMina() {
 		return element;
 	}
 
-	public void setMina(Text mina) {
+	public void setMina(Label mina) {
 		this.element = mina;
 	}
 
-	public Text getElement() {
+	public Label getElement() {
 		return element;
 	}
 
-	public void setElement(Text element) {
+	public void setElement(Label element) {
 		this.element = element;
 	}
 
@@ -71,7 +71,7 @@ public class MinaPescamines extends CasellaPescamines implements AccioCasellaPes
 		this.c = c;
 	}
 
-	public Text getAnti() {
+	public Label getAnti() {
 		return simbolAntimines;
 	}
 

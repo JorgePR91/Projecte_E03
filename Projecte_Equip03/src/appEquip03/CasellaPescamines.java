@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 public abstract class CasellaPescamines implements AccioCasellaPescamines, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 		protected boolean estat;
 		protected transient StackPane container;
 		protected transient Node contingut;
@@ -47,9 +49,14 @@ public abstract class CasellaPescamines implements AccioCasellaPescamines, Seria
 		public void setContainer(StackPane container) {
 			this.container = container;
 		}
+	
+
+
 		public Node getContingut() {
 			return contingut;
 		}
+
+
 		public void setContingut(Node contingut) {
 			this.contingut = contingut;
 		}

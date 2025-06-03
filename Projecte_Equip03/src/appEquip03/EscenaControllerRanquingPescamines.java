@@ -24,17 +24,17 @@ import javafx.stage.Stage;
 
 public class EscenaControllerRanquingPescamines implements Initializable {
 	@FXML
-	private TableView<RanquingPartidaPescamines> taulaRanquing;
+	private TableView<PartidaRanquingPescamines> taulaRanquing;
 	@FXML
-	private TableColumn<RanquingPartidaPescamines, Integer> rPossicio;
+	private TableColumn<PartidaRanquingPescamines, Integer> rPossicio;
 	@FXML
-	private TableColumn<RanquingPartidaPescamines, String> rUsuari;
+	private TableColumn<PartidaRanquingPescamines, String> rUsuari;
 	@FXML
-	private TableColumn<RanquingPartidaPescamines, String> rDificultat;
+	private TableColumn<PartidaRanquingPescamines, String> rDificultat;
 	@FXML
-	private TableColumn<RanquingPartidaPescamines, Time> rTemps;
+	private TableColumn<PartidaRanquingPescamines, Time> rTemps;
 	
-	private ObservableList<RanquingPartidaPescamines> partides = FXCollections.observableArrayList();;
+	private ObservableList<PartidaRanquingPescamines> partides = FXCollections.observableArrayList();;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -42,13 +42,12 @@ public class EscenaControllerRanquingPescamines implements Initializable {
 			//https://www.youtube.com/watch?v=SwYczt6K_Q0
 			//https://code.makery.ch/es/library/javafx-tutorial/part2/
 			 
-			ArrayList<RanquingPartidaPescamines> arrParRan = ranquing();
+			ArrayList<PartidaRanquingPescamines> arrParRan = ranquing();
 			
 			if(arrParRan.size() > 0)
 	        for (int i = 0; i < arrParRan.size(); i++) {
 	        	partides.add(arrParRan.get(i));
 	        }
-
 			
 			this.rPossicio.setCellValueFactory(new PropertyValueFactory<>("possicio"));
 			this.rUsuari.setCellValueFactory(new PropertyValueFactory<>("usuari"));
@@ -63,16 +62,14 @@ public class EscenaControllerRanquingPescamines implements Initializable {
 	@FXML
 	public void tornar(ActionEvent e) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultatPescamines.fxml"));
 
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			// DificultadController controller ;
 
-			// loader.setController( new DificultadController());
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
-			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("Pescamines");
 			window.show();
@@ -82,8 +79,8 @@ public class EscenaControllerRanquingPescamines implements Initializable {
 	}
 
 	@FXML
-	public ArrayList<RanquingPartidaPescamines> ranquing() {
-		ArrayList<RanquingPartidaPescamines> ranquing = null;
+	public ArrayList<PartidaRanquingPescamines> ranquing() {
+		ArrayList<PartidaRanquingPescamines> ranquing = null;
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
@@ -97,7 +94,7 @@ public class EscenaControllerRanquingPescamines implements Initializable {
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new ArrayList<RanquingPartidaPescamines>();
+			return new ArrayList<PartidaRanquingPescamines>();
 		}
 		return ranquing;
 

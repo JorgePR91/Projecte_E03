@@ -42,56 +42,12 @@ public class EscenaControllerJocVida implements Initializable {
 	private Label r_mortes;
 	@FXML
 	private Label r_naix;
-	
-	@FXML private Label nomUsuariLabel;
-    @FXML private Button logoutBtn;
-	private String nomUsuari;
-    public void setNomUsuari(String nomUsuari) {
-        this.nomUsuari = nomUsuari;
-        nomUsuariLabel.setText("Usuari: " + nomUsuari);
-    }
+	@FXML
+	private Label nomUsuariLabel;
     @FXML
-    private void tornarInici() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
-
-            // Afegim el CSS correcte
-            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
-
-            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
-            stageActual.setScene(novaEscena);
-            stageActual.setTitle("Inici");
-
-            // Tanquem altres finestres menys aquesta
-            for (Window window : Stage.getWindows()) {
-                if (window instanceof Stage && window != stageActual) {
-                    ((Stage) window).close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    private Button tornarMenuBtn;
     @FXML
-    private void tornarMenu() {
-    	try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
-
-            MainWordle.canviarEscena(novaEscena);
-            
-            // Tanca l'escena actual
-            Stage actual = (Stage) logoutBtn.getScene().getWindow();
-            actual.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    private Button logoutBtn;
 
 	private ContextJocVida context;
 	private int segons;
@@ -99,7 +55,7 @@ public class EscenaControllerJocVida implements Initializable {
 	private boolean estancament;
 	public int contCicles;
 	private Pane[][] planols;
-
+	
 	public Label getCronometre() {
 		return cronometre;
 	}
@@ -127,13 +83,13 @@ public class EscenaControllerJocVida implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		DadesSingletonJocVida dada = DadesSingletonJocVida.getInstancia();
+		DadesSingleton dada = DadesSingleton.getInstancia();
 
 		context = new ContextJocVida(dada.getCadenaCompartida());
 		
 		context.creacio(context.getAlea(), context.getLIMIT_inici());
 		
-		nouGP(context.getCellula());
+		nouGP(context.getCellules());
 
 		taulerGrid.prefHeightProperty().bind(taulerGrid.widthProperty());
 		
@@ -156,7 +112,7 @@ public class EscenaControllerJocVida implements Initializable {
 
 			context.cicleDeLaVida();
 			
-			actualizarGrid(context.getCellula());
+			actualizarGrid(context.getCellules());
 			
 			context.recompteCel();
 			
@@ -164,7 +120,7 @@ public class EscenaControllerJocVida implements Initializable {
 				context.depurar();
 				temps.stop();
 				
-				actualizarGrid(context.getCellula());
+				actualizarGrid(context.getCellules());
 
 				System.out.println(
 						"SIMULACIÓ DETESA - Cèl·lules: " + context.getComptCel() + ", Estancament: " + estancament);
@@ -267,9 +223,9 @@ public class EscenaControllerJocVida implements Initializable {
 	@FXML
 	public void reiniciar() {
 		temps.stop();
-		context.buidar(context.getCellula());
+		context.buidar(context.getCellules());
 
-		CellulaJocVida[][] c = context.getCellula();
+		CellulaJocVida[][] c = context.getCellules();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
@@ -296,7 +252,7 @@ public class EscenaControllerJocVida implements Initializable {
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
-			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("Joc de la Vida");
 			window.show();
@@ -304,6 +260,44 @@ public class EscenaControllerJocVida implements Initializable {
 			e1.printStackTrace();
 		}
 	}
+    @FXML
+    private void tornarInici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+            stageActual.setScene(novaEscena);
+            stageActual.setTitle("Inici");
+
+            for (Window window : Stage.getWindows()) {
+                if (window instanceof Stage && window != stageActual) {
+                    ((Stage) window).close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void tornarMenu() {
+    	try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+            Parent root = loader.load();
+            Scene novaEscena = new Scene(root, 700, 600);
+
+            Main.canviarEscena(novaEscena);
+            
+            Stage actual = (Stage) logoutBtn.getScene().getWindow();
+            actual.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	@FXML
 	protected void aturar() {

@@ -5,17 +5,9 @@ import java.util.Random;
 import javafx.scene.paint.Color;
 
 public class ContextJocVida {
-	private static final long serialVersionUID = 1L;
 
 	protected int comptCel;
 	protected int comptMor;
-	public int getComptMor() {
-		return comptMor;
-	}
-
-	public void setComptMor(int comptMor) {
-		this.comptMor = comptMor;
-	}
 
 	protected int tamany;
 	protected int morts;
@@ -48,12 +40,13 @@ public class ContextJocVida {
 	}
 
 	// GETTERS I SETTERS
-	public int getComptador() {
+	
+	public int getComptCel() {
 		return comptCel;
 	}
 
-	public void setComptador(int comptador) {
-		this.comptCel = comptador;
+	public void setComptCel(int comptCel) {
+		this.comptCel = comptCel;
 	}
 
 	public int getTamany() {
@@ -64,52 +57,12 @@ public class ContextJocVida {
 		this.tamany = tamany;
 	}
 
-	public Random getAlea() {
-		return alea;
-	}
-
-	public void setAlea(Random alea) {
-		this.alea = alea;
-	}
-
-	public String getMida() {
-		return mida;
-	}
-
-	public void setMida(String mida) {
-		this.mida = mida;
-	}
-
 	public int getMorts() {
 		return morts;
 	}
 
 	public void setMorts(int morts) {
 		this.morts = morts;
-	}
-
-	public CellulaJocVida[][] getCellula() {
-		return cellules;
-	}
-
-	public void setCellula(CellulaJocVida[][] cellula) {
-		this.cellules = cellula;
-	}
-
-	public int getLIMIT_inici() {
-		return LIMIT_inici;
-	}
-
-	public void setLIMIT_inici(int lIMIT_inici) {
-		LIMIT_inici = lIMIT_inici;
-	}
-
-	public int getComptCel() {
-		return comptCel;
-	}
-
-	public void setComptCel(int comptCel) {
-		this.comptCel = comptCel;
 	}
 
 	public int getVives() {
@@ -136,12 +89,36 @@ public class ContextJocVida {
 		this.naixements = naixements;
 	}
 
+	public String getMida() {
+		return mida;
+	}
+
+	public void setMida(String mida) {
+		this.mida = mida;
+	}
+
+	public Random getAlea() {
+		return alea;
+	}
+
+	public void setAlea(Random alea) {
+		this.alea = alea;
+	}
+
 	public CellulaJocVida[][] getCellules() {
 		return cellules;
 	}
 
 	public void setCellules(CellulaJocVida[][] cellules) {
 		this.cellules = cellules;
+	}
+
+	public int getLIMIT_inici() {
+		return LIMIT_inici;
+	}
+
+	public void setLIMIT_inici(int lIMIT_inici) {
+		LIMIT_inici = lIMIT_inici;
 	}
 
 	public boolean isEstancament() {
@@ -151,9 +128,12 @@ public class ContextJocVida {
 	public void setEstancament(boolean estancament) {
 		this.estancament = estancament;
 	}
+	public int getComptMor() {
+		return comptMor;
+	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setComptMor(int comptMor) {
+		this.comptMor = comptMor;
 	}
 
 	// METODES
@@ -230,7 +210,6 @@ public class ContextJocVida {
 			for (int j = 0; j < aux[0].length; j++) {
 				
 				nova[i][j] = new CellulaJocVida();
-				//nova[i][j].setEstat("morta");
 
 				if (cellules[i][j].getEstat().equals("moribunda")) {
 					nova[i][j].setEstat("morta");
@@ -260,7 +239,7 @@ public class ContextJocVida {
 				}
 			}
 		}
-		this.setCellula(nova);
+		this.setCellules(nova);
 	}
 
 	// creació de plantilla d'integers per a indicar qui mor i qui viu
@@ -398,10 +377,10 @@ public class ContextJocVida {
 			}
 		}
 
-		if (postCicle[0].compararCaselles(postCicle[1].getCellula())
-				|| postCicle[0].compararCaselles(postCicle[2].getCellula())
-				|| postCicle[0].compararCaselles(postCicle[3].getCellula())
-				|| postCicle[0].compararCaselles(postCicle[4].getCellula()))
+		if (postCicle[0].compararCaselles(postCicle[1].getCellules())
+				|| postCicle[0].compararCaselles(postCicle[2].getCellules())
+				|| postCicle[0].compararCaselles(postCicle[3].getCellules())
+				|| postCicle[0].compararCaselles(postCicle[4].getCellules()))
 			return true;
 		else
 			return false;
@@ -433,26 +412,6 @@ public class ContextJocVida {
 
 		System.out.println("Vives: " + vives + ", Mortes: " + mortes + ", Moribundes: " + moribundes + ", Naixements: "
 				+ naixements);
-	}
-
-	// Comparar l'actual matriu amb la que se li envia
-	public boolean compararCaselles(CellulaJocVida[][] c, int ñ) {
-		boolean result = true;
-		// https: //
-		// www.lawebdelprogramador.com/foros/Java/674725-Saber-si-un-objeto-existe.html
-		for (int i = 0; i < c.length; i++) {
-			for (int j = 0; j < c[0].length; j++) {
-
-				// Comparació en profunditat
-				CellulaJocVida a = this.cellules[i][j];
-				CellulaJocVida b = c[i][j];
-
-				if (!a.getEstat().equals(b.getEstat()))
-					return false;
-			}
-		}
-		return result;
-
 	}
 
 	public boolean compararCaselles(CellulaJocVida[][] c) {

@@ -1,103 +1,118 @@
 package appEquip03;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class EscenaControllerJocs {
+public class EscenaControllerJocs implements Initializable {
 
-    private String nomUsuari;
-    private static Stage finestraWordle = null;
+	private String nomUsuari;
+	private static Stage finestraWordle = null;
 
-    @FXML
-    private Label nomUsuariLabel;
-    @FXML 
-    private Button logoutBtn;
+	public String getNomUsuari() {
+		return nomUsuari;
+	}
 
-    private void obrirEscena(String fxml, String titol) {
-        try {
-            // Evita obrir una altra finestra si Wordle ja està obert
-            if (fxml.equals("EscenaWordle.fxml") && finestraWordle != null && finestraWordle.isShowing()) {
-                finestraWordle.toFront(); // Porta al davant
-                return;
-            }
+	@FXML
+	private Label nomUsuariLabel;
+	@FXML
+	private Button logoutBtn;
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		DadesSingleton dada = DadesSingleton.getInstancia();
+		setNomUsuari(dada.getUsuari());
+		nomUsuariLabel.setText("Usuari: " + nomUsuari);
+	}
 
-            Object controller = loader.getController();
-            try {
-                controller.getClass()
-                    .getMethod("setNomUsuari", String.class)
-                    .invoke(controller, nomUsuari);
-            } catch (Exception ignored) {}
+	private void obrirEscena(String fxml, String titol) {
 
-            Scene escena = new Scene(root, 700, 600);  // <- Mida fixa aquí
-            escena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+		try {
+			// Evita obrir una altra finestra si Wordle ja està obert
+			if (fxml.equals("EscenaWordle.fxml") && finestraWordle != null && finestraWordle.isShowing()) {
+				finestraWordle.toFront(); // Porta al davant
+				return;
+			}
 
-            Stage novaFinestra = new Stage();
-            novaFinestra.setTitle(titol);
-            novaFinestra.setScene(escena);
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+			Parent root = loader.load();
 
-            // Guarda la finestra si és Wordle
-            if (fxml.equals("EscenaWordle.fxml")) {
-                finestraWordle = novaFinestra;
-                novaFinestra.setOnCloseRequest(e -> finestraWordle = null); // Allibera la referència en tancar
-            }
+			Object controller = loader.getController();
+			/*
+			 * try { controller.getClass() .getMethod("setNomUsuari", String.class)
+			 * .invoke(controller, nomUsuari); } catch (Exception ignored) {}
+			 */
 
-            novaFinestra.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			Scene escena = new Scene(root, 700, 600); // <- Mida fixa aquí
+			escena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
-    @FXML
-    private void anarWordle() {
-        obrirEscena("EscenaWordle.fxml", "Wordle");
-    }
+			Stage novaFinestra = new Stage();
+			novaFinestra.setTitle(titol);
+			novaFinestra.setScene(escena);
 
-    @FXML
-    private void anarPescamines() {
-        obrirEscena("EscenaDificultatPescamines.fxml", "Pescamines");
-    }
+			// Guarda la finestra si és Wordle
+			if (fxml.equals("EscenaWordle.fxml")) {
+				finestraWordle = novaFinestra;
+				novaFinestra.setOnCloseRequest(e -> finestraWordle = null); // Allibera la referència en tancar
+			}
 
-    @FXML
-    private void anarJocVida() {
-        obrirEscena("EscenaDificultatJocVida.fxml", "Joc de la Vida");
-    }
+			novaFinestra.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @FXML
-    private void anarPixelArt() {
-        obrirEscena("EscenaDificultatPixelArt.fxml", "Pixel Art");
-    }
+	@FXML
+	private void anarWordle() {
+		obrirEscena("EscenaWordle.fxml", "Wordle");
+	}
 
-    public void setNomUsuari(String nomUsuari) {
-        this.nomUsuari = nomUsuari;
-        if (nomUsuariLabel != null) {
-            nomUsuariLabel.setText("Usuari: " + nomUsuari);
-        }
-    }
+	@FXML
+	private void anarPescamines() {
+		obrirEscena("EscenaDificultatPescamines.fxml", "Pescamines");
+	}
 
-    @FXML
-    private void tornarInici() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);  // <- També aquí!
-            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+	@FXML
+	private void anarJocVida() {
+		obrirEscena("EscenaDificultatJocVida.fxml", "Joc de la Vida");
+	}
 
-            MainWordle.canviarEscena(novaEscena);
+	@FXML
+	private void anarPixelArt() {
+		obrirEscena("EscenaDificultatPixelArt.fxml", "Pixel Art");
+	}
 
-            // No cal tancar l'escena actual si estàs reutilitzant el stage principal
+	public void setNomUsuari(String nomUsuari) {
+		this.nomUsuari = nomUsuari;
+		if (nomUsuariLabel != null) {
+			nomUsuariLabel.setText("Usuari: " + nomUsuari);
+		}
+	}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@FXML
+	private void tornarInici() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+			Parent root = loader.load();
+			Scene novaEscena = new Scene(root, 700, 600); // <- També aquí!
+			novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+
+			Main.canviarEscena(novaEscena);
+
+			// No cal tancar l'escena actual si estàs reutilitzant el stage principal
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

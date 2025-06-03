@@ -32,7 +32,7 @@ public class ConnexioBD {
 		String url = "jdbc:mysql://localhost:3306/ProjecteProg";
 		String usuari = "root";
 		String contrasenya = "root";
-		
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -102,10 +102,7 @@ public class ConnexioBD {
 	}
 //--------------------------------------------------------------------------------------------------	
 
-	// MÈTODE DE MODIFICAR DADES(USUARI, PARTIDES GUARDADES?)
-	// MÈTODE DE PUJAR DADES
-
-	// https://java.19633.com/es/Java-2/1002019061.html
+//https://java.19633.com/es/Java-2/1002019061.html
 
 	public static String capçaleres(String taula) {
 		String camps = "";
@@ -195,6 +192,40 @@ public class ConnexioBD {
 
 	}
 
+	public static int insertarDades(String taula, byte[] arxiu, String[] camps, String[] valors) {
+		int resultat = 0;
+		int[] tipusCamps = tipusCamp(taula, camps);
+
+		if (valors.length == 0 || camps.length == 0) {
+			return 0;
+		}
+
+		String sentencia = "INSERT INTO " + taula + " (" + Arrays.toString(camps).replaceAll("\\[|\\]", "")
+				+ ") VALUES (" + "?,".repeat(camps.length - 1) + "?);";
+
+		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
+
+			for (int o = 0; o < valors.length; o++) {
+				if (!valors[o].isBlank())
+					conversioDadesBD(ps, tipusCamps[o], o + 1, valors[o]);
+				else
+					ps.setBytes(o + 1, arxiu);
+			}
+
+			ps.executeUpdate();
+
+			ResultSet r = ps.getGeneratedKeys();
+			if (r.next()) {
+				resultat = r.getInt(1);
+			}
+			System.out.println("S'han inserit " + resultat + " dades.");
+			return resultat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return resultat;
+		}
+	}
+
 	public static String ultimaID(String taula, String campId) {
 		String resultat;
 		String sentencia = "SELECT * FROM " + taula + " ORDER BY dataInsercio DESC LIMIT 1;";
@@ -206,7 +237,7 @@ public class ConnexioBD {
 				int id = r.getInt(campId);
 				String usuari = r.getString("usuari");
 				resultat = "" + id + "_" + usuari;
-				System.out.println("ultimaID "+ resultat);
+				System.out.println("ultimaID " + resultat);
 			} else
 				resultat = null;
 
@@ -218,12 +249,39 @@ public class ConnexioBD {
 
 	}
 
+	public static ArrayList<PartidaRanquingPescamines> ranquingPescamines(String taula, String[] camps) {
+		ArrayList<PartidaRanquingPescamines> resultat = null;
+
+		if (camps.length == 0) {
+			return new ArrayList<PartidaRanquingPescamines>();
+		}
+
+		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula
+				+ " ORDER BY temps LIMIT 10;";
+		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);) {
+			int i = 0;
+			ResultSet res = s.executeQuery(sentencia);
+
+			resultat = new ArrayList<PartidaRanquingPescamines>();
+
+			while (res.next()) {
+				resultat.add(new PartidaRanquingPescamines((Integer) i + 1, res.getString("usuari"),
+						res.getString("dificultat"), res.getTime("temps")));
+				i++;
+			}
+
+			return resultat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new ArrayList<PartidaRanquingPescamines>();
+		}
+
+	}
 
 	public static String obtencioDadesBD(ResultSet rs, int tipus, String col) throws SQLException {
 		// https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
 		// Taula feta en base a un excel tret de Gemini.ia :
 		// https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
-		String valor = null;
 
 		switch (tipus) {
 		case Types.INTEGER:
@@ -254,24 +312,12 @@ public class ConnexioBD {
 		case Types.TIME:
 
 			return "" + rs.getTime(col);
-//		case Types.TIMESTAMP:
-//			rs.getTimestamp(pos, java.sql.Timestamp.valueOf(valors));
-//			break;
-//		case Types.ARRAY:
-//			rs.getObject(pos, valors);
-//			break;		
-//		case Types.STRUCT:
-//			rs.getObject(pos, valors);
-//			break;
-//		case Types.JAVA_OBJECT:
-//			rs.getObject(pos, valors);
-//			break;
+
 		default:
 			System.err.println("Error: de tipus de daders.");
 			return "No existent";
 		}
 
-		// CLAUDE PROPOSA CLAVAR-LO DINS D'UN TRY/CATCH
 	}
 
 	public static void conversioDadesBD(PreparedStatement ps, int tipus, int pos, String valors) throws SQLException {
@@ -323,23 +369,11 @@ public class ConnexioBD {
 				ps.setTime(pos, java.sql.Time.valueOf(valors));
 			}
 			break;
-//		case Types.TIMESTAMP:
-//			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors));
-//			break;
-//		case Types.ARRAY:
-//			ps.setObject(pos, valors);
-//			break;		
-//		case Types.STRUCT:
-//			ps.setObject(pos, valors);
-//			break;
-//		case Types.JAVA_OBJECT:
-//			ps.setObject(pos, valors);
-//			break;
+
 		default:
 			System.err.println("Error: de tipus de dades.");
 		}
 
-		// CLAUDE PROPOSA CLAVAR-LO DINS D'UN TRY/CATCH
 	}
 
 	public static String llegirFitxerBD(String direc) {
@@ -375,8 +409,4 @@ public class ConnexioBD {
 		}
 	}
 
-	public static ArrayList<RanquingPartidaPescamines> ranquingPescamines(String string, String[] camps) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

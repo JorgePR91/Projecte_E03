@@ -34,7 +34,7 @@ public class EscenaControllerLogin {
     private Connection connectar() throws Exception {
         String url = "jdbc:mysql://localhost:3306/ProjecteProg"; // Ruta BBDD
         String usuari = "root";
-        String contrasenya = "";
+        String contrasenya = "root";
         return DriverManager.getConnection(url, usuari, contrasenya);
     }
 
@@ -44,7 +44,7 @@ public class EscenaControllerLogin {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaRegistre.fxml"));
             Parent root = loader.load();
             Scene escenaRegistre = new Scene(root);
-            MainWordle.canviarEscena(escenaRegistre);
+            Main.canviarEscena(escenaRegistre);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarMissatge("Error al obrir la finestra de registre: " + e.getMessage());
@@ -61,10 +61,12 @@ public class EscenaControllerLogin {
             ps.setString(2, contrasenyaField.getText());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+        		DadesSingleton dada = DadesSingleton.getInstancia();
+        		dada.setUsuari(usuariField.getText());
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
                 Parent root = loader.load();
                 Scene novaEscena = new Scene(root);
-                MainWordle.canviarEscena(novaEscena);
+                Main.canviarEscena(novaEscena);
             } else {
                 mostrarMissatge("Aquest usuari no esta registrat.");
             }
