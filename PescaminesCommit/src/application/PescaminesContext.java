@@ -1,6 +1,8 @@
 package application;
 
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -8,18 +10,24 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
-public class ContextPescamines implements Serializable {
+public class PescaminesContext implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
 	protected int mines;
 	protected int lliures;
+	protected int grandaria;
 	protected transient Label caixaMines;
 	protected String dificultat;
 	protected int tamany;
 	protected transient Random alea = new Random();
-	protected BooleanProperty partida = new SimpleBooleanProperty(true);
+	protected transient BooleanProperty partida = new SimpleBooleanProperty(true);
 
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+	    oos.defaultWriteObject();  
+	    oos.writeBoolean(partida.get()); 
+	}
+	
 	// GETTERS I SETTERS
 	public int getComptador() {
 		return comptador;
@@ -85,8 +93,24 @@ public class ContextPescamines implements Serializable {
 		this.lliures = lliures;
 	}
 
+	public int getGrandaria() {
+		return grandaria;
+	}
+
+	public void setGrandaria(int grandaria) {
+		this.grandaria = grandaria;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setPartida(BooleanProperty partida) {
+		this.partida = partida;
+	}
+
 	// METODES
-	public Tauler crearTauler(String dificultat, ContextPescamines contxt) {
+	public PescaminesTauler crearTauler(String dificultat, PescaminesContext contxt) {
 		setDificultat(dificultat.toLowerCase());
 
 		switch (dificultat) {
@@ -109,14 +133,15 @@ public class ContextPescamines implements Serializable {
 		}
 		}
 		comptador = mines;
+		grandaria = tamany*tamany;
 		caixaMines = new Label();
-		caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
+		caixaMines.setText("Antimines\n" + comptador + "/" + tamany + "\nCaselles descobertes: " + lliures);
 
-		return new Tauler(tamany, tamany);
+		return new PescaminesTauler(tamany, tamany);
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat, ContextPescamines contxt) {
+	public PescaminesCasella[][] assignarMines(PescaminesCasella[][] c, int tamany, String dificultat, PescaminesContext contxt) {
 
 		// col·locar bombes
 		for (int b = 0; b < comptador;) {
@@ -151,7 +176,7 @@ public class ContextPescamines implements Serializable {
 	}
 
 	// RECOMPTE DE MINES
-	public int recompteMines(Casella[][] c, int a, int b) {
+	public int recompteMines(PescaminesCasella[][] c, int a, int b) {
 		int comptador = 0;
 
 		// CANTO SUP ESQUERRE
@@ -230,8 +255,8 @@ public class ContextPescamines implements Serializable {
 		return comptador;
 	}
 
-	public void buidar(Tauler t) {
-		Casella[][] c = t.getCaselles();
+	public void buidar(PescaminesTauler t) {
+		PescaminesCasella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
@@ -245,23 +270,7 @@ public class ContextPescamines implements Serializable {
 	public boolean disminuirComptador() {
 		if (comptador > 0) {
 			comptador--;
-			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
-
-//			Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
-//			Listeners que no se ejecutan.
-//			Excepciones como IllegalStateException: Not on FX application thread.
-//			Aunque usabas Platform.runLater() para Context.partida.set(), los cambios visuales directos (boto.setVisible(), etc.) se hacían en el hilo secundario, lo que puede causar:
-//
-//				Comportamiento impredecible.
-//
-//				Errores silenciosos.
-//
-//				Actualizaciones UI que no se reflejan.
-//			El error ocurre porque estás intentando modificar la variable local descoberta dentro de la expresión lambda de Platform.runLater(), lo cual no está permitido en Java. Las variables locales usadas en lambdas deben ser efectivamente final (no modificables). Aquí te explico cómo solucionarlo:
-//			Problema Detectado
-//			Variable no final: descoberta se declara como variable local y luego se intenta modificar dentro del lambda.
-//
-//			Ámbito de variables: Las variables locales usadas en lambdas deben ser final o efectivamente final.
+			caixaMines.setText("Antimines\n" + comptador + "/" + tamany + "\nCaselles descobertes: " + lliures);
 
 			return true;
 		} else
@@ -278,12 +287,14 @@ public class ContextPescamines implements Serializable {
 
 	public void disminuirLliures() {
 		lliures--;
+		caixaMines.setText("Antimines\n" + comptador + "/" + tamany + "\nCaselles descobertes: " + lliures);
+
 	}
 
 	public boolean augmentarComptador() {
 		if (comptador < mines) {
 			comptador++;
-			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
+			caixaMines.setText("Antimines\n" + comptador + "/" + tamany + "\nCaselles descobertes: " + lliures);
 			return true;
 		} else
 			return false;

@@ -32,7 +32,7 @@ public class ConnexioBD {
 		String url = "jdbc:mysql://localhost:3306/ProjecteProg";
 		String usuari = "root";
 		String contrasenya = "root";
-		
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -84,8 +84,6 @@ public class ConnexioBD {
 				line = line + ";";
 				if (!line.matches("^\\s*#.*$") || !line.matches("^\\s*--.*$")) {
 					int execucio = s.executeUpdate(line);
-					System.out.println(execucio);
-
 				}
 			}
 			System.out.println("Base de dades creada amb script.");
@@ -163,6 +161,41 @@ public class ConnexioBD {
 		return tipus;
 	}
 
+	public static int insertarDades(String taula, byte[] arxiu, String[] camps, String[] valors) {
+		int resultat = 0;
+		int[] tipusCamps = tipusCamp(taula, camps);
+System.out.println("insertarDades");
+		if (valors.length == 0 || camps.length == 0) {
+			return 0;
+		}
+
+		String sentencia = "INSERT INTO " + taula + " (" + Arrays.toString(camps).replaceAll("\\[|\\]", "")
+				+ ") VALUES (" + "?,".repeat(camps.length - 1) + "?);";
+
+		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
+
+			for (int o = 0; o < valors.length; o++) {
+				if (!valors[o].isBlank())
+					conversioDadesBD(ps, tipusCamps[o], o + 1, valors[o]);
+				else
+					ps.setBytes(o + 1, arxiu);
+			}
+
+			ps.executeUpdate();
+
+			ResultSet r = ps.getGeneratedKeys();
+			if (r.next()) {
+				resultat = r.getInt(1);
+			}
+			System.out.println("S'han inserit " + resultat + " dades.");
+			return resultat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return resultat;
+		}
+
+	}
+
 	public static int insertarDades(String taula, String[] camps, String[] valors) {
 		int resultat = 0;
 		int[] tipusCamps = tipusCamp(taula, camps);
@@ -206,7 +239,7 @@ public class ConnexioBD {
 				int id = r.getInt(campId);
 				String usuari = r.getString("usuari");
 				resultat = "" + id + "_" + usuari;
-				System.out.println("ultimaID "+ resultat);
+				System.out.println("ultimaID " + resultat);
 			} else
 				resultat = null;
 
@@ -218,32 +251,31 @@ public class ConnexioBD {
 
 	}
 
-	public static ArrayList<PartidaRanquing> ranquingPescamines(String taula, String[] camps) {
-		ArrayList<PartidaRanquing> resultat = null;
+	public static ArrayList<PescaminesPartidaRanquing> ranquingPescamines(String taula, String[] camps) {
+		ArrayList<PescaminesPartidaRanquing> resultat = null;
 
 		if (camps.length == 0) {
-			return new ArrayList<PartidaRanquing>();
+			return new ArrayList<PescaminesPartidaRanquing>();
 		}
 
-		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula + " ORDER BY temps LIMIT 10;";
-		System.out.println(sentencia);
+		String sentencia = "SELECT " + Arrays.toString(camps).replaceAll("\\[|\\]", "") + " FROM " + taula
+				+ " ORDER BY temps LIMIT 10;";
 		try (Statement s = connexio.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);) {
 			int i = 0;
 			ResultSet res = s.executeQuery(sentencia);
-				
-				int[] tipusCamp = tipusCamp(taula, camps);
 
-				resultat = new ArrayList<PartidaRanquing>();
+			resultat = new ArrayList<PescaminesPartidaRanquing>();
 
-				while (res.next()) {
-					resultat.add(new PartidaRanquing((Integer) i+1, res.getString("usuari"), res.getString("dificultat"), res.getTime("temps")));
-					i++;
-				}
+			while (res.next()) {
+				resultat.add(new PescaminesPartidaRanquing((Integer) i + 1, res.getString("usuari"),
+						res.getString("dificultat"), res.getTime("temps")));
+				i++;
+			}
 
 			return resultat;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new ArrayList<PartidaRanquing>();
+			return new ArrayList<PescaminesPartidaRanquing>();
 		}
 
 	}
@@ -252,7 +284,6 @@ public class ConnexioBD {
 		// https://stackoverflow.com/questions/12367828/how-can-i-get-different-datatypes-from-resultsetmetadata-in-java
 		// Taula feta en base a un excel tret de Gemini.ia :
 		// https://docs.google.com/spreadsheets/d/1pl1vdyujL0XSCi0Mn-u80nAfBCb6mboEBOalzrkZibU/edit?usp=sharing
-		String valor = null;
 
 		switch (tipus) {
 		case Types.INTEGER:
@@ -283,18 +314,7 @@ public class ConnexioBD {
 		case Types.TIME:
 
 			return "" + rs.getTime(col);
-//		case Types.TIMESTAMP:
-//			rs.getTimestamp(pos, java.sql.Timestamp.valueOf(valors));
-//			break;
-//		case Types.ARRAY:
-//			rs.getObject(pos, valors);
-//			break;		
-//		case Types.STRUCT:
-//			rs.getObject(pos, valors);
-//			break;
-//		case Types.JAVA_OBJECT:
-//			rs.getObject(pos, valors);
-//			break;
+
 		default:
 			System.err.println("Error: de tipus de daders.");
 			return "No existent";
@@ -352,18 +372,7 @@ public class ConnexioBD {
 				ps.setTime(pos, java.sql.Time.valueOf(valors));
 			}
 			break;
-//		case Types.TIMESTAMP:
-//			ps.setTimestamp(pos, java.sql.Timestamp.valueOf(valors));
-//			break;
-//		case Types.ARRAY:
-//			ps.setObject(pos, valors);
-//			break;		
-//		case Types.STRUCT:
-//			ps.setObject(pos, valors);
-//			break;
-//		case Types.JAVA_OBJECT:
-//			ps.setObject(pos, valors);
-//			break;
+
 		default:
 			System.err.println("Error: de tipus de dades.");
 		}

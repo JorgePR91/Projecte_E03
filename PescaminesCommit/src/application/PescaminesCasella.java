@@ -5,15 +5,15 @@ import java.io.Serializable;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
-public abstract class Casella implements AccioCasella, Serializable {
+public abstract class PescaminesCasella implements AccioCasella, Serializable {
 		protected boolean estat;
 		protected transient StackPane container;
 		protected transient Node contingut;
 		protected int x;
 		protected int y;
-		protected ContextPescamines context;
+		protected PescaminesContext context;
 		
-		public Casella(int x, int y, ContextPescamines context) {
+		public PescaminesCasella(int x, int y, PescaminesContext context) {
 			super();
 			this.x = x;
 			this.y = y;

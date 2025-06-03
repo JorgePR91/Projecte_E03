@@ -3,15 +3,13 @@ package application;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Random;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
-public abstract class Casella implements AccioCasella {
+public abstract class PescaminesCasella implements AccioCasella {
 	
 		protected boolean estat;
 		protected BooleanProperty estatBP;
@@ -49,13 +47,13 @@ public abstract class Casella implements AccioCasella {
 			}
 	    }
 				
-		public Casella() {
+		public PescaminesCasella() {
 			super();
 			this.container = new StackPane();
 
 		}
 
-		public Casella(int x, int y, PescaminesContext context) {
+		public PescaminesCasella(int x, int y, PescaminesContext context) {
 			super();
 			this.x = x;
 			this.y = y;

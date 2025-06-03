@@ -2,13 +2,13 @@ package application;
 
 import java.sql.Time;
 
-public class PartidaRanquing {
+public class PescaminesPartidaRanquing {
 	private Integer possicio;
 	private String usuari;
 	private String dificultat;
 	private Time temps;
 	
-	public PartidaRanquing(Integer possicio, String usuari, String dificultat, Time temps) {
+	public PescaminesPartidaRanquing(Integer possicio, String usuari, String dificultat, Time temps) {
 		super();
 		this.possicio = possicio;
 		this.usuari = usuari;

@@ -6,7 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 
-public class Lliure extends Casella implements Serializable {
+public class Lliure extends PescaminesCasella implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private boolean frontera;
@@ -17,12 +17,12 @@ public class Lliure extends Casella implements Serializable {
 	private final transient Label Anti = new Label("(A)");
 	private final BooleanProperty antiminesBP = new SimpleBooleanProperty(false);
 
-	private Casella[][] c;
+	private PescaminesCasella[][] c;
 
 	// RECERCA DE MINES
 	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
-	public Lliure(int x, int y, Casella[][] c, PescaminesContext context) {
+	public Lliure(int x, int y, PescaminesCasella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 		// boto = new Button();
@@ -43,7 +43,7 @@ public class Lliure extends Casella implements Serializable {
 		super(x, y, context);
 	}
 
-	public Lliure(int n, int x, int y, Casella[][] c, PescaminesContext context) {
+	public Lliure(int n, int x, int y, PescaminesCasella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 
@@ -100,13 +100,13 @@ public class Lliure extends Casella implements Serializable {
 		return Anti;
 	}
 
-	public Casella[][] getC() {
+	public PescaminesCasella[][] getC() {
 		return c;
 	}
 
 	// METODES
 
-	public void setC(Casella[][] c) {
+	public void setC(PescaminesCasella[][] c) {
 		this.c = c;
 	}
 
@@ -155,7 +155,7 @@ public class Lliure extends Casella implements Serializable {
 
 
 
-	public Lliure despejar(Lliure l, Casella[][] c) {
+	public Lliure despejar(Lliure l, PescaminesCasella[][] c) {
 		// ES LLIURE
 		// NO ES FRONTERA
 		// DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS

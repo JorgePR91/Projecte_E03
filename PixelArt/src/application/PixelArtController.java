@@ -49,8 +49,8 @@ public class PixelArtController implements Initializable {
 	@FXML
 	private Button tornar;
 
-	private ContextPixelArt context;
-	private Tauler nouTauler;
+	private PixelArtContext context;
+	private PixelArtTauler nouTauler;
 	private int tamany;
 	private String id;
 
@@ -61,7 +61,7 @@ public class PixelArtController implements Initializable {
 		//-------------------------------------------------------
 		id = "usuario";
 		if (dada.getPartidaCompartida() != null) {
-			ContextPixelArt contextProvisional = desserialitzacioLlenç(dada.getPartidaCompartida());
+			PixelArtContext contextProvisional = desserialitzacioLlenç(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
 				System.out.println("Copiant Context");
 				this.context = contextProvisional;
@@ -74,7 +74,7 @@ public class PixelArtController implements Initializable {
 			}
 		} else {
 			System.out.println("Nou context");
-			context = new ContextPixelArt(dada.getCadenaCompartida());
+			context = new PixelArtContext(dada.getCadenaCompartida());
 			nouTauler = context.crearTauler(dada.getTamanyCompartit(),
 					dada.getTamanyCompartit());
 			nouGP(nouTauler.getCaselles());
@@ -82,7 +82,7 @@ public class PixelArtController implements Initializable {
 		}
 	}
 
-	public void nouGP(Casella[][] c) {
+	public void nouGP(PixelArtCasella[][] c) {
 		GridPane gp = this.taulerGrid;
 
 		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
@@ -266,7 +266,7 @@ public class PixelArtController implements Initializable {
 		}
 	}
 
-	public byte[] serialitzacioLlenç(ContextPixelArt cntxt, String id) {
+	public byte[] serialitzacioLlenç(PixelArtContext cntxt, String id) {
 		try  {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -292,13 +292,13 @@ public class PixelArtController implements Initializable {
 		}
 	}
 
-	public ContextPixelArt desserialitzacioLlenç(File f) {
+	public PixelArtContext desserialitzacioLlenç(File f) {
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-			ContextPixelArt c = (ContextPixelArt) ois.readObject();
+			PixelArtContext c = (PixelArtContext) ois.readObject();
 			return c;
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			return new ContextPixelArt();
+			return new PixelArtContext();
 		}
 	}
 

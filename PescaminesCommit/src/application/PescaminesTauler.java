@@ -11,37 +11,11 @@ public class PescaminesTauler extends PescaminesContext implements Serializable 
 
 	
 	Random alea = new Random();
+// Fer Random un atribut però transient
 	private int l;
 	private int a;
 	private PescaminesCasella[][] caselles;
-	
-
-	private void writeObject(ObjectOutputStream oos) {
-        try {
-            oos.defaultWriteObject();
-            
-            oos.writeInt(l);
-            oos.writeInt(a);
-            oos.writeObject(caselles);
-		} catch (IOException e) {
-		}
-    }
-    
-    private void readObject(ObjectInputStream ois) {
-    	try {
-            ois.defaultReadObject();
-            this.alea = new Random();
-            this.l = ois.readInt();
-            this.a = ois.readInt();
-            this.caselles = (PescaminesCasella[][]) ois.readObject();
-		} catch (IOException e) {
-			// TODO: handle exception
-		} catch (ClassNotFoundException e) {
-			// TODO: handle exception
-		}
-    }
-
-	
+		
 	public PescaminesTauler() {
 	};
 	
@@ -50,6 +24,7 @@ public class PescaminesTauler extends PescaminesContext implements Serializable 
 		this.l = l;
 		this.a = a;
 		caselles = new PescaminesCasella[this.a][this.l];
+		// caselles = Context.assignarMines(caselles, a, alea, "n");
 	}
 
 	// GETTERS I SETTERS

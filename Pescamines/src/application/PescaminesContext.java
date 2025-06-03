@@ -1,11 +1,7 @@
 package application;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -17,22 +13,25 @@ public class PescaminesContext implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
-	protected transient BooleanProperty partida = new SimpleBooleanProperty(true);
 	protected int mines;
 	protected int lliures;
-	protected transient Label caixaMines;
-	protected String dificultat;
 	protected int tamany;
 	protected int temps;
+	protected String dificultat;
+	protected int destapades;
+
+	protected transient Label caixaMines;
+	protected transient BooleanProperty partida = new SimpleBooleanProperty(true);
+
 	protected transient Random alea = new Random();
-	protected Casella[][] caselles;
+	protected PescaminesCasella[][] caselles;
 
 	private void readObject(ObjectInputStream ois) {
 		try {
 			ois.defaultReadObject();
 			this.alea = new Random();
 			this.partida = new SimpleBooleanProperty(true);
-			this.caselles = (Casella[][]) ois.readObject();
+			this.caselles = (PescaminesCasella[][]) ois.readObject();
 		} catch (IOException e) {
 			// TODO: handle exception
 		} catch (ClassNotFoundException e) {
@@ -121,16 +120,28 @@ public class PescaminesContext implements Serializable {
 		this.partida = partida;
 	}
 
-	public Casella[][] getCaselles() {
+	public PescaminesCasella[][] getCaselles() {
 		return caselles;
 	}
 
-	public void setCaselles(Casella[][] caselles) {
+	public void setCaselles(PescaminesCasella[][] caselles) {
 		this.caselles = caselles;
 	}
 
+	public int getDestapades() {
+		return destapades;
+	}
+
+	public void setDestapades(int destapades) {
+		this.destapades = destapades;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	// METODES
-	public Tauler crearTauler(String dificultat, PescaminesContext contxt) {
+	public PescaminesTauler crearTauler(String dificultat, PescaminesContext contxt) {
 		setDificultat(dificultat);
 
 		switch (dificultat) {
@@ -158,20 +169,12 @@ public class PescaminesContext implements Serializable {
 		}
 		caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
 
-		return new Tauler(tamany, tamany);
+		return new PescaminesTauler(tamany, tamany);
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES
-	public Casella[][] assignarMines(Casella[][] c, int tamany, String dificultat, PescaminesContext contxt) {
-//		int nMines;
-//		//decidir bombes
-//		if(dificultat == "f") {
-//			nMines=10;
-//		} else if(dificultat == "d") {
-//			nMines=15;
-//		} else {
-//			nMines=12;
-//		}
+	public PescaminesCasella[][] assignarMines(PescaminesCasella[][] c, int tamany, String dificultat,
+			PescaminesContext contxt) {
 
 		if (c != null) {
 			System.out.println("No hi ha matriu");
@@ -210,7 +213,7 @@ public class PescaminesContext implements Serializable {
 	}
 
 	// RECOMPTE DE MINES
-	public int recompteMines(Casella[][] c, int a, int b) {
+	public int recompteMines(PescaminesCasella[][] c, int a, int b) {
 		int comptador = 0;
 
 		// CANTO SUP ESQUERRE
@@ -289,8 +292,8 @@ public class PescaminesContext implements Serializable {
 		return comptador;
 	}
 
-	public void buidar(Tauler t) {
-		Casella[][] c = t.getCaselles();
+	public void buidar(PescaminesTauler t) {
+		PescaminesCasella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {
@@ -305,28 +308,9 @@ public class PescaminesContext implements Serializable {
 		if (comptador > 0) {
 			comptador--;
 			caixaMines.setText("Antimines\n" + comptador + "/" + tamany);
-
-//			Platform.runLater() encola la operación en el hilo de JavaFX, donde los listeners y la UI pueden reaccionar correctamente. Sin esto, los cambios desde hilos secundarios pueden causar:
-//			Listeners que no se ejecutan.
-//			Excepciones como IllegalStateException: Not on FX application thread.
-//			Aunque usabas Platform.runLater() para Context.partida.set(), los cambios visuales directos (boto.setVisible(), etc.) se hacían en el hilo secundario, lo que puede causar:
-//
-//				Comportamiento impredecible.
-//
-//				Errores silenciosos.
-//
-//				Actualizaciones UI que no se reflejan.
-//			El error ocurre porque estás intentando modificar la variable local descoberta dentro de la expresión lambda de Platform.runLater(), lo cual no está permitido en Java. Las variables locales usadas en lambdas deben ser efectivamente final (no modificables). Aquí te explico cómo solucionarlo:
-//			Problema Detectado
-//			Variable no final: descoberta se declara como variable local y luego se intenta modificar dentro del lambda.
-//
-//			Ámbito de variables: Las variables locales usadas en lambdas deben ser final o efectivamente final.
-
 			return true;
 		} else
 			return false;
-
-//Ens estalviaria molta feina fer-ho amb la biblioteca Property, de JavaFX.
 	}
 
 	public void comprovarPartida() {
@@ -348,16 +332,4 @@ public class PescaminesContext implements Serializable {
 			return false;
 	}
 
-
-	public static PescaminesContext desserialitzacioTauler(File f) {
-
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-			PescaminesContext c = (PescaminesContext) ois.readObject();
-			return c;
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-			return new PescaminesContext();
-		}
-
-	}
 }

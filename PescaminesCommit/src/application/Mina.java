@@ -8,16 +8,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
-public class Mina extends Casella implements AccioCasella, Serializable {
+public class Mina extends PescaminesCasella implements AccioCasella, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private transient Text element;
 	private boolean antimines;
 	private final transient Text simbolAntimines = new Text("(A)");
 	private transient Button boto;
-	private Casella[][] c;
+	private PescaminesCasella[][] c;
 
-	public Mina(int x, int y, Casella[][] c, ContextPescamines context) {
+	public Mina(int x, int y, PescaminesCasella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 		this.element = new Text("X");
@@ -63,11 +63,11 @@ public class Mina extends Casella implements AccioCasella, Serializable {
 		this.boto = boto;
 	}
 
-	public Casella[][] getC() {
+	public PescaminesCasella[][] getC() {
 		return c;
 	}
 
-	public void setC(Casella[][] c) {
+	public void setC(PescaminesCasella[][] c) {
 		this.c = c;
 	}
 
@@ -97,8 +97,8 @@ public class Mina extends Casella implements AccioCasella, Serializable {
 						}
 				}
 				if ((e.getButton() == MouseButton.PRIMARY) && !antimines) {
-					for (Casella[] fila : c) {
-						for (Casella cas : fila) {
+					for (PescaminesCasella[] fila : c) {
+						for (PescaminesCasella cas : fila) {
 							if (cas.isEstat()) {
 								cas.setEstat(false);
 								if (cas instanceof Lliure) {

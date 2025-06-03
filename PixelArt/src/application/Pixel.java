@@ -3,14 +3,14 @@ package application;
 import java.io.Serializable;
 import javafx.scene.paint.Color;
 
-public class Pixel extends Casella implements Serializable {
+public class Pixel extends PixelArtCasella implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected transient Color base;
 	protected String colorHex;
-	protected transient ContextPixelArt context;
+	protected transient PixelArtContext context;
 
-	public Pixel(int x, int y, ContextPixelArt c) {
+	public Pixel(int x, int y, PixelArtContext c) {
 		super(x, y);
 		this.context = c;
 		base = context.perDefecte(x, y);
@@ -33,11 +33,11 @@ public class Pixel extends Casella implements Serializable {
 		this.colorHex = colorHex;
 	}
 
-	public ContextPixelArt getContext() {
+	public PixelArtContext getContext() {
 		return context;
 	}
 
-	public void setContext(ContextPixelArt context) {
+	public void setContext(PixelArtContext context) {
 		this.context = context;
 	}
 

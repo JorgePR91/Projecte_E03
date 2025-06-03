@@ -18,7 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class PADificultatController implements Initializable {
+public class PixelArtDificultatController implements Initializable {
 	@FXML
 	private VBox root_dificultad;
 

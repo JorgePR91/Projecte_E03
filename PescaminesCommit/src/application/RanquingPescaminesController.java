@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,19 +21,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class RanquingController implements Initializable {
+public class RanquingPescaminesController implements Initializable {
 	@FXML
-	private TableView<PartidaRanquing> taulaRanquing;
+	private TableView<PescaminesPartidaRanquing> taulaRanquing;
 	@FXML
-	private TableColumn<PartidaRanquing, Integer> rPossicio;
+	private TableColumn<PescaminesPartidaRanquing, Integer> rPossicio;
 	@FXML
-	private TableColumn<PartidaRanquing, String> rUsuari;
+	private TableColumn<PescaminesPartidaRanquing, String> rUsuari;
 	@FXML
-	private TableColumn<PartidaRanquing, String> rDificultat;
+	private TableColumn<PescaminesPartidaRanquing, String> rDificultat;
 	@FXML
-	private TableColumn<PartidaRanquing, Time> rTemps;
+	private TableColumn<PescaminesPartidaRanquing, Time> rTemps;
 	
-	private ObservableList<PartidaRanquing> partides = FXCollections.observableArrayList();;
+	private ObservableList<PescaminesPartidaRanquing> partides = FXCollections.observableArrayList();;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -42,13 +41,12 @@ public class RanquingController implements Initializable {
 			//https://www.youtube.com/watch?v=SwYczt6K_Q0
 			//https://code.makery.ch/es/library/javafx-tutorial/part2/
 			 
-			ArrayList<PartidaRanquing> arrParRan = ranquing();
+			ArrayList<PescaminesPartidaRanquing> arrParRan = ranquing();
 			
 			if(arrParRan.size() > 0)
 	        for (int i = 0; i < arrParRan.size(); i++) {
 	        	partides.add(arrParRan.get(i));
 	        }
-
 			
 			this.rPossicio.setCellValueFactory(new PropertyValueFactory<>("possicio"));
 			this.rUsuari.setCellValueFactory(new PropertyValueFactory<>("usuari"));
@@ -63,12 +61,10 @@ public class RanquingController implements Initializable {
 	@FXML
 	public void tornar(ActionEvent e) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescaminesDificultat.fxml"));
 
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			// DificultadController controller ;
 
-			// loader.setController( new DificultadController());
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
@@ -82,8 +78,8 @@ public class RanquingController implements Initializable {
 	}
 
 	@FXML
-	public ArrayList<PartidaRanquing> ranquing() {
-		ArrayList<PartidaRanquing> ranquing = null;
+	public ArrayList<PescaminesPartidaRanquing> ranquing() {
+		ArrayList<PescaminesPartidaRanquing> ranquing = null;
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
@@ -97,7 +93,7 @@ public class RanquingController implements Initializable {
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new ArrayList<PartidaRanquing>();
+			return new ArrayList<PescaminesPartidaRanquing>();
 		}
 		return ranquing;
 

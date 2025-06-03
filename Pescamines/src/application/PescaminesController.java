@@ -1,7 +1,11 @@
 package application;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.sql.SQLException;
@@ -49,11 +53,12 @@ public class PescaminesController implements Initializable {
 	@FXML
 	private Pane pantallaInici;
 
-	private Tauler nouTauler;
+	private PescaminesTauler nouTauler;
 	private Timeline temps;
 	private Label cronometre;
-	private int segons;
 	private String dif;
+	private int segons;
+	private String id;
 	private PescaminesContext context;
 
 	public PescaminesContext getcontext() {
@@ -76,19 +81,18 @@ public class PescaminesController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
+		id = "usuari";
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
-//Posar booleà si la cadena compartida és null
+
 		DadesSingleton dada = DadesSingleton.getInstancia();
 
 		if (dada.getPartidaCompartida() != null) {
-			PescaminesContext contextProvisional = context.desserialitzacioTauler(dada.getPartidaCompartida());
+			PescaminesContext contextProvisional = desserialitzacioTauler(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
 				System.out.println("Copiant context");
-				context = contextProvisional;
+				this.context = contextProvisional;
 				dif = context.getDificultat();
-				// Tauler
 				nouTauler = context.crearTauler(dif, context);
 				context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
 				taulerGrid.getChildren().clear();
@@ -96,7 +100,11 @@ public class PescaminesController implements Initializable {
 				segons = nouTauler.getTemps();
 				dada.setCadenaCompartida(null);
 				dada.setPartidaCompartida(null);
+
+			} else {
+				System.err.println("No hi ha res serialitzat");
 			}
+
 		} else {
 			System.out.println("Nou context");
 			context = new PescaminesContext();
@@ -119,46 +127,26 @@ public class PescaminesController implements Initializable {
 			nouTauler.setTemps(segons);
 			cronometre.setText(formatter.format(segons * 1000));
 		}));
-		// posar límit en 59 minuts amb 59 segons
 		temps.setCycleCount(3600);
 
 		pantallaInici.setPrefWidth(taulerGrid.getMinWidth());
 		pantallaInici.setPrefHeight(taulerGrid.getHeight());
-
-		// ACABAR EL PROGRAMA I DIR EL RESULTAT
-		// temps.stop
-		// botons inhabilitats
-		// pulsar antimines inhabilitat
-		// pantallaInici.setMouseTransparent(false);
 
 		context.getPartida().addListener((obs, oldVal, newVal) -> {
 			if (!newVal) {
 				acabarPartida();
 			}
 		});
-		/*
-		 * Parámetros del Listener observable (ObservableValue<? extends Tipo>): Es la
-		 * propiedad que está siendo observada (en este caso, context.partida). Permite
-		 * acceder a métodos como getValue() si necesitas el valor actual.
-		 * 
-		 * oldValue (Tipo): El valor anterior de la propiedad antes del cambio. Ejemplo:
-		 * Si partida cambiaba de 5 a 10, oldValue sería 5.
-		 * 
-		 * newValue (Tipo): El valor nuevo de la propiedad después del cambio. Siguiendo
-		 * el ejemplo anterior, newValue sería 10.
-		 */
 	}
 
-	public void nouGP(Casella[][] c) {
+	public void nouGP(PescaminesCasella[][] c) {
 		GridPane gp = this.taulerGrid;
 
 		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
-
 		// Netejar les característiques per defecte del SceneBuilder
 		gp.getColumnConstraints().clear();
 		gp.getRowConstraints().clear();
 
-		// Com les cree per bucle lògic, ho hem de fer per ací i no en el SB
 		for (int i = 0; i < c.length; i++) {
 			ColumnConstraints cC = new ColumnConstraints();
 			cC.setPercentWidth(100.0 / c.length);
@@ -182,14 +170,14 @@ public class PescaminesController implements Initializable {
 					int fil = m;
 
 					bot.setOnMouseClicked((EventHandler<MouseEvent>) e -> {
-						
+
 						if (e.getButton() == MouseButton.PRIMARY) {
 							c[col][fil].reaccioRatoli(e, bot);
-							
+
 							if (!c[col][fil].isEstat()) {
 								gp.getChildren().remove(bot);
-								
-								if(c[col][fil] instanceof Mina) {
+
+								if (c[col][fil] instanceof Mina) {
 									System.out.println("Polsat Mina");
 									Label element = new Label("X");
 									element.setAlignment(Pos.CENTER);
@@ -197,44 +185,44 @@ public class PescaminesController implements Initializable {
 
 								} else {
 									System.out.println("Polsat Lliure");
-
 									Label element = ((Lliure) c[col][fil]).getText();
 									gp.add(element, col, fil);
 								}
-								
+
 							}
-							
+
 						} else if (e.getButton() == MouseButton.SECONDARY) {
-							if(c[col][fil] instanceof Mina)
-							((Mina) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-								if(newVal) {
-									Label simbolAntimines = new Label("(A)");
-									gp.add(simbolAntimines, col, fil);
-								}
+							if (c[col][fil] instanceof Mina)
+								((Mina) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
+									if (newVal) {
+										Label simbolAntimines = new Label("(A)");
+										gp.add(simbolAntimines, col, fil);
+										simbolAntimines.toFront();
+									}
 
-
-							});
-							if(c[col][fil] instanceof Lliure)
-							((Lliure) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-								if(newVal) {
-									Label simbolAntimines = new Label("(A)");
-									gp.add(simbolAntimines, col, fil);
-								}
-							});
-							c[col][fil].reaccioRatoli(e, bot);
-
-						}
+								});
+							if (c[col][fil] instanceof Lliure)
+								((Lliure) c[col][fil]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
+									if (newVal) {
+										Label simbolAntimines = new Label("(A)");
+										gp.add(simbolAntimines, col, fil);
+										simbolAntimines.toFront();
+									}
+								});
 							
+							c[col][fil].reaccioRatoli(e, bot);
+							
+						}
 
-						
 					});
-					
+
 					if (c[o][m] instanceof Mina) {
-						((Mina)c[o][m]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
-							context.caixaMines.setText("Antimines\n" + context.getComptador() + "/" + context.getTamany());
+						((Mina) c[o][m]).antiminesProperty().addListener((obs, oldVal, newVal) -> {
+							context.caixaMines
+									.setText("Antimines\n" + context.getComptador() + "/" + context.getTamany());
 						});
 					}
-					
+
 					c[o][m].getEstatBP().addListener((obs, oldVal, newVal) -> {
 						if (!newVal) {
 							gp.getChildren().remove(bot);
@@ -252,33 +240,39 @@ public class PescaminesController implements Initializable {
 
 	@FXML
 	public void guardarPartida() {
-		String id = "";
 
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD(".././BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
-			String[] camps = { "usuari", "temps" };
-			String[] valors = { "usuari", cronometre.getText() };
-			ConnexioBD.insertarDades("partida_pescamines", camps, valors);
-			id = ConnexioBD.ultimaID("partida_pescamines", "id_partida");
+			if (id != null) {
+				byte[] arxiu = serialitzacioLlenç(context);
+
+				if (arxiu.length == 0)
+					System.err.println("Ha fallat la serialització");
+				else if (guardarEnPC(arxiu)) {
+
+				} else
+					System.err.println("Ha fallat el desat en ordinador.");
+
+				String[] camps = { "usuari", "temps", " " };
+				String[] valors = { "usuari", cronometre.getText() };
+				ConnexioBD.insertarDades("partida_pescamines", camps, valors);
+				id = ConnexioBD.ultimaID("partida_pescamines", "id_partida");
+				ConnexioBD.insertarDades("partida_pescamines", arxiu, camps, valors);
+				id = ConnexioBD.ultimaID("pixelart", "id_llenc");
+			}
 
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// SERIALIZED
-		// https://javarush.com/es/groups/posts/es.710.cmo-funciona-la-serializacin-en-java
-		if (id != null)
-			serialitzacioPartida(context, id);
-		// UTILITZAR CLASSE
-		// ENVIAR VARIABLES NECESSÀRIES DESDE context
 	}
-	public boolean serialitzacioPartida(PescaminesContext cntxt, String id) {
+
+	public boolean serialitzacioPartida(PescaminesContext cntxt) {
 		// https://infogonzalez.com/2024/10/titulo-serializacion-de-objetos-en-java.html
 
-		// ¿Crear /Partides si no existeix com fem amb les BD?
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("./Partides/" + id + ".dat"))) {
 			oos.writeObject(cntxt);
 			return true;
@@ -287,7 +281,7 @@ public class PescaminesController implements Initializable {
 			return false;
 		}
 	}
-//¿Posar ací el mètode de carregar partida??
+
 	@FXML
 	public void reiniciar(ActionEvent e) {
 		temps.stop();
@@ -321,6 +315,43 @@ public class PescaminesController implements Initializable {
 		tornar();
 	}
 
+	public byte[] serialitzacioLlenç(PescaminesContext cntxt) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+			oos.writeObject(cntxt);
+			baos.close();
+			oos.close();
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new byte[0];
+		}
+	}
+
+	public boolean guardarEnPC(byte[] arxiu) {
+		try {
+			FileOutputStream fos = new FileOutputStream("./Partides/" + id + ".d");
+			fos.write(arxiu);
+			fos.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public PescaminesContext desserialitzacioTauler(File f) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+			PescaminesContext c = (PescaminesContext) ois.readObject();
+			return c;
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return new PescaminesContext();
+		}
+	}
+
 	public void enviarRanquing() {
 
 		try {
@@ -338,21 +369,15 @@ public class PescaminesController implements Initializable {
 		}
 		boto_guardarPartida.setDisable(true);
 		boto_abandonar.setDisable(true);
-		// ACABAR EL PROGRAMA I DIR EL RESULTAT
-		//
-		// botons inhabilitats
-		// pulsar antimines inhabilitat
 	}
 
 	public void tornar() {
 		System.out.println("Entrar en abandonar");
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaDificultad.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescaminesDificultad.fxml"));
 
 			Stage window = (Stage) boto_abandonar.getScene().getWindow();
-			// DificultadController controller ;
 
-			// loader.setController( new DificultadController());
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 

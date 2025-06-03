@@ -8,28 +8,24 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
-public class Lliure extends Casella implements AccioCasella, Serializable {
+public class Lliure extends PescaminesCasella implements AccioCasella, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private boolean frontera;
+	private boolean antimines;
 	private int recompte;
 	private transient Text text;
 	private transient Button boto;
-	private boolean antimines;
 	private final transient Text Anti = new Text("(A)");
-	private Casella[][] c;
+	private PescaminesCasella[][] c;
 
-	// RECERCA DE MINES
-	// SI RECOMPTE NO ÉS 0 = FRONTERA TRUE
 
-	public Lliure(int x, int y, Casella[][] c, ContextPescamines context) {
+	public Lliure(int x, int y, PescaminesCasella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		text = new Text(" ");
 		recompte = 0;
-		frontera = false;
 		antimines = false;
 		Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
@@ -39,7 +35,7 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 		reaccio();
 	}
 
-	public Lliure(int n, int x, int y, Casella[][] c, ContextPescamines context) {
+	public Lliure(int n, int x, int y, PescaminesCasella[][] c, PescaminesContext context) {
 		super(x, y, context);
 		this.c = c;
 
@@ -47,21 +43,12 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		this.text = new Text("" + n);
 		this.recompte = n;
-		this.frontera = true;
 		this.antimines = false;
 		this.Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
 		this.text.setVisible(!super.estat);
 		reaccio();
-	}
-
-	public boolean isFrontera() {
-		return frontera;
-	}
-
-	public void setFrontera(boolean frontera) {
-		this.frontera = frontera;
 	}
 
 	public int getRecompte() {
@@ -133,10 +120,7 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 
 	}
 
-	public Lliure despejar(Lliure l, Casella[][] c) {
-		// ES LLIURE
-		// NO ES FRONTERA
-		// DESTAPA FINS QUE ES FRONTERA EN TOTES DIRECCIONS
+	public Lliure despejar(Lliure l, PescaminesCasella[][] c) {
 
 		if (l == null || !l.descobrir(l)) {
 			return l;
@@ -162,18 +146,7 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 
 	public boolean descobrir(Lliure l) {
 		boolean descoberta = false;
-//		if (l instanceof Lliure && l.isEstat() == true && l.antimines) {
-//			descoberta = true;
-//			Platform.runLater(() -> {
-//				l.setEstat(false);
-//				l.boto.setVisible(l.isEstat());
-//				l.text.setVisible(true);
-//				l.Anti.setVisible(false);
-//				context.augmentarComptador();
-//
-//			});
-//
-//		} else 
+
 			if (l instanceof Lliure && l.isEstat() == true && !l.antimines) {
 					descoberta = true;
 
@@ -182,6 +155,8 @@ public class Lliure extends Casella implements AccioCasella, Serializable {
 					l.text.setVisible(true);
 					l.Anti.setVisible(false);
 					context.setLliures(--context.lliures);
+					context.getCaixaMines().setText("Antimines\n" + context.getComptador() + "/" + context.getTamany() + "\nCaselles descobertes: " + (context.getGrandaria()-context.getLliures()));
+
 				    context.comprovarPartida(); 
 				}
 

@@ -5,13 +5,13 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-public class Tauler extends ContextPixelArt implements Serializable {
+public class PixelArtTauler extends PixelArtContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	private Random alea = new Random();
 	private int l;
 	private int a;
-	private Casella[][] caselles;
+	private PixelArtCasella[][] caselles;
 	    
     private void readObject(ObjectInputStream ois) {
     	try {
@@ -24,18 +24,18 @@ public class Tauler extends ContextPixelArt implements Serializable {
 		}
     }
 
-	public Tauler(int l, int a) {
+	public PixelArtTauler(int l, int a) {
 		this.l = l;
 		this.a = a;
-		caselles = new Casella[this.a][this.l];
+		caselles = new PixelArtCasella[this.a][this.l];
 	}
 
 	// GETTERS I SETTERS
-	public Casella[][] getCaselles() {
+	public PixelArtCasella[][] getCaselles() {
 		return caselles;
 	}
 
-	public void setCaselles(Casella[][] caselles) {
+	public void setCaselles(PixelArtCasella[][] caselles) {
 		this.caselles = caselles;
 	}
 

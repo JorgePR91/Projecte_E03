@@ -12,10 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<HBox fx:id="root_Pescamines" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PescaminesController">
-	<children>
-		<BorderPane prefHeight="600.0" prefWidth="600.0">
-			<top>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PescaminesController">
+   <top>
 				<HBox fx:id="capçalera" alignment="TOP_CENTER" prefHeight="151.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 					<children>
 						<Button fx:id="reinici" mnemonicParsing="false" onAction="#reiniciar" prefHeight="81.0" prefWidth="86.0" text="Reiniciar">
@@ -41,12 +40,20 @@
 						<Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
 					</padding>
 				</HBox>
-			</top>
-			<right>
+   </top>
+   <bottom>
+				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
+					<children>
+						<Button fx:id="boto_guardarPartida" mnemonicParsing="false" onAction="#guardarPartida" text="Guardar Partida" />
+						<Button fx:id="boto_abandonar" mnemonicParsing="false" onAction="#acabarPartida" text="Abandonar" />
+					</children>
+				</HBox>
+   </bottom>
+   <right>
 				<AnchorPane BorderPane.alignment="CENTER" />
-			</right>
-			<center>
-				<StackPane>
+   </right>
+   <center>
+				<StackPane BorderPane.alignment="CENTER">
 					<children>
 
 						<GridPane fx:id="taulerGrid" accessibleRole="BUTTON" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="200.0" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: grey;">
@@ -63,18 +70,8 @@
 						<Pane fx:id="pantallaInici" onMouseClicked="#iniciarJoc" />
 					</children>
 				</StackPane>
-			</center>
-			<left>
-				<AnchorPane BorderPane.alignment="CENTER" />
-			</left>
-			<bottom>
-				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
-					<children>
-						<Button fx:id="boto_guardarPartida" mnemonicParsing="false" onAction="#guardarPartida" text="Guardar Partida" />
-						<Button fx:id="boto_abandonar" mnemonicParsing="false" onAction="#acabarPartida" text="Abandonar" />
-					</children>
-				</HBox>
-			</bottom>
-		</BorderPane>
-	</children>
-</HBox>
+   </center>
+   <left>
+				<AnchorPane prefHeight="300.0" prefWidth="0.0" BorderPane.alignment="CENTER" />
+   </left>
+</BorderPane>

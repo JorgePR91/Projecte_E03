@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 
-public class ContextPixelArt implements Serializable {
+public class PixelArtContext implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected int comptador;
@@ -16,7 +16,7 @@ public class ContextPixelArt implements Serializable {
 	protected boolean borrador;
 	protected String mida;
 	protected transient Random alea;
-	protected Tauler tauler;
+	protected PixelArtTauler tauler;
 
 	{
 		color = Color.BLACK;
@@ -24,11 +24,11 @@ public class ContextPixelArt implements Serializable {
 		alea = new Random();
 	}
 
-	public ContextPixelArt() {
+	public PixelArtContext() {
 		super();
 	}
 
-	public ContextPixelArt(String mida) {
+	public PixelArtContext(String mida) {
 		super();
 		this.mida = mida;
 	}
@@ -81,18 +81,18 @@ public class ContextPixelArt implements Serializable {
 		this.mida = mida;
 	}
 
-	public Tauler getTauler() {
+	public PixelArtTauler getTauler() {
 		return tauler;
 	}
 
-	public void setTauler(Tauler tauler) {
+	public void setTauler(PixelArtTauler tauler) {
 		this.tauler = tauler;
 	}
 
 	// METODES
 
-	public Tauler crearTauler(int llarg, int ample) {
-		this.tauler = new Tauler(llarg, ample);
+	public PixelArtTauler crearTauler(int llarg, int ample) {
+		this.tauler = new PixelArtTauler(llarg, ample);
 		return tauler;
 
 	}
@@ -127,8 +127,8 @@ public class ContextPixelArt implements Serializable {
 		return col;
 	}
 
-	public void buidar(Tauler t) {
-		Casella[][] c = t.getCaselles();
+	public void buidar(PixelArtTauler t) {
+		PixelArtCasella[][] c = t.getCaselles();
 
 		for (int fil = 0; fil < c.length; fil++) {
 			for (int col = 0; col < c.length; col++) {

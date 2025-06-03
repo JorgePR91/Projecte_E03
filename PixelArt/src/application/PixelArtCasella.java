@@ -6,7 +6,7 @@ import java.io.Serializable;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
-public abstract class Casella implements Serializable {
+public abstract class PixelArtCasella implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	
@@ -16,7 +16,7 @@ public abstract class Casella implements Serializable {
 		protected int x;
 		protected int y;
 		
-		public Casella() {}
+		public PixelArtCasella() {}
 
 
 		
@@ -27,7 +27,7 @@ public abstract class Casella implements Serializable {
 			}
 		
 		
-		public Casella(int x, int y) {
+		public PixelArtCasella(int x, int y) {
 			super();
 			this.x = x;
 			this.y = y;
