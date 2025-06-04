@@ -3,10 +3,12 @@ package appEquip03;
 import java.io.Serializable;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 public class LliurePescamines extends CasellaPescamines implements AccioCasellaPescamines, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +25,7 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 		this.c = c;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		boto.setMinSize(0, 0);
 		text = new Label(" ");
 		recompte = 0;
 		antimines = false;
@@ -30,6 +33,7 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 		Anti.setMouseTransparent(true);
 		super.setContingut(this.text);
 		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
+		StackPane.setAlignment(this.boto, Pos.CENTER);
 		text.setVisible(!super.estat);
 		reaccio();
 	}

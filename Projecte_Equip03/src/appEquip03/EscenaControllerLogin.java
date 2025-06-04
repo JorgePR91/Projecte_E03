@@ -33,7 +33,7 @@ public class EscenaControllerLogin {
 
     private Connection connectar() throws Exception {
         String url = "jdbc:mysql://localhost:3306/ProjecteProg"; // Ruta BBDD
-        String usuari = "root";
+        String usuari = "Root";
         String contrasenya = "root";
         return DriverManager.getConnection(url, usuari, contrasenya);
     }
