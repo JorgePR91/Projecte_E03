@@ -58,16 +58,16 @@ public class EscenaControllerDificultatPixelArt implements Initializable {
 
 		switch (tamany) {
 		case "Xicotet" -> {
-			dada.setTamanyCompartit(40);
+			dada.setTamanyCompartit(20);
 		}
 		case "Mitjà" -> {
-			dada.setTamanyCompartit(60);
+			dada.setTamanyCompartit(40);
 		}
 		case "Gran" -> {
 			dada.setTamanyCompartit(80);
 		}
 		default -> {
-			dada.setTamanyCompartit(60);
+			dada.setTamanyCompartit(40);
 		}
 		}
 

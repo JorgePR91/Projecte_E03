@@ -25,7 +25,8 @@ public class MinaPescamines extends CasellaPescamines implements AccioCasellaPes
 		this.element = new Label("X");
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		boto.setMinSize(0, 0);
+		//boto.setMinSize(0, 0);
+		boto.getStyleClass().add("botoPescamines");
 		super.setContingut(this.element);
 		this.simbolAntimines.setMouseTransparent(true);
 		this.simbolAntimines.setVisible(false);

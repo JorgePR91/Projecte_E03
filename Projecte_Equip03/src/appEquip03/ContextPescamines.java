@@ -15,9 +15,11 @@ public class ContextPescamines implements Serializable {
 	protected int mines;
 	protected int lliures;
 	protected int grandaria;
-	protected transient Label caixaMines;
-	protected String dificultat;
 	protected int tamany;
+	protected int temps;
+	protected String dificultat;
+	protected TaulerPescamines tauler;
+	protected transient Label caixaMines;
 	protected transient Random alea = new Random();
 	protected transient BooleanProperty partida = new SimpleBooleanProperty(true);
 
@@ -26,6 +28,15 @@ public class ContextPescamines implements Serializable {
 		oos.writeBoolean(partida.get());
 	}
 
+	public ContextPescamines() {
+		super();
+	}
+
+	public ContextPescamines(TaulerPescamines tauler) {
+		super();
+		this.tauler = tauler;
+	}
+	
 	// GETTERS I SETTERS
 	public int getComptador() {
 		return comptador;
@@ -107,6 +118,22 @@ public class ContextPescamines implements Serializable {
 		this.partida = partida;
 	}
 
+	public TaulerPescamines getTauler() {
+		return tauler;
+	}
+
+	public void setTauler(TaulerPescamines tauler) {
+		this.tauler = tauler;
+	}
+
+	public int getTemps() {
+		return temps;
+	}
+
+	public void setTemps(int temps) {
+		this.temps = temps;
+	}
+
 	// METODES
 	public TaulerPescamines crearTauler(String dificultat, ContextPescamines contxt) {
 		setDificultat(dificultat.toLowerCase());
@@ -134,8 +161,9 @@ public class ContextPescamines implements Serializable {
 		grandaria = tamany * tamany;
 		caixaMines = new Label();
 		caixaMines.setText("Antimines\n" + comptador + "/" + tamany + "\nCaselles descobertes: " + lliures);
-
-		return new TaulerPescamines(tamany, tamany);
+		
+		this.tauler = new TaulerPescamines(tamany, tamany);
+		return this.tauler;
 	}
 
 	// OMPLIR BOMBES i OMPLIR CASELLES LLIURES

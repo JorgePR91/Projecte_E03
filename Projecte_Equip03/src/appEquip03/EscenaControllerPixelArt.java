@@ -52,10 +52,10 @@ public class EscenaControllerPixelArt implements Initializable {
 	private Button tornar;
 	@FXML
 	private Label nomUsuariLabel;
-    @FXML
-    private Button tornarMenuBtn;
-    @FXML
-    private Button logoutBtn;
+	@FXML
+	private Button tornarMenuBtn;
+	@FXML
+	private Button logoutBtn;
 
 	private int tamany;
 	private String id;
@@ -66,9 +66,9 @@ public class EscenaControllerPixelArt implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		DadesSingleton dada = DadesSingleton.getInstancia();
-        nomUsuariLabel.setText("Usuari: " + dada.getUsuari());
+		nomUsuariLabel.setText("Usuari: " + dada.getUsuari());
 		id = dada.getUsuari();
-		
+
 		if (dada.getPartidaCompartida() != null) {
 			ContextPixelArt contextProvisional = desserialitzacioLlenç(dada.getPartidaCompartida());
 			if (contextProvisional != null) {
@@ -83,9 +83,9 @@ public class EscenaControllerPixelArt implements Initializable {
 			}
 		} else {
 			System.out.println("Nou context");
+			this.tamany = dada.getTamanyCompartit();
 			context = new ContextPixelArt(dada.getCadenaCompartida());
-			nouTauler = context.crearTauler(dada.getTamanyCompartit(),
-					dada.getTamanyCompartit());
+			nouTauler = context.crearTauler(tamany, tamany);
 			nouGP(nouTauler.getCaselles());
 
 		}
@@ -131,8 +131,10 @@ public class EscenaControllerPixelArt implements Initializable {
 				context.pintar(planol, (PixelPixelArt) c[o][m]);
 				gp.add(planol, o, m);
 				this.taulerGrid = gp;
+
 			}
 		}
+
 	}
 
 	@FXML
@@ -170,20 +172,21 @@ public class EscenaControllerPixelArt implements Initializable {
 			}
 			if (id != null) {
 				byte[] arxiu = serialitzacioLlenç(context, id);
-				
-				if(arxiu.length == 0)
+
+				if (arxiu.length == 0)
 					System.err.println("Ha fallat la serialització");
-					else
-						if(guardarEnPC(arxiu, id)) {
-							
-						} else
-							System.err.println("Ha fallat el desat en ordinador.");
-				String[] camps = { "usuari", "mida", "imatge" };
-				String[] valors = { "usuari", (""+tamany), " " };
-				ConnexioBD.insertarDades("pixelart", arxiu, camps, valors);
-				id = ConnexioBD.ultimaID("pixelart", "id_llenc");
+				else {
+					if (guardarEnPC(arxiu, id)) {
+						System.out.println("Partida guardada al teu PC: /Llenços");
+
+					} else
+						System.err.println("Ha fallat el desat en ordinador.");
+					String[] camps = { "usuari", "mida", "imatge" };
+					String[] valors = { "usuari", ("" + tamany), " " };
+					ConnexioBD.insertarDades("pixelart", arxiu, camps, valors);
+					id = ConnexioBD.ultimaID("pixelart", "id_llenc");
+				}
 			}
-						
 			ConnexioBD.tancarBD();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -276,7 +279,7 @@ public class EscenaControllerPixelArt implements Initializable {
 	}
 
 	public byte[] serialitzacioLlenç(ContextPixelArt cntxt, String id) {
-		try  {
+		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 
@@ -285,11 +288,17 @@ public class EscenaControllerPixelArt implements Initializable {
 			oos.close();
 			return baos.toByteArray();
 		} catch (IOException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
 			return new byte[0];
 		}
 	}
+
 	public boolean guardarEnPC(byte[] arxiu, String id) {
+
+		File llenços = new File("Llenços");
+		if (!llenços.exists() || !llenços.isDirectory())
+			llenços.mkdir();
+
 		try {
 			FileOutputStream fos = new FileOutputStream("./Llenços/" + id + ".d");
 			fos.write(arxiu);
@@ -310,44 +319,46 @@ public class EscenaControllerPixelArt implements Initializable {
 			return new ContextPixelArt();
 		}
 	}
-    @FXML
-    private void tornarInici() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
 
-            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+	@FXML
+	private void tornarInici() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+			Parent root = loader.load();
+			Scene novaEscena = new Scene(root, 700, 600);
 
-            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
-            stageActual.setScene(novaEscena);
-            stageActual.setTitle("Inici");
+			novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
-            for (Window window : Stage.getWindows()) {
-                if (window instanceof Stage && window != stageActual) {
-                    ((Stage) window).close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @FXML
-    private void tornarMenu() {
-    	try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
+			Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+			stageActual.setScene(novaEscena);
+			stageActual.setTitle("Inici");
 
-            Main.canviarEscena(novaEscena);
-            
-            Stage actual = (Stage) logoutBtn.getScene().getWindow();
-            actual.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			for (Window window : Stage.getWindows()) {
+				if (window instanceof Stage && window != stageActual) {
+					((Stage) window).close();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void tornarMenu() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+			Parent root = loader.load();
+			Scene novaEscena = new Scene(root, 700, 600);
+
+			Main.canviarEscena(novaEscena);
+
+			Stage actual = (Stage) logoutBtn.getScene().getWindow();
+			actual.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub

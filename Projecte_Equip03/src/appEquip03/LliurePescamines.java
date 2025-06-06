@@ -2,6 +2,7 @@ package appEquip03;
 
 import java.io.Serializable;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,7 +16,7 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 
 	private boolean antimines;
 	private int recompte;
-	private transient Label text;
+	private transient Label element;
 	private transient Button boto;
 	private final transient Label Anti = new Label("(A)");
 	private CasellaPescamines[][] c;
@@ -25,32 +26,34 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 		this.c = c;
 		boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		boto.setMinSize(0, 0);
-		text = new Label(" ");
+		boto.getStyleClass().add("botoPescamines");
+		// boto.setMinSize(0, 0);
+		element = new Label(" ");
 		recompte = 0;
 		antimines = false;
 		Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
-		super.setContingut(this.text);
-		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
+		super.setContingut(this.element);
+		super.container.getChildren().addAll(this.element, this.boto, this.Anti);
 		StackPane.setAlignment(this.boto, Pos.CENTER);
-		text.setVisible(!super.estat);
+		element.setVisible(!super.estat);
 		reaccio();
 	}
 
 	public LliurePescamines(int n, int x, int y, CasellaPescamines[][] c, ContextPescamines context) {
 		super(x, y, context);
 		this.c = c;
-
 		this.boto = new Button();
 		boto.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		this.text = new Label("" + n);
+		boto.getStyleClass().add("botoPescamines");
+		// boto.setMinSize(0, 0);
+		this.element = new Label("" + n);
 		this.recompte = n;
 		this.antimines = false;
 		this.Anti.setVisible(false);
 		Anti.setMouseTransparent(true);
-		super.container.getChildren().addAll(this.text, this.boto, this.Anti);
-		this.text.setVisible(!super.estat);
+		super.container.getChildren().addAll(this.element, this.boto, this.Anti);
+		this.element.setVisible(!super.estat);
 		reaccio();
 	}
 
@@ -63,11 +66,11 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 	}
 
 	public Label getText() {
-		return text;
+		return element;
 	}
 
 	public void setText(Label text) {
-		this.text = text;
+		this.element = text;
 	}
 
 	public Button getBoto() {
@@ -148,13 +151,22 @@ public class LliurePescamines extends CasellaPescamines implements AccioCasellaP
 
 	public boolean descobrir(LliurePescamines l) {
 		boolean descoberta = false;
-
-		if (l instanceof LliurePescamines && l.isEstat() == true && !l.antimines) {
+		if (l instanceof LliurePescamines && l.isEstat() == true && l.antimines) {
 			descoberta = true;
-
 			l.setEstat(false);
 			l.boto.setVisible(l.isEstat());
-			l.text.setVisible(true);
+			l.element.setVisible(true);
+			l.Anti.setVisible(false);
+			context.augmentarComptador();
+			context.setLliures(--context.lliures);
+			context.getCaixaMines().setText("Antimines\n" + context.getComptador() + "/" + context.getTamany()
+					+ "\nCaselles descobertes: " + (context.getGrandaria() - context.getLliures()));
+
+		} else if (l instanceof LliurePescamines && l.isEstat() == true && !l.antimines) {
+			descoberta = true;
+			l.setEstat(false);
+			l.boto.setVisible(l.isEstat());
+			l.element.setVisible(true);
 			l.Anti.setVisible(false);
 			context.setLliures(--context.lliures);
 			context.getCaixaMines().setText("Antimines\n" + context.getComptador() + "/" + context.getTamany()

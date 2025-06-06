@@ -20,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -54,19 +55,18 @@ public class EscenaControllerPescamines implements Initializable {
 	private Pane pantallaInici;
 	@FXML
 	private Label nomUsuariLabel;
-    @FXML
-    private Button tornarMenuBtn;
-    @FXML
-    private Button logoutBtn;
+	@FXML
+	private Button tornarMenuBtn;
+	@FXML
+	private Button logoutBtn;
 
 	private Timeline temps;
 	private Label cronometre;
 	private int segons;
 	private String id;
 	private String dif;
-	private TaulerPescamines context;
-	private TaulerPescamines nouTauler;
-
+	private ContextPescamines context;
+	private TaulerPescamines tauler;
 
 	public String getDif() {
 		return dif;
@@ -78,36 +78,53 @@ public class EscenaControllerPescamines implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		id = "usuari";
 		caixaTemps.getChildren().clear();
 		compAntimines.getChildren().clear();
 		
 		DadesSingleton dada = DadesSingleton.getInstancia();
 		dif = dada.getCadenaCompartida();
-		id = dada.getUsuari();
-        nomUsuariLabel.setText("Usuari: " + dada.getUsuari());
-
 		
-		context = new TaulerPescamines();
-		nouTauler = context.crearTauler(dif, context);
-		context.assignarMines(nouTauler.getCaselles(), context.tamany, dif, context);
-		nouGP(nouTauler.getCaselles());
-		segons = 1;
+		this.id = dada.getUsuari();
+		nomUsuariLabel.setText("Usuari: " + id);
 
-		cronometre = new Label();
-		compAntimines.getChildren().add(context.caixaMines);
-
-		caixaTemps.getChildren().add(cronometre);
-		Format formatter = new SimpleDateFormat("mm:ss");
-
-		temps = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-			segons++;
-			cronometre.setText(formatter.format(segons * 1000));
-		}));
-		temps.setCycleCount(3600);
+		if (dada.getPartidaCompartida() != null) {
+			ContextPescamines contextProvisional = desserialitzacioTauler(dada.getPartidaCompartida());
+			if (contextProvisional != null) {
+				System.out.println("Copiant Context");
+				this.context = contextProvisional;
+				this.tauler = contextProvisional.getTauler();
+				nouGP(this.tauler.getCaselles());
+				dada.setCadenaCompartida(null);
+				dada.setPartidaCompartida(null);
+				this.segons = contextProvisional.getTemps();
+			} else {
+				System.err.println("No hi ha res serialitzat");
+			}
+		} else {
+			System.out.println("Nou context");
+			this.context = new ContextPescamines();
+			this.tauler = context.crearTauler(dif, this.context);
+			context.assignarMines(tauler.getCaselles(), context.tamany, dif, this.context);
+			nouGP(this.tauler.getCaselles());
+			this.segons = 1;
+		}
 
 		pantallaInici.setPrefWidth(taulerGrid.getMinWidth());
 		pantallaInici.setPrefHeight(taulerGrid.getHeight());
+		
+		compAntimines.getChildren().add(this.context.caixaMines);
+		cronometre = new Label("Temps\n00:00");	
+		caixaTemps.getChildren().add(cronometre);
+		Format formatter = new SimpleDateFormat("mm:ss");
+		
+		temps = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+			segons++;
+			cronometre.setText("Temps\n"+formatter.format(segons * 1000));
+			context.setTemps(segons);
+		}));
+		temps.setCycleCount(3600);
+
+
 
 		context.getPartida().addListener((obs, oldVal, newVal) -> {
 			if (!newVal) {
@@ -118,7 +135,7 @@ public class EscenaControllerPescamines implements Initializable {
 
 	public void nouGP(CasellaPescamines[][] c) {
 		GridPane gp = this.taulerGrid;
-		
+
 		// https://falkhausen.de/docs/JavaFX-10/javafx.scene.layout/GridPane/h.html
 
 		// Netejar les característiques per defecte del SceneBuilder
@@ -148,28 +165,33 @@ public class EscenaControllerPescamines implements Initializable {
 
 	@FXML
 	public void guardarPartida() {
-
+		Format formatter = new SimpleDateFormat("mm:ss");
+	
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD(".././BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
-			
-			if (id != null) {
+
+			if (this.id != null) {
 				byte[] arxiu = serialitzacioTauler(context);
 
 				if (arxiu.length == 0)
 					System.err.println("Ha fallat la serialització");
-				else if (guardarEnPC(arxiu)) {
+				else {
+					if (guardarEnPC(arxiu, this.id)) {
+						System.out.println("Partida guardada al teu PC: /Partides");
+					} else
+						System.err.println("Ha fallat el desat en ordinador.");
+					
+					String[] camps = { "usuari", "temps", "partida" };
+					String[] valors = { this.id, formatter.format(segons * 1000), " " };
+					for(String d : valors)
+					System.out.println(d);
 
-				} else
-					System.err.println("Ha fallat el desat en ordinador.");
-
-				String[] camps = { "usuari", "temps", "partida" };
-				String[] valors = { id, cronometre.getText(), " " };
-				ConnexioBD.insertarDades("partida_pescamines", arxiu,  camps, valors);
-				id = ConnexioBD.ultimaID("partida_pescamines", "id_partida");
-
+					ConnexioBD.insertarDades("partida_pescamines", arxiu, camps, valors);
+					System.out.println(ConnexioBD.ultimaID("partida_pescamines", "id_partida"));
+				}
 			}
 
 			ConnexioBD.tancarBD();
@@ -177,7 +199,7 @@ public class EscenaControllerPescamines implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public byte[] serialitzacioTauler(ContextPescamines cntxt) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -193,9 +215,14 @@ public class EscenaControllerPescamines implements Initializable {
 		}
 	}
 
-	public boolean guardarEnPC(byte[] arxiu) {
+	public boolean guardarEnPC(byte[] arxiu, String id) {
+
+		File partides = new File("Partides");
+		if (!partides.exists() || !partides.isDirectory())
+			partides.mkdir();
+
 		try {
-			FileOutputStream fos = new FileOutputStream("./partides/" + id + ".d");
+			FileOutputStream fos = new FileOutputStream("./Partides/" + id + ".dat");
 			fos.write(arxiu);
 			fos.close();
 			return true;
@@ -214,11 +241,11 @@ public class EscenaControllerPescamines implements Initializable {
 			return new ContextPescamines();
 		}
 	}
-	
+
 	@FXML
 	public void reiniciar(ActionEvent e) {
 		temps.stop();
-		context.buidar(this.nouTauler);
+		context.buidar(this.tauler);
 		taulerGrid.getChildren().clear();
 		pantallaInici.setVisible(true);
 		pantallaInici.setMouseTransparent(false);
@@ -227,11 +254,13 @@ public class EscenaControllerPescamines implements Initializable {
 
 	@FXML
 	public void iniciarJoc(MouseEvent event) {
+		System.out.println("Inici del joc");
 		pantallaInici.setVisible(false);
 		pantallaInici.setMouseTransparent(true);
 		temps.play();
 		event.consume();
 	}
+
 	@FXML
 	public void acabarPartida() {
 		temps.stop();
@@ -248,14 +277,15 @@ public class EscenaControllerPescamines implements Initializable {
 	}
 
 	public void enviarRanquing() {
-		
+		Format formatter = new SimpleDateFormat("mm:ss");
+
 		try {
 			if (!ConnexioBD.connectarBD("ProjecteProg")) {
 				ConnexioBD.connectarScriptBD("./BD/script.sql");
 				ConnexioBD.connectarBD("ProjecteProg");
 			}
 			String[] camps = { "usuari", "dificultat", "temps" };
-			String[] valors = { "usuari", context.getDificultat(), cronometre.getText() };
+			String[] valors = { "usuari", formatter.format(segons * 1000), cronometre.getText() };
 			ConnexioBD.insertarDades("ranking_pescamines", camps, valors);
 
 			ConnexioBD.tancarBD();
@@ -280,7 +310,7 @@ public class EscenaControllerPescamines implements Initializable {
 			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("Pescamines");
-			
+
 			Platform.runLater(() -> { // espera que l'inicialització siga completa.
 				window.show();
 			});
@@ -289,42 +319,43 @@ public class EscenaControllerPescamines implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-    @FXML
-    private void tornarInici() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
 
-            novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+	@FXML
+	private void tornarInici() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaInici.fxml"));
+			Parent root = loader.load();
+			Scene novaEscena = new Scene(root, 700, 600);
 
-            Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
-            stageActual.setScene(novaEscena);
-            stageActual.setTitle("Inici");
+			novaEscena.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 
-            for (Window window : Stage.getWindows()) {
-                if (window instanceof Stage && window != stageActual) {
-                    ((Stage) window).close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @FXML
-    private void tornarMenu() {
-    	try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
-            Parent root = loader.load();
-            Scene novaEscena = new Scene(root, 700, 600);
+			Stage stageActual = (Stage) logoutBtn.getScene().getWindow();
+			stageActual.setScene(novaEscena);
+			stageActual.setTitle("Inici");
 
-            Main.canviarEscena(novaEscena);
-            
-            Stage actual = (Stage) logoutBtn.getScene().getWindow();
-            actual.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			for (Window window : Stage.getWindows()) {
+				if (window instanceof Stage && window != stageActual) {
+					((Stage) window).close();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void tornarMenu() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaJocs.fxml"));
+			Parent root = loader.load();
+			Scene novaEscena = new Scene(root, 700, 600);
+
+			Main.canviarEscena(novaEscena);
+
+			Stage actual = (Stage) logoutBtn.getScene().getWindow();
+			actual.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

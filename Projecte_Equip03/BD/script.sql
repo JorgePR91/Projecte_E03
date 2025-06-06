@@ -22,7 +22,7 @@ CREATE TABLE `pixelart` (
   `id_llenc` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
   `mida` INTEGER NOT NULL,
-  `imatge` VARCHAR(150) NOT NULL,
+  `imatge` LONGBLOB NOT NULL,
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY(`id_llenc`, `usuari`),
@@ -33,7 +33,7 @@ CREATE TABLE `pixelart` (
 CREATE TABLE `partida_pescamines` (
   `id_partida` INTEGER AUTO_INCREMENT,
   `usuari` VARCHAR(50) NOT NULL,
-  `partida` LONGTEXT NULL DEFAULT NULL,
+  `partida` LONGBLOB NULL DEFAULT NULL,
   `temps` TIME,
   `dataInsercio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

@@ -206,10 +206,20 @@ public class ConnexioBD {
 		try (PreparedStatement ps = connexio.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);) {
 
 			for (int o = 0; o < valors.length; o++) {
-				if (!valors[o].isBlank())
-					conversioDadesBD(ps, tipusCamps[o], o + 1, valors[o]);
-				else
+//				if (!valors[o].isBlank()) {
+//					System.out.println("Valor primer "+valors[o]);
+//
+//					conversioDadesBD(ps, tipusCamps[o], o + 1, valors[o]);
+//				} else
+//					System.out.println(valors[o]);
+//					ps.setBytes(o + 1, arxiu);
+				if (camps[o].equals("partida") || camps[o].equals("imatge")) {
+					System.out.println("Valor Bytes "+o);
 					ps.setBytes(o + 1, arxiu);
+				} else {
+					System.out.println(valors[o]);
+				conversioDadesBD(ps, tipusCamps[o], o + 1, valors[o]);
+				}
 			}
 
 			ps.executeUpdate();
@@ -371,7 +381,7 @@ public class ConnexioBD {
 			break;
 
 		default:
-			System.err.println("Error: de tipus de dades.");
+			System.err.println("Error: de tipus de dades al valor "+valors);
 		}
 
 	}

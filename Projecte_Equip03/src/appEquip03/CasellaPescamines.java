@@ -22,6 +22,8 @@ public abstract class CasellaPescamines implements AccioCasellaPescamines, Seria
 			this.context = context;
 			this.estat = true;
 			this.container = new StackPane();
+			container.getStyleClass().add("casella");
+			container.setMinSize(0, 0);
 		}
 		
 		

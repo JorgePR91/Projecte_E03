@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<VBox prefHeight="600" prefWidth="700" style="-fx-padding: 20 20 20 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="appEquip03.EscenaControllerPixelArt"> <!-- padding dret eliminat -->
+<VBox prefHeight="600" prefWidth="700" style="-fx-padding: 20 20 20 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appEquip03.EscenaControllerPixelArt"> <!-- padding dret eliminat -->
 
     <children>
         <!-- BARRA SUPERIOR AMB USUARI + BOTONS -->
@@ -25,31 +25,30 @@
             <Button fx:id="logoutBtn" onAction="#tornarInici" text="LogOut" />
         </HBox>
 
-        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="589.0" prefWidth="661.0">
             <center>
-                <GridPane fx:id="taulerGrid" maxHeight="375.0" maxWidth="375.0" prefHeight="300.0" prefWidth="300.0" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
+                <GridPane fx:id="taulerGrid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-border-width: 2px; -fx-border-color: black;" BorderPane.alignment="CENTER">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </GridPane>
             </center>
             <left>
-                <HBox prefHeight="202.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+                <HBox alignment="BOTTOM_LEFT" prefHeight="202.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                        <Button fx:id="tornar" alignment="CENTER" mnemonicParsing="false" onAction="#tornar" prefHeight="26.0" prefWidth="77.0" text="Tornar" />
+               </children></HBox>
             </left>
             <right>
                 <AnchorPane prefHeight="370.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
             </right>
             <bottom>
-                <AnchorPane prefHeight="64.0" prefWidth="661.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Button fx:id="tornar" alignment="CENTER" layoutX="296.0" layoutY="18.0" mnemonicParsing="false" onAction="#tornar" prefHeight="37.0" prefWidth="67.0" text="Tornar" />
-                    </children>
-                </AnchorPane>
+                <AnchorPane prefHeight="1.0" prefWidth="661.0" BorderPane.alignment="CENTER" />
             </bottom>
             <top>
                 <HBox prefHeight="100.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                     <children>
-                        <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT">
+                        <ButtonBar fx:id="barraBotons" buttonMinWidth="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="57.0" prefWidth="662.0">
                             <buttons>
                                 <Button fx:id="netejar" mnemonicParsing="false" onAction="#netejarLlenc" text="Netejar" />
                                 <ColorPicker fx:id="color" editable="true" onAction="#establirColor">

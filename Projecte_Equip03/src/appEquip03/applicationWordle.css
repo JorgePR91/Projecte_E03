@@ -12,7 +12,7 @@
     -fx-font-weight: bold;        
 }
 
-.button {
+.button, ColorPicker {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-font-weight: bold;
@@ -23,19 +23,23 @@
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-alignment: center;
-    -fx-padding: 0;
     -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: #e2e7ea;
     -fx-effect: none;
 }
 .botoPescamines:hover{
     -fx-border-color: #cc3333;
-    -fx-border-width: 2;
-    -fx-padding: 10.0;
+    -fx-background-color: none;
+    -fx-border-width: 3;
     -fx-effect: none;
 }
-.button:hover {
+ColorPicker:hover, .button:hover {
     -fx-background-color: grey;
     -fx-opacity: 0.7;
+}
+.casella {
+    -fx-background-color: lightblue;
 }
 
 .text-field {
@@ -44,11 +48,4 @@
     -fx-border-radius: 3.0;
     -fx-padding: 5.0 10.0 5.0 10.0;
 }
-.pixel_imparell{
-	-fx-background-color: lightgrey;
-		
-}
-.pixel_parell{
-	-fx-background-color: white;
-		
-}
+

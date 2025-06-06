@@ -92,14 +92,29 @@ public class EscenaControllerDificultatPescamines implements Initializable {
 
         File f = fileChooser.showOpenDialog(root_dificultad.getScene().getWindow());
 
-        if (f != null) {
-            File partida = new File(f.getAbsolutePath());
+		if (f != null) {
+			File partida = new File(f.getAbsolutePath());
 
-    		DadesSingleton dada = DadesSingleton.getInstancia();
-    		dada.setPartidaCompartida(partida);
- 
-            
-        }
+			DadesSingleton dada = DadesSingleton.getInstancia();
+			dada.setPartidaCompartida(partida);
+
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("EscenaPescamines.fxml"));
+
+				Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+				Parent root = loader.load();
+				Scene escena2 = new Scene(root);
+
+				escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
+				window.setScene(escena2);
+				window.setTitle("Pescamines");
+				window.show();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+		}
 	}
 
 
@@ -115,7 +130,7 @@ public class EscenaControllerDificultatPescamines implements Initializable {
 			Parent root = loader.load();
 			Scene escena2 = new Scene(root);
 
-			escena2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			escena2.getStylesheets().add(getClass().getResource("applicationWordle.css").toExternalForm());
 			escena2.getStylesheets().add(getClass().getResource("/appEquip03/EscenaPescamines.fxml").toExternalForm());
 			window.setScene(escena2);
 			window.setTitle("Pescamines");
